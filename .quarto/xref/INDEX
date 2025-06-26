@@ -1,0 +1,15 @@
+{
+  "about.qmd": {
+    "about.html": "53c56b8c"
+  },
+  "lessons.qmd": {
+    "lessons.html": "de84107c"
+  },
+  "index.qmd": {
+    "index.html": "9d9c7cb5"
+  },
+  "data_basics.qmd": {
+    "data_basics.html": "7da1aa56",
+    "data_basics.tex": "33267295"
+  }
+}
