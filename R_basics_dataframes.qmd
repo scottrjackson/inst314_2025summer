@@ -1,0 +1,433 @@
+---
+title: "R Basics: data frames and reading simple files"
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+# R loves data frames (and you should, too!)
+
+In this tutorial, we will discuss how R implements the concept of a *data frame*. If you haven't already, you should read through the [Data Basics reading](data_basics_reading.qmd#data-frames), which describes the general concept of a data frame. Here, we will focus on how it works in R.
+
+The good news is that data frames are very common in R, and they are implemented in a really useful way. R makes data frames easy to work with and manipulate, and many R functions take advantage of this. When in doubt, get your data into a data frame!
+
+# Pre-loaded data
+
+One of the non-obvious things about R is that it comes pre-loaded with a lot of "classic" data sets, mainly to help illustrate code examples. Many packages also come with data, for the same reason. In order to see what data is already available to you, run the following, which will probably open up a new tab/window to display the results:
+
+```{r, eval = FALSE}
+data()
+```
+
+In order to show how data frames work, let's take a very simple example, the `chickwts` data frame.  First, we can use the `class` function to verify that it's a data frame.
+
+```{r}
+class(chickwts)
+```
+
+
+# Getting the basic shape of the data frame
+
+Now recalling back to the [Unit 1 reading](data_basics_reading.qmd#data-frames), one property of data frames is that they are *rectangular*, meaning that they have columns and rows, where each column has the same number of rows, and each row has the same number of columns. So how do we go about inspecting the `chickwts` data frame?
+
+We could technically just print out the entire data frame, but we don't yet know how big it is, and we usually work with data sets that are large enough that printing the whole thing out to the console is not super helpful.
+
+Instead, we can use the `head()` function to print out the first several rows. This is basically a way to "peek" at the top of your data frame. The `head()` function in R defaults to 6 rows (I have no idea why 6), but you can specify more or less with the `n` argument:
+
+```{r}
+head(chickwts)
+head(chickwts, 10) # prints 10 rows instead of 6
+```
+
+
+We can immediately see several useful things when we take this "peek", including the names of columns and examples of the values in each column. So here we can see that there's a `weight` column with some number values and a `feed` column with the string "horsebean" in each of the first several rows.
+
+This is a very simple data frame with just two columns, but sometimes we have *many* columns in our data, and while RStudio gives us some neat features where we can inspect object structure, it's also helpful to be able to return a complete list of the column names, which you can do with:
+
+```{r}
+colnames(chickwts)
+```
+
+Finally, sometimes you would like to know just how many rows and/or columns there are.  For this, R has `nrow` (number of rows), `ncol` (number of columns), and `dim` (length of each dimension, in a vector row, col for data frames):
+
+```{r}
+nrow(chickwts)
+ncol(chickwts)
+dim(chickwts)
+```
+
+
+So now we can see that this data frame has 71 observations (rows), and for each observation there are two columns: a `weight` and a `feed` value.
+
+# Creating copies of data frames
+
+Before we start working with and modifying this data, let's talk about copies. In this case, we have a pre-loaded object `chickwts`. If we alter this object in any way, then in order to get the original back, we have to reload R and start fresh. That might start to get annoying if we are working with the data interactively, so in this case, let's make a copy of the data frame that we can mess around with, and if we mess up something, we still have the original.[^objectsVfiles]
+
+[^objectsVfiles]: I do want to be clear about something here: when I talk about altering a *data frame* we are not changing any *files*. This is one thing that can be confusing if you are coming from working with programs like Microsoft Excel or Word. In those programs, everything is done on *files.* You open a spreadsheet file, make changes in it, and save those changes. But R is different. When we load data from a file, what we are actually doing is loading the *value* returned by our reading function into an object in R, with a variable name. We can then alter that object to our heart's content, but it does not touch the original *file*, unless we tell R to write the new data to that same file. So even if we "mess up" a data frame in R, we are not touching the original data *file*, so you should feel very safe playing around with things in R.
+
+This is straightforward in R, if we simply assign the value of our original data frame to a new object. For example:
+
+```{r}
+chickwts_copy <- chickwts
+```
+
+Unlike some other languages (like Python), this creates an independent copy, and modifying one of these objects does not affect the other. This is good, because that's usually want we want to do.
+
+So now we have a copy we can muck around with, and if we ever decide "oh wait, I didn't want to do that, let's start over", we can always just re-run the line above to get a "fresh" copy from the original `chickwts` data frame.
+
+
+# Renaming columns and finding documentation
+
+Now that we have a copy of this data, let's talk about what we can do to make it easier to work with.
+
+It's nice to be able to see the column names, and as we will see, you will use the column names a lot when working with your data. And just like there are "good" (helpful, easy-to-use) and "bad" (awkward, confusing, opaque) variable names, there are "good" and "bad" column names.  Once you go into the world and you see data with column names like "CMNRT1996-1997" or "Average Weight (grams)", you'll see what I mean. 
+
+So one of the first things you should do when exploring data is to rename column names to be easier to work with. The same general guidance that applies to naming variables applies here as well: column names are generally easier to work with when they are all lower-case, no spaces, and a balance between descriptive but not too long.[^colnames]
+
+[^colnames]: That said, some of the features of RStudio make it a little easier to deal with unwieldy column names, so it's really up to you and your own preferences.
+
+In our `chickwts` example, the column names "weight" and "feed" are not too bad.  But maybe we would like to be more clear about the unit of the weight, since we already know this is about the weights of chicks, and unless you're already an expert in baby chicks, the unit of measurent might not be obvious.
+
+This also brings us to an important point about data sets: ideally you have some kind of document (sometimes called a "data dictionary") which tells you something about each variable (column) in the data. For any of R's built-in data sets, you can access a help file for that data just as you would get the help for a function. For the `chickwts` data set, see the following:
+
+```{r, eval = FALSE}
+?chickwts
+```
+
+We can see down in the Details of this description that the weights are in grams. So let's imagine for clarity that we would like to rename the "weight" column to "grams", or even "weight_g".  Let's go with the simpler "grams" for this example.
+
+When it comes to changing column names, R pulls a bit of an apparent magic trick for our convenience. Recall that we can get the value of the column names as a vector with:
+
+```{r}
+colnames(chickwts_copy)
+```
+
+Interestingly, if we *assign a new value* to this vector (using the normal assignment arrow), we will *change* the column names in the data frame. Since we already have a copy to mess with, let's change the entire vector of column names (which is only two elements) at once:
+
+```{r}
+colnames(chickwts_copy) <- c("weight_g", "feed")
+colnames(chickwts_copy)
+```
+
+Note that on the right side I need to create a vector of names using the `c()` function.
+
+This is easy when there are just two, but notice I was really only changing the first column name.  Imagine a situation where you only want to change the 45th column name out of 82 columns. Typing out the entire vector of 82 column names would be a little tedious, especially if we only really wanted to change one of them. So you can also do the following:
+
+```{r}
+colnames(chickwts_copy)[1] <- "grams"
+colnames(chickwts_copy)
+```
+
+That first line may look a little odd at first, since you have square brackets on the end after a parenthesis. But just imagine that the whole `colnames(chickwts_copy)` expression returns a vector itself, then you can use all the normal tricks (see the [R Basics: Vectors tutorial](R_basics_vectors.qmd) for details) to select just certain items from that vector to change. Here, we are using the `[1]` to select just the first value of the column names, and then we can just assign a single string to that, instead of needing `c()` to make a vector. This is an easy way to change just one or two column names at a time.
+
+::: column-margin
+If the idea of assigning a value to `colnames(data_frame)` in order to change the column names makes sense to you, then you should just continue and let it make sense. But if the idea of assigning a value to the result of a function making a change in the original object is making your brain hurt, then you should know that under the hood R has a special type of function that allows this behavior. So it's not dark magic, it's a clever syntactic trick that again reflect R's design goals for data analysis. In this case, there's actually a separate function called `colnames<-` different from `colnames`. This is a special type of function R allows for just this kind of purpose. They are fairly frequent in R, so it's good to get used to the idea.
+:::
+
+Finally, since I feel like this was a good choice and I don't want to keep typing `chickwts_copy` over and over, I should probably just go back and edit my code to change the column names of the original `chickwts`. But since I want you to see the code above, I'll do the lazier thing and just re-assign the value of the newer copy back to the older name, effectively over-writing the original data frame with the new one.[^overwriting] And if I use `head`, I can verify that the column name is the new one:
+
+[^overwriting]: But again, even this "over-writing" is not permanent. Once I close this session of R and start a new one, my workspace and all of the objects start fresh, and unless I explicitly wrote new values to a file, none of the original data has been altered.
+
+```{r}
+chickwts <- chickwts_copy
+head(chickwts)
+```
+
+
+# Accessing data from a data frame
+
+Okay, now that we've peeked a bit at the data and made the column names what we want, we would like to explore the data more, so we need ways of referring to different parts of the data frame.
+
+The most fundamental way is to treat the data frame as a two-dimensional object (which it is) with the `[]` brackets. In contrast, when we are working with vectors, which are one-dimensional, it's:
+
+> `[indexes]`
+
+But when we are working with two-dimensional data frames, it's:
+
+> `[rows, columns]`
+
+For example, if we just wanted to access the value in the 3rd row of the 1st column, we could use:
+
+```{r}
+chickwts[3, 1]
+```
+
+And you can use `head` to confirm that this is correct:
+
+```{r}
+head(chickwts)
+```
+
+You can also use any of the other ways of passing a vector of indexes to get multiple values, for example:
+
+```{r}
+chickwts[2:5, 1] # values from rows 2, through 5 in column 1
+chickwts[c(1, 30, 60), 2] # values from rows 1, 30, 60 from column 2
+```
+
+
+But just as we saw with vectors, referring to elements by the numerical index is not usually as useful as other methods. One of the conveniences of data frames is that you can use column names in place of numbers:
+
+```{r}
+chickwts[4:6, "grams"] # values from rows 4, 5, 6 from the "grams" column
+```
+
+
+This is better, because now we don't need to remember which column number is which, if we can just remember the name, and even more helpful, if we later manipulate the data by removing, adding, or changing the order of columns, column names will still work as expected, even if the `grams` column has moved to a different position. This is worth making a special note of:
+
+> When possible, refer to columns by name rather than by number.
+
+There is another syntax for referring to columns by name, and that's the "dollar sign" syntax. In short it looks like:
+
+> `data_frame$column_name`
+
+When we refer to a column like this, what we get is a vector, and we can use square brackets after that vector to get a subset of values, so this is another way to select certain values from a column.  For example, these three expressions are equivalent:
+
+```{r}
+chickwts[2:4, 1]
+chickwts[2:4, "grams"]
+chickwts$grams[2:4]
+```
+
+The first one literally says something like, "return the data from the 2nd through 4th rows from the first column." The second one says, "return the data from the 2nd through 4th rows from the column called `"grams"`. And the third one says something like, "take the `grams` column (which is a vector), and get the 2nd through 4th values from that."
+
+The choice of which to use is mostly up to you and to what you find easier to read. I just recommend using column names instead of numbers whenever possible.
+
+## Quick practice
+
+See if you can pull out the following values:
+
+1. The 21st through 24th values from the "grams" column. Answer: 244, 271, 243, 230
+2. The values from the "feed" column from the 20th, 40th, and 60th rows. Answer: "linseed", "sunflower", and "casein"
+3. The 35th through 38th rows, both columns. Answer: (table below)
+
+
+| grams | feed      |
+|-------|-----------|
+| 158   | soybean   |
+| 248   | soybean   |
+| 423   | sunflower |
+| 340   | sunflower |
+
+For more practice, see how many different ways you can think of pulling out these values, using the bracket notation and the `$` notation.
+
+## Boolean row selections
+
+However, just like we saw with vectors, using logical (boolean) expressions gives us a lot more useful ways of referring to specific values, especially rows.  For example, so far we have only peeked at some of the data, and we know that there is a feed called "horsebean". Maybe we just want to look at only the data for that feed type. We could pull out a subset of the data using this information as follows:
+
+```{r}
+chickwts_horsebeanonly <- chickwts[chickwts$feed %in% "horsebean", ]
+nrow(chickwts_horsebeanonly)
+print(chickwts_horsebeanonly)
+```
+
+In this way, we created a new data frame that is only the rows from the original data frame where the `feed` column is "horsebean", resulting in a data frame that is 10 rows long.
+
+But there are a few things in this example I want to unpack:
+
+- Note that in the brackets after `chickwts`, there is a comma, because it's still `[rows, columns]`.
+- The rows are being selected as the rows where the expression `chickwts$feed %in% "horsebean"` evaluates to `TRUE`.
+- The columns segment (the part in the brackets after the comma) is blank. Remember that R treats blanks in these dimensions as meaning "everything". So leaving the columns position blank means "all of the columns."
+- We could have used the "equals" comparison operator `==` here instead, like: `chickwts$feed == "horsebean"`, but the `%in%` operator is a little safer, and very useful. We'll see another example of this shortly.
+
+This covers the primary ways R has to select certain values and subsets from data frames. We'll continue to use these throughout, so we'll get plenty of reminders.
+
+
+# Exploring a categorical variable
+
+Now that we know the basics of how to get at different parts of our data frame, it's time to start actually exploring the data. So what do we know so far? We know that this is data about the weight of chicks who are getting different types of feed, and we have two columns, `weight` (which we re-named to `grams`) and `feed`.
+
+In terms of the discussion in the [Unit 1 reading](data_basics_reading.qmd), we can say that `grams` is a numeric variable, and at a first guess it appears to be a continuous, interval variable. That is, we know that grams are a continuous unit of measurement (at least, up to our precision of measurement), and the difference between, say, 10 and 20 grams is the same as the difference between 110 and 120 grams.
+
+We don't know much about the `feed` variable so far, because we have so far only seen the "horsebean" value. But when we took a subset of the data where `feed` is "horsebean", we only got 10 rows back, so we know there must be other values. And it looks like a categorical variable, since it's hard to imagine "horsebean" being a continuous value. But how do we explore the other values?
+
+One of the first things to do when exploring a categorical variable is to see how many different values there are, and how those values are distributed. For example, is the data spread evenly across these different feed categories, or are some values more common than others?
+
+A simple method we can use to find out is simply tabulating the counts of each variable. This is also sometimes called "cross-tabulation", particularly if we look at the co-occurrence of categorical values across more than one variable. But in this case, we just have one variable.
+
+In R, we can use the function `xtabs()` (for "cross-tabulations"):
+
+```{r}
+xtabs(~ feed, data = chickwts)
+```
+
+
+There are a couple of things to note about this:
+
+- The result of `xtabs()` is a special object that acts as both a table and as an `xtabs` object, which has other uses, too. Tables are similar to data frames in some ways, including multiple dimensions, so you can pull them apart with many of the same tools we've gone through above.
+- The first argument of `xtabs()` is something called a "formula" in R, which uses the "tilde" (`~`) character, which is what you get if you hold Shift and hit the "backtick" character. We'll get more into R's formulas later, I'm just pointing it out now.
+
+But these technical points aside, the result shows us that we have a similar number of rows for each feed type, but not identical. Horsebean turns out to be the least common, since the other categories all have more than 10 occurences. Good to know!
+
+This step is a helpful first step because when you look at the values, you may realize that it might be good to collapse some categories together, or even drop some categories when doing your analysis. But for now, it's helpful to know that we have six categories of feed, with roughly a dozen (give or take a couple) of each.
+
+
+# Exploring a continuous variable
+
+Using `xtabs()` on a continuous variable would be a little silly, because with a continuous variable, we expect a lot of different values, and many values may occur only once or twice. You can try to use `xtabs()` to look at the `grams` variable, and you'll see what I mean. So how can we start understanding our continuous variable `grams`?
+
+## Range
+
+We will start exploring statistical distributions in the next unit, but for now, just a few summary statistics will help. First, we would like to know what the limits of the data are, or more precisely, the *range*. What's the smallest and largest value in the data set?  This can be very informative as we start to think about how to analyze the data.
+
+To illustrate this, let's think about our uncertainty before we look at the data. We know the measurements are in grams, and we know generally that chicks are pretty small animals, but not as small as say, an insect. So we would expect them to be somewhere in the hundreds of grams in order of magnitude.  A chick weighing thousands of grams would be several pounds heavy, which would not fit our mental model of a baby chick (at least not my mental model!), and a chick just a few grams heavy would seem to be too small to be born yet. So if we saw values outside our expected range, we may have concerns or questions about the data!
+
+But beyond that, what do we expect?  Do we think the chick weights will all be relatively close or do we think that some chicks may be twice as heavy or more than others?  Think to yourself about this, and consider how sure you feel about it. This step of considering what our assumptions are is a really important step in data analysis! And taking a few seconds to think about what we expect before we use R to check can be a good way to highlight interesting or unexpected results.
+
+After you think about it for a bit, it's time to actually check. There are a few handy functions in R that will compute a minimum, maximum, or both from a vector of values:
+
+```{r}
+min(chickwts$grams)
+max(chickwts$grams)
+range(chickwts$grams)
+```
+
+So we can see that the chick weights range from about 100 grams to more than 400 grams.  We can see that this fits with our most general expectations, and that the weights are not surprisingly large or tiny. But it also tells us that the heaviest chick is more than four times as heavy as the smallest. This may be somewhat surprising. In fact, we may want to double-check that this is not an erroneous outlier, but we will get to that in later units. For now, getting just a simple range has really reduced our uncertainty about the values are in the `grams` variable.
+
+## Mean and median
+
+After looking at extreme values, the next thing to look at are "central" values. The two most common are the *mean* and the *median*. These are discussed in the [Unit 1 reading](data_basics_reading.html#basic-numerical-summaries), so let's just go on to see how they're computed in R. The answer is, "very easily", now that we know how to get the vector of `grams` values.[^dollarpractice]
+
+[^dollarpractice]: I use the "dollar sign" notation in these examples. Can you also get the brackets notation to work, with the same results?
+
+```{r}
+mean(chickwts$grams)
+median(chickwts$grams)
+```
+
+And there you go! Easy peasy. The fact that the two statistics are very close to each other gives us a little more information, as well. The general idea of central values is that all else equal, if we get a new measurement, we would expect it to be close to the central value, which would mean somewhere around 260 grams in this data. We will explore this concept more in the next unit as well.
+
+Finally, we may want to combine some of these methods to start asking more detailed questions, like, "how do the weights compare between different feeds?" We will eventually get to more sophisticated methods of making these comparisons, but let's review the tools we have introduced in this tutorial to look at different mean values for two of the feeds:
+
+::: column-margin
+Each of the commented-out lines does the same thing as the line above it (you can uncomment them to check). Take some time to work out how they do the same thing. There's no real pros or cons to either method, but you may find one easier to read or wrap your head around than the other.
+:::
+
+
+```{r}
+soybean_weights <- chickwts$grams[chickwts$feed %in% "soybean"]
+# soybean_weights <- chickwts[chickwts$feed %in% "soybean", "grams"]
+sunflower_weights <- chickwts$grams[chickwts$feed %in% "sunflower"]
+# sunflower_weights <- chickwts[chickwts$feed %in% "sunflower", "grams"]
+mean(soybean_weights)
+mean(sunflower_weights)
+```
+
+Let's also take a minute to appreciate the usefulness of the `%in%` operator. So far, we have used it to check for values that equal a certain value, so it would work similar to the comparison operator `==`. However, `%in%` can also be used to check whether the values on the left are *a member of* the **set** of things on the right. In other words, if we put a vector of values after the `%in%` instead of just a single value, we can get `TRUE` values for multiple matches. 
+
+For example, the following code gets the mean value for the data where the feed is either soybean or sunflower:[^scroll]
+
+[^scroll]: If you're reading this tutorial as a web page, you may need to use the scrollbar in the code chunk to see the entire lines.
+
+```{r}
+soybean_and_sunflower_weights <- chickwts$grams[chickwts$feed %in% c("soybean", "sunflower")]
+mean(soybean_and_sunflower_weights)
+```
+
+
+
+# Manipulating columns and creating new columns
+
+So far the only thing we changed about our data frame is the column names. But in real world data analysis, we very frequently need to alter, transform, combine, or otherwise manipulate our data. Fortunately, R gives us a lot of powerful tools to do this.
+
+For example, what if we would rather look at our chick weight data in terms of ounces rather than grams?  First, let's consider the formula for converting grams to ounces:
+
+> ounces = grams / 28.3495
+
+So basically we just need to divide each value in the `grams` column by 28.3495 to get the weight in ounces. We would also like this to be in a new column.
+
+In R, this is simple because of what we learned in the [vectors tutorial](R_basics_vectors.Rmd). We don't need to create a loop or anything like that, because if we apply a calculation to a vector,[^columns] then it applies the calculation to each element in the vector.
+
+[^columns]: and remember, columns in data frames are *always* vectors in R
+
+Furthermore, in order to create a new column, all we need to do is assign a value to a new column, using either the dollar-sign syntax or the bracket syntax.
+
+Put these together, and here's how we can add an `ounces` column that is based on the `grams` column. We can also go the extra step to round off the results to 2 decimal places, using the `round` function. I'll show this as a separate step below, but you could also imagine combining these steps if you wish:
+
+```{r}
+chickwts$ounces <- chickwts$grams / 28.3495
+chickwts$ounces <- round(chickwts$ounces, digits = 2)
+head(chickwts)
+```
+
+Just to break this down, in the first line, we use `chickwts$ounces` to refer to a column that doesn't exist yet. That's okay, because we are assigning a value to that column, so after we run that line, that column now exists in the data frame. So in the second line, we take the value from that column (on the right side) and round it off to 2 decimal places[^rounding], and then assign it to that same column. That's a way of basically replacing the values in that column with the new rounded values.
+
+[^rounding]: using the `digits` argument, see `?round` for more details on how that works in R (see how handy the built-in help is?)
+
+
+# Reading simple CSV files
+
+Finally, let's talk about reading data into R. In the examples above, we used a data frame object `chickwts` that was pre-loaded into base R, so we didn't need to do anything. But obviously most of the time, we are interested in data that is not pre-loaded.
+
+One of the good things about R is that it handles a lot of different types of data in just base R,[^base-r] and for more "exotic" data types, people have created additional packages to help.
+
+[^base-r]: Just as a reminder, when I say "base R", I mean the standard set of code that comes with the default "vanilla" installation of R. Technically, that installation includes several different packages like `base`, `stats`, and `graphics`, but those are all essentially pre-loaded whenever you start a session with R.
+
+One of the more common and simple data file formats is the CSV file, which stands for Comma Separated Values. These files are just simple text files with multiple lines of data, where each line is a new row in the data frame, and as the name suggests, the values on each line are separated by commas. Those comma-separated values are essentially representing different columns of data in our resulting data frame.
+
+For example, you can download a small data set called "mammals.csv" from the course website.[^mammals] If you open this file with a simple text editor,[^rstudiotext] you will see that's it's just rows of text, with values separated by commas (and no space around the commas). But since this format is so common, lots of programs are able to view these files in fancier ways. For example, if you have a spreadsheet program like Microsoft Excel, macOS Numbers, or the open-source Libre Office Calc, and you double-click on the CSV file, it will probably try to open that file in one of those programs.
+
+> **I recommend caution when opening a CSV in a spreadsheet program, especially Excel!**
+
+[^mammals]: This data set is a very slightly modified version of the `mammals` data from the `MASS` package. You can use the regular R help to see info about this data set, but you have to load the `MASS` package with the `library(MASS)` command first.
+
+[^rstudiotext]: Notepad on Windows and TextEdit on macOS are examples of simple text editors. In RStudio, you can use the menu `File > Open file ...` to open the file in a new tab as a simple text file.
+
+Sometimes spreadsheet programs like to be "helpful" by formatting data in different ways, but the result can sometimes unintentionally alter your data, which is bad!  The point is that CSV files are very common, and you can access them in different ways.
+
+Base R comes with a simple function `read.csv()` that will read in the contents of a CSV to a data frame.[^dotsyntax] But as we discussed in the [R fundamentals tutorial](R_basics_fundamentals.qmd), if we want to keep that data frame in memory so that we can actually do things with it, we need to assign it to a variable.
+
+[^dotsyntax]: An aside for Pythonistas: in Python, the period `.` character is meaningful, but it's not in R. Like, if you saw a function in Python called `read.csv()`, you might think that it's a method of a `read` object, or that it's a function from a module called `read` or something like that. But in R, the period character is just another character, like underscore. As you work with R, you might start to notice that many of the older functions from base R use `.` as a delimiter, and newer functions use the `_` underscore. This is just kind of an historical oddity, and a by-product of the fact that in R's predecessor, the S language, the underscore character had a function, as an alternate character for assignment. The point is, don't get thrown off: in R, the period character is not special!
+
+So if you put the "mammals.csv" file into your working directory, the following code will read the data into a new data frame called `mammals`:
+
+```{r}
+mammals_from_file <- read.csv("mammals.csv")
+head(mammals_from_file)
+```
+
+If the `head()` shows you several rows and columns listing several species of mammals along with some average characteristics, then this worked correctly.
+
+We will cover other ways to read in data as we progress through the course, but starting with CSV files gives you access to a great many data files out there. It's a popular format precisely because it is so simple (just text!) and accessible (readable by many many programs, not just to specific software).
+
+# Working directory and file paths
+
+One of the trickiest things for people who are new to R or to programming in general to get used to is how to tell R where to find files. The important concepts here are *file paths* and *working directories*.
+
+In a nutshell, a *file path* can be thought of as a set of *step-by-step directions* from one location in a computer's file system to another location. There are basically two ways to give these directions. 
+
+One way is called an *absolute* path, and that starts with the *root* directory of the system. This is generally a bad idea when we write code that we intend to share, because this means it specifies a specific location on a specific machine, which may not be in the same place on someone else's machine. For example, an absolute path usually requires navigating through all the machine-specific folders, like your specific username folder and so on.
+
+The more common way to specify a path is called a *relative* path, because it is just the steps to go to a file or folder *relative* to some starting location. The name for that starting location is the *working directory*. One way to think about this is that your program or code is currently *working* in a specific folder, and you just need to say how to get from that folder to wherever the data is.
+
+As an example, imagine that I am working on a project, and I have everything in a folder called `my_project`, and I make this folder the working directory, and I put my R code in this folder. Then imagine I keep all of my data in another folder called `project_data` that is inside the `my_project` folder. In this case, the relative path from the working directory to a file called `my_file.csv` would be: 
+
+> `project_data/my_file.csv`
+
+But if `my_file.csv` is just directly in the working directory (that is, directly in the `my_project` folder), then the path would just be the file name:
+
+> `my_file.csv`
+
+Similarly, if it was embedded two folders down from the working folder, like in a folder called `new_data` inside a folder called `project_data`, inside the `my_project` working directory, then the path would look like:
+
+> `project_data/new_data/my_file.csv`
+
+The point is that there are two steps:
+
+1. Set your working directory, or at least just figure out where it is.
+2. Specify the file path as the steps through the folders to navigate from your working directory to the target file.
+
+There are multiple ways to set your working directory in R and RStudio. Since it's a little easier to see this in action, I will post a video on the course ELMS site to show you a few tips on how to do this. In a nutshell, I highly recommend using RStudio's "project" structure to help manage this. It's very easy and makes things very convenient.
+
+# Next steps
+
+At this point, you should have gone through the Reading and all of the Code Tutorials for Unit 1. Congrats! You should now be ready to tackle the Practice and Challenge for this Unit.
+
+The Practice will ask you to apply both the code and concepts from this Unit, and sample solutions are provided. This is to allow you to easily try things out and test yourself if you get stuck. But don't just skip to the answers! Part of learning and internalizing how R code works is a process of thinking, struggling, recalling, and experimenting until you figure it out. You could go to the gym and lift weight with a forklift instead of your own deadlifts, but that won't make you any stronger!
+
+The Challenge is essentially just a repeat of the Practice, but using a different data set, as described in the assignment on the course ELMS site.
+
+After the Unit 1 Challenge, you'll be ready to start on Unit 2.

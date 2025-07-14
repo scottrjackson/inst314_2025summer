@@ -1,0 +1,152 @@
+---
+title: "Installing R and RStudio for INST 314"
+subtitle: "last updated July 10, 2025"
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+# Overview
+
+This document is meant to be an aid for installing the main tools we will use in this course: R and RStudio.  I'll give you some brief descriptions of these tools and point you towards the resources you'll need to install them.  Details about how to use them will be covered throughout the course.
+
+# What are R and RStudio?
+
+**R** is an open-source programming language and platform that is specialized towards doing statistical analysis, including data visualizations and graphics.  
+
+**RStudio** is a program that can be used to write, edit, and run R code, and it has a lot of useful features that make it the *de facto* standard way to use R.
+
+**Positron** is an alternative to RStudio that is being built by the same people who make RStudio, but it is based on the open-source fork of Visual Studio Code. If you already use VS Code and like it better than RStudio, then this is something to check out. I won't discuss it any more in this guide, since it's still in beta, but if you're interested, [you can get started at this link](https://positron.posit.co/).
+
+## Huh?  What do you mean?  Why do I need both of these?
+
+So to be a little more specific:
+
+- R is a programming language, which means we write code in the "R language" to do our statistical analysis, make graphics, etc.
+- R is a type of language called an *interpreted* language, which means that you can write R code (the language) with any kind of text editor,[^editor] but you need a program called an *interpreter* that will actually execute the code.
+- So when we say "install R", what we really mean is "install an R interpreter, so that we can run R code on our machine." This is what we will go over in this document.
+- R is free and open-source,[^fossr] and while there are a few different interpreters out there, the most common is one distributed by the R Foundation, sometimes known as "GNU R".
+- GNU R comes with a very bare-bones GUI (graphical user interface) to be able to write and run R, but it's not the most convenient way to interact with R.
+- RStudio is a product from a company called Posit,[^posit] which is essentially a specialized text editor for writing R code, and it has many useful features.
+- Because Posit is a commercial company, there are paid ("Pro") and "Server" versions of RStudio, but these are mainly useful if you want to use R in a corporate context.
+- The free (no cost) version of RStudio is perfectly great for individual users, and that's what we will use in this course.
+- When you install RStudio, it will essentially "find" the version of R you have installed, and will make use of that whenever you ask it to run code.  But RStudio is just the *interface* to R, it does not *include* R.
+- So in the end, you need to install **R** in order to be able to *run* R code, and you should install **RStudio** in order to make it easier to *write* R code.
+
+[^editor]: Note that there are many other good text editors out there.  I personally use an editor called [Emacs](https://www.gnu.org/software/emacs/), because I have put in the time to be able to use Emacs for (almost) *everything* I do.  But editors like Emacs or Vim (both of which have been around a loooong time but are still up-to-date) can have a steep learning curve.  RStudio hits a sweet spot of being pretty easy to learn how to use, but very useful when writing R code.
+
+    But also note that programs like Microsoft Word or Apple's Pages are **NOT** text editors, they are word processors, which deal a lot with the *formatting* and *layout* of text. A good text editor just focuses on the simple text itself.
+
+[^fossr]: R was founded on open-source principles, and it has been released under the GNU license since 1997.  In a nutshell, this means that not only is it free to use and distribute R, but you can inspect every line of code of R (if you so desire), and you can make any kinds of modifications you like to the R installation on your machine.
+
+    This open-source quality is one of the main reasons R has been so successful. Since it can be easily used and extended by anyone, including bleeding-edge academic statisticians, it is extremely hard for a single commercial product to keep up with all of the features and capabilities that are developed by the R community.  The openness also creates an environment of trust, because you can inspect (and alter, if needed) every algorithm or routine in R, so you don't have to just blindly trust a commercial company.
+
+[^posit]: RStudio used to be the name of the company, too, and only relatively recently changed their name to Posit, though it's mainly the same people.  While it's a commercial company, RStudio is headed up by some of the most prolific and influential contributors to R (such as Hadley Wickham), and especially since the RStudio product is still free and excellent, the company is widely respected and highly regarded in the R community.
+
+# Installing R
+
+## Pick a mirror
+
+Since R is open-source and the R Foundation is non-profit, there is a longstanding history of R being distributed from multiple sites across the globe.  These are called *mirrors*, because they all host basically the exact same set of web page and download content, just in different sites, to make it easier to manage the load of people accessing and downloading R.
+
+The network of mirrors is called the Comprehensive R Archive Network (CRAN). CRAN hosts not only the source code for the "core" installation of R, but also the code for many, many packages (over 20,000 at the time of writing).  However, there are also many useful packages and code available in other places, like GitHub or personal websites.  CRAN is simply the most common or "centralized" place to get R code.
+
+So to download and install R, you just need to go to the following URL, which may ask you to pick a mirror.  In general, it's a good idea to just pick something that's relatively close to you geographically:
+
+[https://cran.r-project.org/](https://cran.r-project.org/)
+
+## Download for your OS
+
+R also runs on Windows, macOS, and (many flavors of) Linux.  Once you pick a mirror you should see links to "Download and Install R" for your operating system.  So just click the link and follow the instructions!  You just may want to double-check your operating system to remind yourself what you have, and make sure to download the installer or set of files that is appropriate for your version.
+
+If you are in doubt about 32- or 64-bit, it's safe to assume 64-bit, unless your machine is *really* old.
+
+Feel free to contact the instructor (or UMD IT) if you need any assistance with installation.
+
+## Run the installer
+
+Generally, when you run the installer after downloading it, you should just pick the default installation options as you go.  If you have any questions about the different options, again please feel free to reach out to your instructor.
+
+## Verify your installation
+
+Once you have R installed, you can run R code!  If you try to start R, what your interface looks like will depend somewhat on what your operating system is.  But most likely you will see a window open somewhere that displays the following text (or something close to it; your platform may differ):
+
+```
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+```
+
+This is the standard "welcome" text for the most current version of R, version 4.5.1 (from June 13, 2025).  If you see this somewhere when you try to run R, then your installation worked!  You can just close this console for now.
+
+# Installing RStudio
+
+## Download and run installer
+
+RStudio is also easy to install, and since it's only distributed by Posit (it has many open-source components, but it's not 100% open-source), you just go here to get it:
+
+[https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)
+
+Note that on this page, "Step 1" says to install R, and they have a link to CRAN, but we already did this step above, so you don't need to do it again.  It's just a reminder that it's a good idea to install R first, before you install RStudio, so that when you install RStudio, it can more easily find the version of R you have on your machine.
+
+Again, RStudio is available for Windows, macOS, and several versions of Linux, so pick the installer that matches your system, follow the directions, and ask your instructor for help if you run into any problems.
+
+I recommend using the "installer" download (`.exe`, `.dmg`, `.deb`) instead of the "zip/tarball" option.  And again, I recommend the default options when going through the installation process.
+
+## Verify installation
+
+After you have RStudio installed, try starting it up on your machine.  The interface has a few different panels (or "Panes"), but by default, the first time you start it, you should see the same welcome text given above on the left pane. In other words, if you start RStudio and it gives you the welcome tex that starts with something like:
+
+```
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+```
+
+Then you're good to go!
+
+# Installing a newer version of R
+
+## Should you?
+
+At some point, you may want to install a new version of R.  R tends to update roughly every 6 months. Or you may have R already from a previous class or other experience. Should you upgrade?
+
+In a nutshell, yes, you should almost always just go ahead and upgrade, unless you have a very specific reason that you need a specific version on your machine.  The releases are extremely stable, and always include various improvements and changes, and since they only update R every six months or so, it's not that onerous to just go ahead and do it.
+
+Because R is very stable, it's also quite backwards-compatible, so it's rare that having an older version is much of a problem. However, whenever you want to install a new package, if your base version of R is behind, it may warn/complain that the package was built under a different version than your current version.  This is another reason why it's typically less of a headache to just go ahead and update your version of R when a new one comes out, because then you don't need to worry about it being out of sync with your packages.
+
+## How to install a new version (and what to do about older versions)
+
+If you do want to install a new version of R over an existing version, you simply follow the same steps as if you were installing it for the first time.
+
+One quirk is that depending on your operating system, this may result in you having multiple versions of R installed on your machine at the same time. This is typically the case with Windows, but not as common with macOS or Linux. This is not necessarily a problem, and the R installation is not gigantic, so unless you are pressed for hard drive space, you may not need to even worry about it.  But if you don't want older versions, you can uninstall those just fine without it interfering with your newer installation.
+
+Additionally, all decent R editors (including RStudio) have ways to detect different installations, so you should see that they use the latest version you have installed (though you may need to restart RStudio before it switches).
+
+## Packages for an updated installation
+
+While installing a new version over an older version is usually not a problem, it does mean that you will need to re-install packages. We will discuss package installation in a different tutorial, but I'm just pointing it out here, that packages don't "carry over" when you install an updated version of the base R installation.
+
+# Next steps
+
+If you are reading this for INST 314 (Summer 2025), then there will be a video available that shows you a few initial tips and tricks for getting started using RStudio.  I suggest checking that out next. Links to the video will be available on ELMS.
+
+The RStudio website itself also has a lot of great documentation, and here's a good place to start if you want to dig deeper into what RStudio can do:
+
+[https://docs.posit.co/ide/user/](https://docs.posit.co/ide/user/)

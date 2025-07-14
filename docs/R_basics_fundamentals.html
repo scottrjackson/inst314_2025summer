@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R Basics: fundamentals of working with R – INST 314 (Summer 2025)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5f8498b817ae5b2cb3a7a87727a6ad5f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-2c7af7b2a4cbf6e016b7c3feffc32b4a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">INST 314 (Summer 2025)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics_reading.html">Unit 1: Starting with the Basics</a></li><li class="breadcrumb-item"><a href="./R_basics_fundamentals.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_basics_fundamentals.html">Getting started with R</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installing_R_RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing R and RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 1: Starting with the Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_basics_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: some basic data concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_fundamentals.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Getting started with R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vectors: a basic building block of data in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Frames: the most useful data structure in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#start-here" id="toc-start-here" class="nav-link active" data-scroll-target="#start-here">Start here</a></li>
+  <li><a href="#getting-your-tools-together" id="toc-getting-your-tools-together" class="nav-link" data-scroll-target="#getting-your-tools-together">Getting your tools together</a></li>
+  <li><a href="#r-is-designed-to-be-an-interactive-programming-language" id="toc-r-is-designed-to-be-an-interactive-programming-language" class="nav-link" data-scroll-target="#r-is-designed-to-be-an-interactive-programming-language">R is designed to be an interactive programming language</a></li>
+  <li><a href="#the-r-console-as-a-fancy-calculator" id="toc-the-r-console-as-a-fancy-calculator" class="nav-link" data-scroll-target="#the-r-console-as-a-fancy-calculator">The R console as a fancy calculator</a></li>
+  <li><a href="#scripts-comments-r-markdown-and-notebooks" id="toc-scripts-comments-r-markdown-and-notebooks" class="nav-link" data-scroll-target="#scripts-comments-r-markdown-and-notebooks">Scripts, Comments, R Markdown, and Notebooks</a>
+  <ul class="collapse">
+  <li><a href="#some-history" id="toc-some-history" class="nav-link" data-scroll-target="#some-history">Some history</a></li>
+  <li><a href="#using-r-markdown-in-this-course" id="toc-using-r-markdown-in-this-course" class="nav-link" data-scroll-target="#using-r-markdown-in-this-course">Using R Markdown in this course</a></li>
+  </ul></li>
+  <li><a href="#objects-variables-and-assignment" id="toc-objects-variables-and-assignment" class="nav-link" data-scroll-target="#objects-variables-and-assignment">Objects, variables, and assignment</a></li>
+  <li><a href="#using-functions" id="toc-using-functions" class="nav-link" data-scroll-target="#using-functions">Using functions</a>
+  <ul class="collapse">
+  <li><a href="#functions-do-things" id="toc-functions-do-things" class="nav-link" data-scroll-target="#functions-do-things">Functions <em>do</em> things</a></li>
+  <li><a href="#using-arguments-in-functions" id="toc-using-arguments-in-functions" class="nav-link" data-scroll-target="#using-arguments-in-functions">Using <em>arguments</em> in functions</a></li>
+  <li><a href="#default-values-for-arguments" id="toc-default-values-for-arguments" class="nav-link" data-scroll-target="#default-values-for-arguments">Default values for arguments</a></li>
+  <li><a href="#mixing-order-names-and-defaults" id="toc-mixing-order-names-and-defaults" class="nav-link" data-scroll-target="#mixing-order-names-and-defaults">Mixing order, names and defaults</a></li>
+  </ul></li>
+  <li><a href="#getting-help" id="toc-getting-help" class="nav-link" data-scroll-target="#getting-help">Getting help</a></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s next?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics_reading.html">Unit 1: Starting with the Basics</a></li><li class="breadcrumb-item"><a href="./R_basics_fundamentals.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_basics_fundamentals.html">Getting started with R</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">R Basics: fundamentals of working with R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="start-here" class="level1">
+<h1>Start here</h1>
+<p>If you have never used R before, this is for you. This tutorial will walk you through some of the basics you need to know about how R works and how you can work with R, before we get to other topics.</p>
+<p>Even if you have used R before, I encourage you to go through this content as a refresher. It may even have some new things, or it might help clarify things you’ve done in the past.</p>
+<p>If you want the full R Markdown document that this page is based on, you can download it from the course site on ELMS. Otherwise, feel free to copy &amp; paste code from here into your own <code>.R</code> script or R Markdown document. Either way, you should run the code seen here, modify it, and generally play around with it to make sure you are understanding how it works.</p>
+</section>
+<section id="getting-your-tools-together" class="level1">
+<h1>Getting your tools together</h1>
+<p>If you haven’t already, go through the <a href="./installing_R_RStudio.html">process of installing R and RStudio</a> so that you’re ready to start running R code.</p>
+</section>
+<section id="r-is-designed-to-be-an-interactive-programming-language" class="level1">
+<h1>R is designed to be an interactive programming language</h1>
+<p>R was designed to be a useful language for doing data analysis. And since data analysis is often an “interactive” activity – where what you find in one step may change what you do in the next step – R was designed to work in a similar fashion.</p>
+<p>Because of this, the central interface of R is what R calls the <em>console</em>. In other languages, this may be called a “command line” or a “REPL” (Read-Eval-Print-Loop). For some programming languages, this is a bit of a novelty feature, but because R was designed to be interactive, it’s a central part of how R works in most day-to-day use. It’s basically an interface that has a prompt – which is shaped like a greater-than sign – and if you type R code at the prompt and hit Enter/Return, that code will be executed, and (often, but not always) results will be displayed.</p>
+<p>Since the console is a place where you can enter <em>commands</em> on a <em>line</em> and run those commands by hitting Enter/Return, it is a type of <em>command line interface</em> (CLI). There are many programs that run using some kind of CLI, but when we are using R, we’ll just call it the “console”.</p>
+</section>
+<section id="the-r-console-as-a-fancy-calculator" class="level1">
+<h1>The R console as a fancy calculator</h1>
+<p>If you are reading this document in RStudio, then there is probably an R console running in the window below where you are reading this. This is because by default, RStudio starts a console when it starts. If you don’t have RStudio running yet, fire it up and find the console, which is usually the place where the “welcome message” is displayed, followed by the <code>&gt;</code> prompt symbol.</p>
+<p>So take a minute to try running a few basic commands in the console. Just click so that your cursor is at the prompt (<code>&gt;</code> symbol), and type:</p>
+<blockquote class="blockquote">
+<p>2 + 2</p>
+</blockquote>
+<p>and hit enter (don’t type the <code>&gt;</code>). It should display the result, looking something like this:</p>
+<p><code>[1] 4</code></p>
+<p>We’ll get to what that <code>[1]</code> means in the next tutorial document about <em>vectors</em>. For now, just ignore it.</p>
+<p>The point right now is that R uses most standard symbols for doing arithmetic, so in addition to plus and minus, you can use the <code>*</code> symbol for multiplication, the <code>/</code> for division, and the <code>^</code> symbol for powers (e.g., <code>2^3</code> is “2 to the 3rd power”, or 8).</p>
+<p>So go ahead and try running a few different mathematical expressions at the console.</p>
+<blockquote class="blockquote">
+<p>Console tip: when your cursor is at the prompt, you can use up- and down-arrow keys on your keyboard to scroll back and forth through previous commands. This is a nice way to save typing or potential typos if you want to re-run a previous command, or run a previous command with a slight change.</p>
+</blockquote>
+</section>
+<section id="scripts-comments-r-markdown-and-notebooks" class="level1 page-columns page-full">
+<h1>Scripts, Comments, R Markdown, and Notebooks</h1>
+<section id="some-history" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="some-history">Some history</h2>
+<p>Working at the console can be very convenient, but once we start doing anything more meaningful, we would like to be able to save our commands, instead of re-typing things every time.</p>
+<p>The basic way to do this is to save code in a file with a <code>.R</code> extension. This type of file is often called a “script.” A file with the <code>.R</code> extension is treated as if everything in that file is R code.</p>
+<p>Scripts are very useful, and when you just want to write code, they are usually the way to go. You can also add “comments” in your code, which is just a way to tell the R interpreter to ignore parts of a line when executing the code. For example, you could have something like the following in a <code>.R</code> script:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is a comment, and is ignored</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the `#` symbol tells R to ignore EVERYTHING TO THE RIGHT</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the following code will be NOT be executed, because</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># it has a `#` in front of it:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 42 * 83</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># but the next line WILL be executed:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dv">42</span> <span class="sc">*</span> <span class="dv">83</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3486</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"hello"</span>) <span class="co"># you can also put comments after code on the same line</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "hello"</code></pre>
+</div>
+</div>
+<p>If you are writing your code in a <code>.R</code> file, since everything is treated as R code, you have to use comments if you want to write or explain anything using anything other than valid R code. However, when we do data analysis, we often want to mix our code with more descriptive (aka wordy) narrative about what we are doing, how we are interpreting results, and so on, and comments are just not a good way to include a lot of more detailed documentation or narrative.</p>
+<p>In fact, R has a long history of being one of the first and best languages to implement a paradigm called “literate programming.”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The concept of literate programming is that it is a mix of code and text, and that some system is in place for treating the two differently. The pioneering method for doing this in R was called “Sweave”,<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> and it was a mix of R code and <a href="https://www.latex-project.org/help/documentation/">LaTeX</a>. LaTeX is another language that acts as a kind of mark-up language for formatting text, and it is still popular in some fields like mathematics.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This concept was coined and championed by the legendary computer scientist Donald Knuth. There are lots of places to read more about the original ideas, including <a href="http://literateprogramming.com/">this ancient-looking page</a>.</p></div><div id="fn2"><p><sup>2</sup>&nbsp;More trivia: the R language is an open-source project based on a commercial language called S that was developed at Bell Labs in the 1970s. The name S was a bit of a “programming pun” on the name of the C language, with S for “statistics.” In turn the name of the R language was a pun on S, because R was originally developed by two statisticians whose names both started with “R”: Ross Ihaka and Robert Gentleman. To bring us full circle, the term “Sweave” refers to the literate programming concept of “weaving” S code with text, so it’s pronounced “S-weave”.</p></div></div><p>Sweave still works great if that’s what you want, but learning LaTeX in addition to R makes the entire learning curve steeper, so people were interested in coming up with a better alternative. Enter R Markdown.</p>
+<p><a href="https://www.markdownguide.org/">Markdown</a> itself is a simple mark-up language that was originally invented to provide some simple ways to write text that could be converted to HTML. The original Markdown was created by John Gruber on his blog “Daring Fireball”, and you can still find info about it there:</p>
+<p><a href="https://daringfireball.net/projects/markdown/syntax">https://daringfireball.net/projects/markdown/syntax</a></p>
+<p>But because Markdown made it really easy to write documents in a way that they could be easily converted to HTML, it became <em>really</em> popular, and now you can find Markdown everywhere, being used for all sorts of things. Here’s one reference site you might find useful if you want to learn more about it:</p>
+<p><a href="https://www.markdownguide.org/">https://www.markdownguide.org/</a></p>
+<p>But the point for us is that some people decided that R + Markdown would be an easier thing to work with than R + LaTeX, and that’s where the idea of “R Markdown” came from. R Markdown files have the extension <code>.Rmd</code> (Markdown by itself is just <code>.md</code>), and they are a mix of R code and Markdown-formatted text.</p>
+<p>Over time, people implemented more and more features, and the <code>rmarkdown</code> package now enables a lot of different ways to use R Markdown. In fact, there is a lot of overlap between the people who created and maintain RStudio and the people who created and maintain the <code>rmarkdown</code> package, so R Markdown is especially feature-rich when you use RStudio.</p>
+<p>In fact, if you are reading this document on the web, it is written in a new type of R Markdown document called <a href="https://quarto.org/">Quarto</a>, which can be used to easily generate good looking web documents like blogs, research papers, and so on. If you’re interested in this kind of thing, I can highly recommend Quarto as a kind of “next evolution” in R Markdown documents. For the purposes of the course, I have loaded simpler <code>.Rmd</code> versions of these files for you to download and work with.</p>
+<p>Finally, R Markdown and its related formats shares some things with the Jupyter system, which is popular with many Python users, particularly in data science.[^jupyter] However, one of the nice things about R Markdown is that it does not require the more complex kernel/server architecture of Jupyter, and it can more easily be converted into a variety of other formats beyond HTML, including PDF (which is actually rendered via LaTeX, to go full circle) and even Microsoft Word formats.</p>
+</section>
+<section id="using-r-markdown-in-this-course" class="level2">
+<h2 class="anchored" data-anchor-id="using-r-markdown-in-this-course">Using R Markdown in this course</h2>
+<p>Okay, that’s the long background that explains some of the differences and reasons behind these types of files, but how do you <em>use</em> R Markdown?</p>
+<p>The fundamental idea is that when you type in an R Markdown document, it’s just simple text in the Markdown format. This works great for typical kinds of documentation, like writing paragraphs of text, using headings to create a document structure, using lists (numbered and bulleted), simple tables, and so on. You use special characters to create formatting, as described by all those guides on Markdown that I referred you to earlier. So for example, <code>#</code> symbols at the beginning of a line are not “comment” characters, but rather they create a “heading”, where the number of <code>#</code> symbols designated the “level” of the heading (<code>#</code> is top-level heading, <code>##</code> is level 2, <code>###</code> is level 3, etc.). I recommend just spending a few minutes browsing one of the Markdown overviews linked above to get a feel for the most common options.</p>
+<p>The point here is that Markdown is a nice, simple format for writing <em>text</em>. But when you want to write R <em>code</em>, you need to designate a “code chunk”, using the following symbols (these are only visible in the raw <code>.Rmd</code> file):</p>
+<p>The symbol that starts and ends chunks is called a “backtick” symbol, or sometimes a “grave accent”, and it’s the character you get from the key just to the left of the “1” key (at least on a standard English-language keyboard). Three of those backtick symbols starts the code chunk, and another three end it. Finally, on the first line, just after the opening three backticks, you use curly braces with the name of the language, in this case you use a lower-case <code>r</code>. Inside those curly braces, you can also put options that change how the chunk behaves, but we’ll get to those another time.</p>
+<p>So you want to run R code inside an R Markdown file or R Notebook, you just make a code chunk and write your code on the lines between the backticks. All of the text inside the code chunk is treated as R code, and it runs just as if you were working with that code inside a plan <code>.R</code> file. For example, the following chunk will perform a calculation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">4</span> <span class="sc">+</span> <span class="dv">10</span>) <span class="sc">*</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 42</code></pre>
+</div>
+</div>
+<p>In RStudio, there are a few different ways to run the code in a chunk. If you want to run ALL the code in a chunk, there is a little green “play” arrow in the upper right of the chunk itself. This will run every line of code in the chunk, one line after another, immediately and without stopping.</p>
+<p>If you just want to run one line at a time (which I personally find very useful), just put your cursor on the line you want to run (anywhere is fine), hold the Ctrl key (on Windows) or Command key (on Mac), and hit Enter. The cursor will also skip down to the next line, so you can just hold Ctrl/Command and hit Enter repeatedly to run multiple lines.</p>
+<p>I will show you a few more tips about using R Markdown/Notebooks in RStudio, in a separate video file, because it’s just easier to show you some things than to try to describe it all in text. But the basic idea is to:</p>
+<ul>
+<li>Put your R code into “chunks” (and if you don’t want to type the characters to make the chunk, you can use the menu option Code &gt; Insert Chunk, or the keyboard shortcut).</li>
+<li>Run your R code when you want to.</li>
+<li>Type outside the chunk using standard Markdown formatted-text.</li>
+</ul>
+<p>The advantage of this kind of file is being able to have both R code as well as other lightly-formatted text in the same document, which you can export to multiple formats as output.</p>
+</section>
+</section>
+<section id="objects-variables-and-assignment" class="level1">
+<h1>Objects, variables, and assignment</h1>
+<p>Okay, back to the basics of using R. So far, we have only learned that we can execute mathematical expressions and get back a result.</p>
+<p>But what if we want to “save” a value and recall it later? That’s what <em>variables</em> are for. Note this is not a <em>variable</em> in the statistics sense, this is a <em>variable</em> in the computer-programming sense. In this sense, <em>variable</em> just means “name for an object held in memory”.</p>
+<p>In order to hold a value in memory, you have to <em>assign</em> that value to a variable name, which in turn creates an <em>object</em> in memory. So there are three things that are intrinsically connected: a <em>value</em> that you get by evaluating some R code, the <em>object</em> that represents that value in memory, and a <em>variable</em> name that gives you a way to refer to that object.</p>
+<p>Let’s walk through these concepts with our simple math example. Let’s say I want to take the calculation I did above and assign it to a variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>my_result <span class="ot">&lt;-</span> (<span class="dv">4</span> <span class="sc">+</span> <span class="dv">10</span>) <span class="sc">*</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you run this code, it may look like nothing happened, but actually what happened was that R evaluated the expression <code>(4 + 10) * 3</code>, assigned the resulting value to an object, using the assignment operator which is intended to look like an arrow (<code>&lt;-</code>), and gave that object the variable name <code>my_result</code>. Now that we’ve done that, we don’t have to keep making the same calculation over and over, since we have the resulting object stored, and we can refer to it by name.</p>
+<p>If we want to inspect the object named <code>my_result</code>, we can do a few things. We can use the function <code>class</code> (more on functions shortly) to see what type of object it is, and we can use the <code>print</code> function to print the result out:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(my_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 42</code></pre>
+</div>
+</div>
+<p>Try running each of these. The result of the first one is to tell us that it’s a “numeric” type object (meaning it will behave like a number), and the second prints out the actual value of the calculation, 42.</p>
+<p>In order to assign a value to a variable, you use the special assignment operator, which in R is the <code>&lt;-</code> symbol (a less-than sign followed by a dash), which is supposed to look like a left-pointing arrow. The idea is to make you think of the value on the right “going into” the new variable on the left.</p>
+<p>If you want to change the value of that variable, you can just assign it a new value:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>my_result <span class="ot">&lt;-</span> <span class="dv">87</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">^</span><span class="dv">4</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 103</code></pre>
+</div>
+</div>
+<p>When you just start programming, it may be tempting to use overly simple variable names, especially if you are learning from examples that use variable names like <code>x</code> or <code>my_result</code>. But it’s really helpful to spend a little energy thinking of good variable names. Please don’t be that person who names every data frame “data” or “mydata” or “df”. My example above is just that kind of mistake, but in this case, it’s because the code doesn’t <em>mean</em> anything.</p>
+<p>To recall from the <a href="./data_basics_reading.html#defining-data">Unit 1 reading</a>, data is important because of what it <em>means</em>. So the more meaningful our variable names are, the easier it will be to keep things straight in our own heads, because that’s already enough of a challenge.</p>
+<p>It’s also important to know that <em>case</em> matters in R’s variable names. For example, a variable called <code>Data</code> is different than one called <code>data</code>. My recommendation is that you should try to stick to all-lowercase variable names, because otherwise you have to remember your own capitalization rules, and that’s just more mental overhead.</p>
+<p>Finally, if your variable names are descriptive, they may start to contain multiple words in the name, but you cannot include spaces in the name of a variable! There are different conventions for how to handle this, but I prefer to use underscores as “word separators” in variable names. Other options are fine if you already have habits from another programming language, but using underscores is a pretty standard style for R programmers.</p>
+<p>Putting these tips together, if I had a data set from IMDB, I’d probably call it <code>imdb</code> instead of somethign generic like <code>data</code>, because it helps me keep track of what it represents. There’s nothing wrong with using <code>IMDB</code> as the variable name, but then again, I just have to remember if I’m using capital letters or not, and it’s just easier to remember if I just always make all variables lower-case.</p>
+<p>If I did some work to clean up this data set and wanted to assign the cleaned-up version to a new variable, I’d probably call it something like <code>imdb_cleaned</code>, again because it describes what it is. Naming it something like <code>imbd2</code> wouldn’t tell me anything, and could be hard to remember (“which one was the <code>2</code> version again?”). And if I went on from there and compiled some stats by song, I might call the result <code>imdb_cleaned_bysong</code> or maybe just <code>imdb_bysong</code>. You get the idea. At some point it can get to be too much if your variable name turns into a long description, but in general people could stand to be more descriptive with their variable names.</p>
+</section>
+<section id="using-functions" class="level1 page-columns page-full">
+<h1>Using functions</h1>
+<section id="functions-do-things" class="level2">
+<h2 class="anchored" data-anchor-id="functions-do-things">Functions <em>do</em> things</h2>
+<p>While we may use structures like vectors or data frames (covered in other tutorials) to act as <em>containers</em> for data, most of the time we want to actually <em>do</em> stuff with data, and that’s what <em>functions</em> are for. To put it another way, functions are the “verbs” of the R language.</p>
+<p>I won’t discuss how to <em>create</em> your own functions yet (it’s actually very easy), but for now I’ll just focus on how to <em>use</em> functions.</p>
+<p>The syntax for running a function is always the same:</p>
+<blockquote class="blockquote">
+<p>function_name(argument1, argument2, …)</p>
+</blockquote>
+<p>Every function has a name, which is essentially the same kind of thing as a variable name. It just refers back to an object that’s made up of code, instead of an object that contains other kinds of data values.</p>
+<p>Following the name, you must use parentheses. That’s what tells R, “I want to run this function.” This is why you’ll sometimes see functions with just a pair of parentheses with nothing between them, because even if you don’t need to pass it any arguments, you still need the parentheses.</p>
+<p>On example of this is the <code>objects()</code> function, which prints out a list of all the objects in your “workspace”, which is basically the objects that are currently in memory that you can access. Run the following, and you should see <code>my_result</code> listed (at least, if you ran the code above assigning a value to <code>my_result</code>), plus any other variables/objects you have created in this session of R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">objects</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "my_result"</code></pre>
+</div>
+</div>
+<p>The <code>objects</code> function doesn’t need an argument, because by default it shows you the contents of your “Global Environment” workspace. But if you want to run the function, you still need the parentheses.</p>
+<p>If you just entered <code>objects</code> without the parentheses, R would actually print out the code that is represented in the <code>objects</code> function.</p>
+</section>
+<section id="using-arguments-in-functions" class="level2">
+<h2 class="anchored" data-anchor-id="using-arguments-in-functions">Using <em>arguments</em> in functions</h2>
+<p>So while some functions can just run like this with nothing in the parentheses, most of the time, you will use <em>arguments</em>. Arguments are the values that go inside the parentheses of the function, and they are separated by commas. You can think about arguments as the “input” values of the function. In other words, it’s what the function needs to know in order to do its job.</p>
+<p>For example, the function <code>rnorm</code> will generate random samples from a normal distribution (we will get to what all that means soon!), and the only argument it really needs is a number to tell it how many samples to generate. Try running the following:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  0.7965748 -0.2349396  1.3247517  0.4388958  2.1711147  1.1412401
+ [7]  0.1537557  2.0340569  0.5982573  2.1574210</code></pre>
+</div>
+</div>
+<p>Every time you run it, you’ll get different numbers. Now try deleting the 10 and see what happens (see below). It will give you an error and tell you that an argument is missing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Most functions actually have several arguments. So if you enter in several values separated by commas, how does R know which value goes with which argument? It turns out that R has a few different ways of doing this, which makes specifying arguments pretty convenient.</p>
+<p>First off, arguments have <em>names</em>, and if you specify their names using the <code>=</code> (“single equal-sign”) operator, you can enter them in any order. For example, in that <code>rnorm()</code> error message above, it tells you that <code>argument "n" is missing</code>. So we could specify the code as:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -0.5672638  0.8361274  0.3135270  1.6947685 -0.9991935  2.6123040
+ [7]  0.0972927  0.0704026 -1.0248264  0.6004358</code></pre>
+</div>
+</div>
+<p>The syntax here is that you put the name of the argument first, followed by a <code>=</code> symbol, followed by a value, and spaces are optional. Note that when we are assigning values to arguments, we use the <code>=</code> sign, not the “assignment arrow” <code>&lt;-</code> symbol. In this example, we are just being very explicit about which argument we want that <code>10</code> to go to.</p>
+<p>A second way that R knows which arguments are which is by the <em>order</em> they come in. For example, the <code>rnorm()</code> function has three arguments: <code>n</code>, <code>mean</code>, and <code>sd</code>, in that order. So if we give three values <em>without</em> names, then R assumes we are providing the arguments in order. So the following two lines of code are identical. The first uses explicit argument names, and the second just provides the arguments in order.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  79.61446 100.67370 110.71073 109.95952 107.99800</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  88.83407  94.65678 105.47573 100.31342 118.68041</code></pre>
+</div>
+</div>
+</section>
+<section id="default-values-for-arguments" class="level2">
+<h2 class="anchored" data-anchor-id="default-values-for-arguments">Default values for arguments</h2>
+<p>If you were paying careful attention, you might have noticed that in the code above we used three arguments, but the first time we ran <code>rnorm()</code>, we only gave it a single argument. Why was that good enough?</p>
+<p>Many functions in R have <em>default values</em> for some (or even all!) of their arguments. This is helpful because with many functions, there are some “standard” values that make sense, and if you don’t have to enter those in every time, it’s convenient.</p>
+<p>For example, in our <code>rnorm()</code> function, the <code>mean</code> and <code>sd</code> arguments default to 0 and 1, respectively. This means that if we only give <code>rnorm()</code> a value for its <code>n</code> argument (representing the number of samples we want), then it will give us samples with a mean of 0 and a standard deviation of 1. These are good choices for defaults, because they represent the values that correspond to what’s called the <em>standard normal</em> distribution (which we will discuss in Unit 2).</p>
+<p>So in essence, the default argument values in R are chosen by whoever wrote the definition of that function. Since R is a language for statistical analysis, this means most of the default values are chosen based on common practices or whatever the author thought were good “starting place” values.</p>
+<p>That said, one nice thing about default values is that we can easily change them. Changing values of an argument are sort of like changing the “settings” or “options” that the function uses to produce a result. Try running each of the following and look at how the overall pattern of values changes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -0.3448963  1.0154312  0.5076629  1.0975216  0.4880646  0.7370158
+ [7]  0.5678738 -0.2687003 -1.3879383 -0.6537299</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 28.79822 29.65214 31.95170 30.31433 30.50122 28.26873 29.80729 29.59241
+ [9] 30.13764 30.96090</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  -0.4744123   3.4630303   1.6361987  -1.2753485   0.1336913 -14.3688318
+ [7] -11.3685173   0.7640895  -7.5017273   5.1079612</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 22.579319 36.103099 20.682545 28.916039 30.999468 32.175430 29.607294
+ [8]  8.888866 28.757611 39.336722</code></pre>
+</div>
+</div>
+<p>You should see different patterns according to the different arguments, which you can see as changing the “settings” of the function. Recall that the default of <code>mean</code> is 0 and the default of <code>sd</code> is 1.If you don’t notice any differences, edit the values to be larger to make more extreme patterns.</p>
+<p>Finally, it’s important to know that not all arguments have default values. Remember how we got an error when we tried running <code>rnorm()</code> without any arguments? This is because there is <em>no</em> default value for <code>n</code>. This makes sense, because if you want to generate samples, you ought to at least tell R how many samples you want. But again, this is a choice made by the author of the <code>rnorm()</code> function. Different functions may differ on how many arguments have defaults or not.</p>
+</section>
+<section id="mixing-order-names-and-defaults" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="mixing-order-names-and-defaults">Mixing order, names and defaults</h2>
+<p>Now examine the following closely:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">17</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">17</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">17</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It turns out that these three lines are identical.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> They illustrate how flexible R is when it comes to specifying arguments. In the first example, we give all three arguments with their names, in the default order. In the second line, we simply give the arguments in order, and R knows what to do with them. It’s just a little riskier to do this, because we need to be confident that <em>we</em> are putting things in the order that R expects.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;You can run these yourself to verify. Just remember that this function is generating random numbers, so the actual values will be different, but you should play around with them enough to convince yourself that these lines do all do the exact same thing.</p></div></div><p>The third line is maybe the most representative of typical practice when you are using R for real analysis. The first argument is given without the name, but it represents the argument that doesn’t have a default, <code>n</code>. It’s important to note that in R, arguments without defaults always come before arguments with defaults. Again, for <code>rnorm()</code>, we just know that we need to tell it how many samples to generate. Then the <code>mean</code> and <code>sd</code> arguments are specified, because we want something different from the defaults. But notice that they are “out of order.” This is okay!</p>
+<p>Basically, if you specify arguments by <em>name</em>, they can come in any order. This is nice because it means you don’t have to worry about both order and name. As long as you have the order right <em>or</em> the names right when specifying arguments, R can essentially figure out what you mean. This is one of those design features of R that really comes in handy for day-to-day use.</p>
+<p>To sum this up, in practice, what people commonly do is:</p>
+<ol type="1">
+<li>specify <em>required</em> arguments<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> in order
+<ul>
+<li>maybe only providing names if you sometimes have trouble remembering the order</li>
+</ul></li>
+<li>provide <em>names</em> for arguments that normally have <em>default</em> values
+<ul>
+<li>not because you have to, but just because those are the arguments that people are naturally less familiar with, so providing names just helps make the code more clear</li>
+</ul></li>
+</ol>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;<em>Required</em> arguments are arguments that do <em>not</em> have a default value.</p></div></div><p>At this point, you may be asking yourself:</p>
+<blockquote class="blockquote">
+<p>How do I know what the arguments are, which ones have defaults, and what are those default values?</p>
+</blockquote>
+<p>This is where we get to talk about the great internal help system in R.</p>
+</section>
+</section>
+<section id="getting-help" class="level1">
+<h1>Getting help</h1>
+<p>The last thing I want to cover in this document is a brief intro to how to get help in R.</p>
+<p>Most importantly, I would suggest you start with R’s built-in help system before you resort to Google. R has a very robust internal help system, and very good internal documentation. It takes some practice to learn how to read the documentation, but once you do, it will be a lifesaver, and it’s much more reliable than trying to find everything on the internet or (heavens forbid) using AI.</p>
+<p>Most of the time, what you will need help on is a function, because you’re trying to understand what it does, or what arguments it needs, or what the arguments are named, or what the defaults are, and so on.</p>
+<p>There are two ways to access the help file for a function. The following two things are identical (so I usually just go with the first):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>?rnorm</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(rnorm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First, note that in both cases, we don’t use the parentheses following <code>rnorm</code>, because we don’t want to <em>run</em> the <code>rnorm</code> function here, we are trying to get <em>help</em> on the <code>rnorm</code> function.</p>
+<p>Depending on where you are running R, either of these lines will bring up the official help document for the <code>rnorm</code> function. In RStudio, this is typically the pane in the lower right.</p>
+<p>This particular example shows another common occurrence in R, that some functions come in “families.” So here, we asked for help on <code>rnorm</code>, but we got the help for <code>dnorm</code>, <code>pnorm</code>, and <code>qnorm</code> too! That’s because the authors of these functions decided to basically combine the help page for all of these functions, because they’re closely related.</p>
+<p>All of the sections of the help file are helpful, but we’ll just focus on the top few for now. There is always a Description that tells you basically what this function does. Then there is always a Usage section, and this is the part that tells you:</p>
+<ul>
+<li>what the arguments are called</li>
+<li>the order of the arguments</li>
+<li>and the default values of arguments, if there are any</li>
+</ul>
+<p>So if we look down to the <code>rnorm</code> line under Usage, we see:</p>
+<blockquote class="blockquote">
+<p>rnorm(n, mean = 0, sd = 1)</p>
+</blockquote>
+<p>This is telling us that the arguments are <code>n</code>, <code>mean</code>, and <code>sd</code>, in that order, and that <code>mean</code> has a default value of 0 and <code>sd</code> has a default value of 1. Notice how the argument <code>n</code> is not followed by an equals <code>=</code> sign. This tells you that it does not have a default, and if an argument doesn’t have a default, then a value <em>must</em> be supplied for that argument when the function is run.</p>
+<p>Now you should be able to understand that error we get when we try to run the following:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Below Usage, there is an Arguments section, which tells you exactly what each argument is expecting. Sometimes you think you are giving a function what it needs, but if it’s not working like you think it should, checking the help may reveal that you needed to provide an argument in a slightly different format or something.</p>
+<p>The other sections in the help file are more optional, and not every function has all of the other sections. But they are almost always helpful, if you take the time to read them. For example, sometimes the <em>examples</em> (always the last thing in the help file) make it easier to understand exactly how to use the arguments to get different kinds of results.</p>
+</section>
+<section id="whats-next" class="level1">
+<h1>What’s next?</h1>
+<p>Of course there is a lot more to the R language, but this document covers enough of the “ground rules” that you should be able to continue on. I will incorporate other tips and examples throughout the course, but the goal is to use R in order to explore statistics and data analysis, not to go through an exhaustive exploration of the R language.</p>
+<p>In the rest of Unit 1, we will focus on some of the core data structures in R, <em>vectors</em> and <em>data frames</em>. When you’re ready, proceed to the <a href="./R_basics_vectors.html">tutorial on vectors</a>!</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

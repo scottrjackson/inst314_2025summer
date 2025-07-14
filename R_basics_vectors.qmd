@@ -1,0 +1,286 @@
+---
+title: "R Basics: vectors"
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+# Fundamental data structures in R
+
+R has a lot of different data structures, but for the purposes of this course, we will try to keep our focus as narrow as possible, which means that we will focus almost exclusively on *vectors* and *data frames*. This document walks you through how to use vectors, along with several other tips and functions that frequently come in handy. A separate document will do the same for data frames, but that document assumes you understand vectors, so please go through this tutorial first.
+
+## Vectors, variables, and sequences
+
+As we discussed in the [reading on Data Basics](data_basics_reading.qmd#variables), one of the fundamental constructs in data analysis and statistics is the concept of a *variable*. In the [R Fundamentals tutorial](R_basics_fundamentals.qmd#objects-variables-and-assignment), we also discussed a different kind of "variable." Usually the context will make it clear which one we are talking about, but if we need to be less ambiguous, I will sometimes refer to "data variables" vs. "programming variables."
+
+A *data variable* is a variable in the statistics sense, namely a set of values that corresponds to data on a particular scale, such as a set of years, or length measurements, or dollar amounts, or genders of respondents, or crime rates, or song titles, or flower species, or whatever. A *programming variable* is the use of a symbol[^symbol] that names an object in memory. So when we say something like, "pick a variable from your data set", we are talking about a "statistics variable," but when we say something like, "assign this value to a new variable in your code," we are talking about a "programming variable."
+
+[^symbol]: And by *symbol*, I mean "set of valid characters." In R, we can use alphanumeric characters (letters and numbers), plus a couple of other characters like underscores and periods to form a variable name. That variable name is a *symbol* in this technical sense.
+
+Sorry if this feels like weird nitpicking. But there are times when we use similar (or even the same!) words for different concepts in *statistics* vs. *programming*, and I just want to call attention to where that happens, in case those terms are creating confusion for you.
+
+Back to the topic at hand, in R, *statistics* variables are usually represented by a structure that R calls a *vector*. In other programming languages, this might be called an *array*.[^array]
+
+[^array]: R also has *array* structures, which are essentially multi-dimensional vectors. This is another aspect of terminology that can be confusing, when programming languages use terms differently. Unfortunately, since we can't really change how different languages have already named things, the best we can do is try to keep track. For example, R and Python both have things called "lists", but they have a lot of differences. If you are coming from Python, the closest thing to R's *vector* structure is the *array* from the NumPy library.
+
+A vector in R is essentially just a series of values, and by "series", I mean that there's an order to them, and the order usually matters.  This is typical in data analysis, because the data in a vector might correspond to the order that the data was collected in, or perhaps it is arranged in another way that is meaningful.
+
+Another key property of vectors in R, which does match our definition of a *statistics* variable, is that all of the values in a vector have to match in type. That is, they can all be numbers, or all strings, or all some other type of object, but you can't mix data types in a vector in R.[^lists]
+
+[^lists]: If you want a structure where you can mix types in R, you should use a *list*. This is something that R lists do have in common with Python lists, if you're keeping track.
+
+These properties make vectors natural ways to represent *statistics* variables.
+
+Furthermore, almost any time you generate a simple series or sequence of values (whether those are numeric or some other type), it's treated as a *vector*. And because vectors are kind of the "default" data structure in R, R gives you lots of convenient ways to create them.
+
+For example, we can use the colon operator `:` to generate a sequence of integers.  The following creates a vector of integers from 1 to 10, inclusive of both.  Run this code and modify it until you understand what it's doing.
+
+```{r}
+short_vector <- 1:10
+print(short_vector)
+```
+
+
+The colon operator is convenient, but there is a function `seq()` (for "sequence") that gives us a lot more control over creating a sequenced numeric vector. In this function, you give it a starting value, an ending value, and a value that represents the "step" you take between values. For example, the following creates a sequence from 0 to 1, stepping by 0.1, another sequence from 10 to 30 stepping by 2, and a third sequence from 1 to 100 stepping by 5. To illustrate some of what we discussed in [the previous tutorial](R_basics_fundamentals.qmd#mixing-order-names-and-defaults), I'll mix up how the arguments are specified, to show you a few different options.
+
+```{r}
+sequence1 <- seq(0, 1, 0.1)
+print(sequence1)
+sequence2 <- seq(to = 30, by = 2, from = 10)
+print(sequence2)
+sequence3 <- seq(1, 100, by = 5)
+print(sequence3)
+```
+
+One more note about the `seq()` function. In `sequence3`, we asked it to increment by 5 from 1 to 100. But it only got to 96, because the next value by 5 would be 101, which is beyond the `to` value. This is just an example that you might want to double-check your sequences if you make them, to confirm that they are giving you the values you want.  If we actually wanted a vector that counted by 5's up to 100, we would want something like `seq(0, 100, by = 5)` instead.
+
+## Making vectors from scratch
+
+While ordered sequences are handy, we sometimes want to make vectors out of series of numbers (or other data) that are not necessarily an orderly sequence. For this, R uses a simple function `c()` (which stands for "concatenate") that simply converts its arguments into a vector.  For example:
+
+```{r}
+some_numbers <- c(3, 66, 1, 5849, 42, 0.33, pi) # pi is a number in R!
+some_words <- c("person", "woman", "man", "camera", "TV")
+```
+
+Both `some_numbers` and `some_words` are vectors. The point is that just a series of items separated by commas is not automatically interpreted as a vector. If you want to "manually" type in a vector in R, you need to use the `c()` function to create a vector from its arguments (separated by commas).
+
+## Vectors are homogeneous
+
+As I mentioned above, one crucial aspect of vectors in R is that they are homogeneous, meaning that the *entire* vector has to contain the same type of data.  For example, you can have a vector of numbers, like `some_numbers` above, or a vector of strings, like `some_words` above, but you can't have a mixed vector of some numbers and some strings. However, R doesn't stop you from trying:
+
+```{r}
+mixed_vector <- c(467, 2, "apple", 487, "three")
+print(mixed_vector)
+```
+
+### Coercion
+
+In some programming languages, something like the above produce an error, but R tries to be helpful by giving you a result back. In this example, all of the numeric values have been *coerced* into strings. This process of *coercion* is common throughout R. It is often convenient and helpful, but it can also lead to problems when you're not careful or if you're unaware it's happening.
+
+One example you may encounter is that when you read in data, you might find that a column of what should be numbers is not treated as numeric, but rather as characters. This might be because R treats columns as vectors (so they must be homogeneous), and then somewhere in the column there might have been a value that was not numeric (like a value with a stray character in it), so the entire vector was coerced into a character vector. For example, if you have a column of dollar amounts as integers but one amount is listed as the string "not available", that column may be coerced into a character vector.
+
+In short, coercion is a process that R frequently uses to avoid errors by converting the data to the "lowest denominator", meaning the data type that has the least restrictions.  So while the number 1 can be coerced to the character "1", the word "hello" cannot be coerced to a number.
+
+### Conversion
+
+But you can also *force* R to convert a vector into another data type. There are a bunch of functions that all start with `as.` that do this, like `as.numeric()`, `as.integer()`, `as.character()`, `as.factor()`, `as.data.frame()` and so on. When you use these, R does the best it can. For example, see what happens when we try to force our `mixed_vector` from above to be numeric:
+
+```{r}
+mixed_vector_num <- as.numeric(mixed_vector)
+print(mixed_vector_num)
+```
+
+What happens is that for the values where R has a method for converting that value to a number, it does so. This is why we can get the number `467` from the string `"467"`. It's pretty intuitive to think about taking a string of numeric characters and converting into numeric type data, so this is nice. But R essentially doesn't know how to convert a character string like "apple" or "three" to numbers, so it substitutes a special `NA` value if you force those values to be numeric type data. Fortunately, R also gives you a warning message when this happens, just in case you weren't expect it. This special `NA` value is important enough to warrant a short excursion.
+
+### The missing data value: `NA`
+
+In R, there are several different values that represent "non-values" like `NA`, `NULL`, and `NaN`. The `NA` value is the "missing data" value, and it can be best understood as something like "there is a value here in theory, but it's unknown". In the example above, where we got `NA`s from converting a string like "apple" to numeric type, R is basically saying "well, there was a value here, but since I don't know how to convert it to a number, I'm giving you back the 'unknown' value of `NA`".
+
+Since R treats `NA` values different from other kinds of non-values, this can be very helpful.[^nonvalues]
+
+[^nonvalues]: In brief: where an `NA` value means "exists, but is unknown", a `NULL` value means "does not exist", and a `NaN` value means `not a number`, which you can get when you end up with invalid mathematical results, like if you try to get the logarithm of a negative number.
+
+But back to the specific issue at hand: when you convert a vector to another type of data, R will typically *warn* you if you are introducing `NA` values because of that conversion, but "warnings" in R are just sort of "FYIs", and don't prevent you from doing the thing. Converting a vector of data to numeric might be the right thing to do, even if it introduces some missing values (`NA` values). That's up to you as the data analyst. The warning is just there to help inform you that you should check where the `NA`s were produced, in case that indicates a problem with your data.
+
+## Selecting parts of vectors: indexing and subsetting
+
+With those important side notes out of the way, let's return to the topic of vectors in general. Since order matters in a vector, you can refer to specific segments of a vector using a few different methods of *indexing*.  Let's look at a few of the most common.
+
+First, R uses square brackets to indicate an index or subset of most objects, including vectors. Second, unlike many other programming languages, R counts starting from 1, so that (for example), the 1st element of a vector is selected using `[1]` and the 4th element of a vector is selected using `[4]`.[^zeroindex]
+
+[^zeroindex]: This is another great example of R's purposeful design. There are some solid computer science reasons for why most other programming languages start counting at 0. But R is designed for statisticians and data analysts, and when you're thinking about numbers and data, starting at 1 just makes a little more intuitive sense. But this can be a minor nuisance for people coming to R from other programming backgrounds.
+
+Additionally, if you put a *vector* of numbers inside the brackets, R gives you back the values at those positions. See the following code for some examples, and play around with making some additional examples to understand how this works. We first create a vector of letters, and then print out some different examples of subsets of that vector using the square bracket notation.
+
+```{r}
+letters <- c("a", "b", "c", "d", "e")
+print(letters[2])
+print(letters[c(1, 3, 5)])
+print(letters[3:5])
+print(letters[ ])
+print(letters[-3])
+print(letters[c(-3, -5)])
+```
+
+Let's walk through these different printed values:
+
+- The 2nd element of the `letters` vector can be referred to as `letters[2]`
+- By using the vector `c(1, 3, 5)` inside the brackets, we can get back the 1st, 3rd, and 5th elements.
+- Any method of making a vector works inside the brackets. So because `3:5` creates the vector `c(3, 4, 5)`, the third print statement returns back the 3rd, 4th, and 5th elements.
+- If you leave the area in the brackets blank, it returns *all* of the values in the vector.
+- Negative index values *exclude* values instead, so `[-3]` means "everything except the 3rd value."
+- And finally, you can use a vector of negative numbers to exclude multiple values, so the final print statement above means "everything except the 3rd and 5th values."
+
+Incidentally, now that you know that indexes are numbers in brackets, run the following code and look at the console print out:
+
+```{r}
+print(1:100)
+```
+
+In addition to the values, you can see bracketed numbers all along the left side, starting with [1]. This is basically R's way of helping you read the output, because these bracketed numbers are telling you which element of the printed vector starts that row.  So for example, if you were looking for an NA value, and you saw a console print out that looked like:
+
+> `[37] 45  82  91   4  13  NA  84  67`
+
+Then you would know that the value "45" was the 37th item in the vector (because of the `[37]`), and you could count over to the NA to figure out that it's the element `[42]` in the vector.  In other words, those bracketed numbers along the left side are just there for convenience, to help you identify the index of a certain value.
+
+So now you should understand what that `[1]` means whenever you see any printed-out result from R! It's just indicating the vector position of that result, and when the result is just a single value, the vector may only have a length of 1.
+
+## Selecting vector values with booleans/logicals
+
+While selecting values from a vector by numeric index can be helpful, it's usually much more helpful to select values by some kind of *condition*.
+
+In order to help accomplish this, like most other programming languages R has special values `TRUE` and `FALSE` that stand for the boolean "true" and "false" values.[^bool] [^shortbool] R calls these values "logical"-type data.  Among other things, these are the values you get back from comparisons, so for example, see what values the following expressions return:
+
+[^bool]: This is another thing that varies a little between programming languages. Virtually every language has a way of expressing true/false values, but they often look different. In R, it's all-caps `TRUE` and `FALSE`. In Python, it's title-case `True` and `False`. In JavaScript, it's lowercase `true` and `false.` In some dialects of Lisp it's `t` and `nil`. And so on.
+
+[^shortbool]: R also has "shortcut" values where you can use `T` and `F` to stand for `TRUE` and `FALSE`, but I **highly** recommend that you do not use these in practice. This is because it's actually possible to assign values to `T` and `F` as variable names, so if you were perverse enough you could actually assign `T <- FALSE`. But you cannot assign variable names of `TRUE` or `FALSE`, so those value are safe. It's also a lot easier to visually confuse `T` and `F` when you're skimming code. So don't be lazy, use the full forms. I'm just telling you this in case you see it in other code somewhere.
+
+```{r}
+print(3 < 5) 
+print(3 > 5)
+```
+
+
+What is important for us here is that you can use boolean `TRUE` and `FALSE` values inside square brackets instead of indexing by number. As an example, let's think about the numbers from 2 to 10, and think about which ones are prime numbers. Then imagine we had a vector of `TRUE` and `FALSE` values that was also 9 elements long, where the `TRUE` values were in the positions that corresponded to where the other vector had prime numbers. That vector of booleans could be used to get that exact subset inside the square brackets, instead of having to pass numeric indexes.
+
+```{r}
+some_integers <- c(2, 3, 4, 5, 6, 7, 8, 9, 10)
+primes <- c(TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE)
+some_integers[primes]
+```
+
+What this means is that if we can use a condition to create a vector of `TRUE` and `FALSE` values, we can use that to get subsets where that condition returns `TRUE`. This is *extremely* powerful and useful.
+
+For example, let's imagine we have a long vector of numbers, and we just want to see the numbers that are under a particular threshold. The following code creates a vector of numbers, and then shows how the `<` comparison can be used to create a vector of `TRUE` and `FALSE` values to match the condition.
+
+```{r}
+sample_values <- c(30, 18, 300, 5, 8000, 101, 2, 13)
+sample_values < 100
+```
+
+And the handy thing is that we can use this vector of booleans inside the square brackets of the original vector to get just the items that match that condition:
+
+```{r}
+subset_under_100 <- sample_values[sample_values < 100]
+print(subset_under_100)
+```
+
+For mnemonic purposes, you can phrase the 1st line above as the: "I want to get the values of the `sample_values` vector **wherever `sample_values` is less than 100**". Using the "wherever" phrase in your head can be a helpful way to think about what this structure is doing.
+
+This way of using booleans is great, because it means we can do all kinds of "search" or subset operations with tons of data without having to know things like the numeric indexes of what we're looking for.
+
+Notice that you don't have to use the same vector for the comparison. It's often very useful to subset by a different set of values. Take the following example, where there are two vectors of values, one a vector of fruit names, and another a vector of prices that corresponds to those fruits.  We can use boolean subsetting to just get back the fruits "wherever the price is greater than 5".
+
+```{r}
+fruits <- c("apple", "bananas", "kiwi", "peaches", "raspberries", "pears")
+prices <- c(3.49, 1.79, 6.00, 4.59, 5.99, 4.09)
+print(fruits[prices > 5])
+```
+
+Note that the important thing here is that if you are using a vector of booleans inside square brackets as a way to get a subset, the length of the boolean vector should be the same as the length of the vector you are subsetting. For example, if you have 700 data points, your boolean vector should have 700 `TRUE` and `FALSE` values.
+
+## Value recycling
+
+What I just said about matching length is true, and is usually the best practice. But in the spirit of R being relatively permissive and flexible, there's a phenomenon called *recycling* that I'll explain, since it sometimes comes up unintentionally. If you give R a short vector where it expects a longer one, then it will repeat or "recycle" the shorter value to try to match the length of the longer one. If it doesn't recycle evenly, it will sometimes give you an error, but sometimes not. It's the "sometimes" aspect of this phenomenon that can lead to unexpected issues, if you're not careful.
+
+See the following example code.
+
+```{r}
+fruits <- c("apple", "bananas", "kiwi", "peaches", "raspberries", "pears")
+print(fruits[c(TRUE, FALSE)])
+print(fruits[c(TRUE, FALSE, FALSE, TRUE)])
+```
+
+In the first print statement, we are using a vector of just two logical values, while the length of the `fruits` vector is 6. What R does is *recycle* the short vector, so you end up with alternating `TRUE` and `FALSE` values, which ends up returning alternating values from the `fruits` vector. To put it another way, R ends up repeating that `c(TRUE, FALSE)` vector until it's long enough to match the `fruits` vector, so it's the same as saying:
+
+> `fruits[c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE)]`
+
+In the second print statement, the logical vector has a length of 4, which doesn't go evenly into 6. Never mind that, R will still recycle as much as it can, so after the first sequence of `TRUE`, `FALSE`, `FALSE`, `TRUE`, it starts another sequence of the same, even though it will only use the first two values before it "fills up" the length of the `fruits` vector. So you end up with the same effect as if it was a vector of `TRUE`, `FALSE`, `FALSE`, `TRUE`, `TRUE`, `FALSE`.
+
+This is sometimes convenient, but it can also produce unwelcome surprises, so it's something good to be aware of. In practice, I recommend trying to avoid the whole recycling issue by making sure the vectors you're matching up have the same length. You can always check the length of a vector with the `length()` function, for example:
+
+```{r}
+print(length(fruits))
+print(length(c(TRUE, FALSE, FALSE, TRUE)))
+```
+
+## Vector operations
+
+A final crucial point about vectors in R is that many operations in R are *vectorized*.[^numpy] Not to go too far into the details, but in case you run into discussions of vectorized operations elsewhere, there are basically two kinds of vectorization. One is computationally very efficient, which is why you might see some discussions where people are yelling about always vectorizing, instead of using other methods like for-loops. But there are also cases where it *looks* like a vectorized operation, but it's really just a for-loop in disguise, under the hood.
+
+[^numpy]: For Pythonistas, this is another property that R vectors share with NumPy `ndarray`s.
+
+This distinction doesn't really matter unless you are getting deep into performance issues, like if you need to optimize the performance of some code to be able to run more rapidly or more cheaply for a commercial application. But most of the time, and especially for what we are doing in this class, it doesn't matter all that much.
+
+What *is* important is that R generally does a good job of letting you apply operations and functions to vectors and get back a vector, and you should take advantage of that. For example, if you wanted to add 5 to a large vector of numbers, you don't need to write a code that implements a loop, you can just say: 
+
+> `large_vector <- large_vector + 5` 
+
+and R is smart enough to know that you mean you want to add 5 to **each** element in the vector.
+
+Notice we already did this when we said `prices > 5` in the code above, because the result was that we compared *each* value of the `prices` vector to 5.
+
+Most of the time this is convenient, because it means you can apply some operation or calculation to many things at once, without having to write an explicit loop in your code.
+
+A slightly different example of "vectorization" (in the broad sense) is when you perform an operation between two vectors. When the vectors are *equal length*, the operation is done "pairwise" -- the first element of vector A is paired with the first element of vector B, and so on.  Consider the following examples:
+
+```{r}
+vector_a <- c(1, 4, 2, 6, 8, 9)
+vector_b <- c(5, 2, 1, 7, 7, 9)
+
+print(vector_a + 5)
+print(log(vector_a))
+
+print(vector_a + vector_b)
+print(vector_a * vector_b)
+print(vector_a < vector_b)
+```
+
+The first two print statements are examples of regular vectorization, where you are applying some calculation or transformation to every variable in the vector. So when we say we are "log-transforming a variable" using the `log()` function, what we really mean is that we are log-transforming each value in the vector representing our variable.
+
+The latter three print statements above all show "pairwise" operations, where the first element of one vector is added/multiplied/compared to the first element of the other vector, the second element to the second element, and so on.
+
+Recycling can also work here, but not quite as permissively as what we saw above with subsetting. See the following examples, and work through the math so you can see what is getting added to what in each line:
+
+```{r}
+vector_a <- c(1, 4, 2, 6, 8, 9)
+vector_c <- c(1, 7)
+vector_d <- c(3, 3, 3, 4)
+
+vector_a + vector_c # recycling works
+vector_a + vector_d # incomplete recycling doesn't work
+```
+
+In short, pairwise operations usually work, operations with recycling can sometimes work, if the length of the smaller vector is a multiple of the length of the longer one, but operations between two vectors where one length is not a multiple of the other usually don't work.
+
+The upshot is that you should think about the length of your vectors, and the best case is when they match in length, but R gives you some flexibility, at the cost of sometimes producing some unexpected behavior if you're not careful.
+
+But being able to perform vectorized operations is a major feature of R, and one we'll use a lot, even if we don't actively think about it.
+
+## Next steps
+
+This concludes the tutorial on vectors. Next up: [data frames](R_basics_dataframes.qmd)!

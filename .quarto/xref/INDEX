@@ -11,5 +11,20 @@
   "data_basics.qmd": {
     "data_basics.html": "7da1aa56",
     "data_basics.tex": "33267295"
+  },
+  "data_basics_reading.qmd": {
+    "data_basics_reading.html": "c250ac24"
+  },
+  "R_basics_vectors.qmd": {
+    "R_basics_vectors.html": "e0e531c2"
+  },
+  "R_basics_dataframes.qmd": {
+    "R_basics_dataframes.html": "2c9892c1"
+  },
+  "R_basics_fundamentals.qmd": {
+    "R_basics_fundamentals.html": "2550f29b"
+  },
+  "installing_R_RStudio.qmd": {
+    "installing_R_RStudio.html": "d1a77214"
   }
 }

@@ -1,0 +1,346 @@
+---
+title: "R Basics: fundamentals of working with R"
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+# Start here
+
+If you have never used R before, this is for you. This tutorial will walk you through some of the basics you need to know about how R works and how you can work with R, before we get to other topics.
+
+Even if you have used R before, I encourage you to go through this content as a refresher. It may even have some new things, or it might help clarify things you've done in the past.
+
+If you want the full R Markdown document that this page is based on, you can download it from the course site on ELMS. Otherwise, feel free to copy & paste code from here into your own `.R` script or R Markdown document. Either way, you should run the code seen here, modify it, and generally play around with it to make sure you are understanding how it works.
+
+# Getting your tools together
+
+If you haven't already, go through the [process of installing R and RStudio](installing_R_RStudio.qmd) so that you're ready to start running R code.
+
+# R is designed to be an interactive programming language
+
+R was designed to be a useful language for doing data analysis. And since data analysis is often an "interactive" activity -- where what you find in one step may change what you do in the next step -- R was designed to work in a similar fashion.
+
+Because of this, the central interface of R is what R calls the *console*. In other languages, this may be called a "command line" or a "REPL" (Read-Eval-Print-Loop). For some programming languages, this is a bit of a novelty feature, but because R was designed to be interactive, it's a central part of how R works in most day-to-day use. It's basically an interface that has a prompt -- which is shaped like a greater-than sign -- and if you type R code at the prompt and hit Enter/Return, that code will be executed, and (often, but not always) results will be displayed.
+
+Since the console is a place where you can enter *commands* on a *line* and run those commands by hitting Enter/Return, it is a type of *command line interface* (CLI). There are many programs that run using some kind of CLI, but when we are using R, we'll just call it the "console".
+
+# The R console as a fancy calculator
+
+If you are reading this document in RStudio, then there is probably an R console running in the window below where you are reading this. This is because by default, RStudio starts a console when it starts. If you don't have RStudio running yet, fire it up and find the console, which is usually the place where the "welcome message" is displayed, followed by the `>` prompt symbol.
+
+So take a minute to try running a few basic commands in the console. Just click so that your cursor is at the prompt (`>` symbol), and type:
+
+> 2 + 2
+
+and hit enter (don't type the `>`). It should display the result, looking something like this:
+
+`[1] 4`
+
+We'll get to what that `[1]` means in the next tutorial document about *vectors*. For now, just ignore it.
+
+The point right now is that R uses most standard symbols for doing arithmetic, so in addition to plus and minus, you can use the `*` symbol for multiplication, the `/`  for division, and the `^` symbol for powers (e.g., `2^3` is "2 to the 3rd power", or 8).
+
+So go ahead and try running a few different mathematical expressions at the console.
+
+> Console tip: when your cursor is at the prompt, you can use up- and down-arrow keys on your keyboard to scroll back and forth through previous commands. This is a nice way to save typing or potential typos if you want to re-run a previous command, or run a previous command with a slight change.
+
+# Scripts, Comments, R Markdown, and Notebooks
+
+## Some history
+
+Working at the console can be very convenient, but once we start doing anything more meaningful, we would like to be able to save our commands, instead of re-typing things every time.
+
+The basic way to do this is to save code in a file with a `.R` extension.  This type of file is often called a "script."  A file with the `.R` extension is treated as if everything in that file is R code.
+
+Scripts are very useful, and when you just want to write code, they are usually the way to go. You can also add "comments" in your code, which is just a way to tell the R interpreter to ignore parts of a line when executing the code.  For example, you could have something like the following in a `.R` script:
+
+```{r}
+# this is a comment, and is ignored
+# the `#` symbol tells R to ignore EVERYTHING TO THE RIGHT
+# the following code will be NOT be executed, because
+# it has a `#` in front of it:
+# 42 * 83
+
+# but the next line WILL be executed:
+42 * 83
+print("hello") # you can also put comments after code on the same line
+```
+
+If you are writing your code in a `.R` file, since everything is treated as R code, you have to use comments if you want to write or explain anything using anything other than valid R code. However, when we do data analysis, we often want to mix our code with more descriptive (aka wordy) narrative about what we are doing, how we are interpreting results, and so on, and comments are just not a good way to include a lot of more detailed documentation or narrative.
+
+In fact, R has a long history of being one of the first and best languages to implement a paradigm called "literate programming."[^knuth] The concept of literate programming is that it is a mix of code and text, and that some system is in place for treating the two differently. The pioneering method for doing this in R was called "Sweave",[^sweave] and it was a mix of R code and [LaTeX](https://www.latex-project.org/help/documentation/). LaTeX is another language that acts as a kind of mark-up language for formatting text, and it is still popular in some fields like mathematics.
+
+[^knuth]: This concept was coined and championed by the legendary computer scientist Donald Knuth. There are lots of places to read more about the original ideas, including [this ancient-looking page](http://literateprogramming.com/).
+
+[^sweave]: More trivia: the R language is an open-source project based on a commercial language called S that was developed at Bell Labs in the 1970s. The name S was a bit of a "programming pun" on the name of the C language, with S for "statistics." In turn the name of the R language was a pun on S, because R was originally developed by two statisticians whose names both started with "R": Ross Ihaka and Robert Gentleman. To bring us full circle, the term "Sweave" refers to the literate programming concept of "weaving" S code with text, so it's pronounced "S-weave".
+
+Sweave still works great if that's what you want, but learning LaTeX in addition to R makes the entire learning curve steeper, so people were interested in coming up with a better alternative. Enter R Markdown.
+
+[Markdown](https://www.markdownguide.org/) itself is a simple mark-up language that was originally invented to provide some simple ways to write text that could be converted to HTML. The original Markdown was created by John Gruber on his blog "Daring Fireball", and you can still find info about it there:
+
+[https://daringfireball.net/projects/markdown/syntax](https://daringfireball.net/projects/markdown/syntax)
+
+But because Markdown made it really easy to write documents in a way that they could be easily converted to HTML, it became *really* popular, and now you can find Markdown everywhere, being used for all sorts of things.  Here's one reference site you might find useful if you want to learn more about it:
+
+[https://www.markdownguide.org/](https://www.markdownguide.org/)
+
+But the point for us is that some people decided that R + Markdown would be an easier thing to work with than R + LaTeX, and that's where the idea of "R Markdown" came from. R Markdown files have the extension `.Rmd` (Markdown by itself is just `.md`), and they are a mix of R code and Markdown-formatted text.
+
+Over time, people implemented more and more features, and the `rmarkdown` package now enables a lot of different ways to use R Markdown.  In fact, there is a lot of overlap between the people who created and maintain RStudio and the people who created and maintain the `rmarkdown` package, so R Markdown is especially feature-rich when you use RStudio.
+
+In fact, if you are reading this document on the web, it is written in a new type of R Markdown document called [Quarto](https://quarto.org/), which can be used to easily generate good looking web documents like blogs, research papers, and so on. If you're interested in this kind of thing, I can highly recommend Quarto as a kind of "next evolution" in R Markdown documents. For the purposes of the course, I have loaded simpler `.Rmd` versions of these files for you to download and work with.
+
+Finally, R Markdown and its related formats shares some things with the Jupyter system, which is popular with many Python users, particularly in data science.[^jupyter] However, one of the nice things about R Markdown is that it does not require the more complex kernel/server architecture of Jupyter, and it can more easily be converted into a variety of other formats beyond HTML, including PDF (which is actually rendered via LaTeX, to go full circle) and even Microsoft Word formats.
+
+
+## Using R Markdown in this course
+
+Okay, that's the long background that explains some of the differences and reasons behind these types of files, but how do you *use* R Markdown?
+
+The fundamental idea is that when you type in an R Markdown document, it's just simple text in the Markdown format. This works great for typical kinds of documentation, like writing paragraphs of text, using headings to create a document structure, using lists (numbered and bulleted), simple tables, and so on. You use special characters to create formatting, as described by all those guides on Markdown that I referred you to earlier. So for example, `#` symbols at the beginning of a line are not "comment" characters, but rather they create a "heading", where the number of `#` symbols designated the "level" of the heading (`#` is top-level heading, `##` is level 2, `###` is level 3, etc.).  I recommend just spending a few minutes browsing one of the Markdown overviews linked above to get a feel for the most common options.
+
+The point here is that Markdown is a nice, simple format for writing *text*. But when you want to write R *code*, you need to designate a "code chunk", using the following symbols (these are only visible in the raw `.Rmd` file):
+
+```{r}
+
+```
+
+
+The symbol that starts and ends chunks is called a "backtick" symbol, or sometimes a "grave accent", and it's the character you get from the key just to the left of the "1" key (at least on a standard English-language keyboard).  Three of those backtick symbols starts the code chunk, and another three end it. Finally, on the first line, just after the opening three backticks, you use curly braces with the name of the language, in this case you use a lower-case `r`. Inside those curly braces, you can also put options that change how the chunk behaves, but we'll get to those another time.
+
+So you want to run R code inside an R Markdown file or R Notebook, you just make a code chunk and write your code on the lines between the backticks.  All of the text inside the code chunk is treated as R code, and it runs just as if you were working with that code inside a plan `.R` file. For example, the following chunk will perform a calculation.
+
+```{r}
+(4 + 10) * 3
+```
+
+In RStudio, there are a few different ways to run the code in a chunk.  If you want to run ALL the code in a chunk, there is a little green "play" arrow in the upper right of the chunk itself. This will run every line of code in the chunk, one line after another, immediately and without stopping.
+
+If you just want to run one line at a time (which I personally find very useful), just put your cursor on the line you want to run (anywhere is fine), hold the Ctrl key (on Windows) or Command key (on Mac), and hit Enter. The cursor will also skip down to the next line, so you can just hold Ctrl/Command and hit Enter repeatedly to run multiple lines.
+
+I will show you a few more tips about using R Markdown/Notebooks in RStudio, in a separate video file, because it's just easier to show you some things than to try to describe it all in text. But the basic idea is to:
+
+- Put your R code into "chunks" (and if you don't want to type the characters to make the chunk, you can use the menu option Code > Insert Chunk, or the keyboard shortcut).
+- Run your R code when you want to.
+- Type outside the chunk using standard Markdown formatted-text.
+
+The advantage of this kind of file is being able to have both R code as well as other lightly-formatted text in the same document, which you can export to multiple formats as output.
+
+
+# Objects, variables, and assignment
+
+Okay, back to the basics of using R. So far, we have only learned that we can execute mathematical expressions and get back a result.
+
+But what if we want to "save" a value and recall it later?  That's what *variables* are for. Note this is not a *variable* in the statistics sense, this is a *variable* in the computer-programming sense. In this sense, *variable* just means "name for an object held in memory".
+
+In order to hold a value in memory, you have to *assign* that value to a variable name, which in turn creates an *object* in memory.  So there are three things that are intrinsically connected: a *value* that you get by evaluating some R code, the *object* that represents that value in memory, and a *variable* name that gives you a way to refer to that object.
+
+Let's walk through these concepts with our simple math example. Let's say I want to take the calculation I did above and assign it to a variable.
+
+```{r}
+my_result <- (4 + 10) * 3
+```
+
+If you run this code, it may look like nothing happened, but actually what happened was that R evaluated the expression `(4 + 10) * 3`, assigned the resulting value to an object, using the assignment operator which is intended to look like an arrow (`<-`), and gave that object the variable name `my_result`.  Now that we've done that, we don't have to keep making the same calculation over and over, since we have the resulting object stored, and we can refer to it by name. 
+
+If we want to inspect the object named `my_result`, we can do a few things.  We can use the function `class` (more on functions shortly) to see what type of object it is, and we can use the `print` function to print the result out:
+
+```{r}
+class(my_result)
+```
+
+```{r}
+print(my_result)
+```
+
+Try running each of these.  The result of the first one is to tell us that it's a "numeric" type object (meaning it will behave like a number), and the second prints out the actual value of the calculation, 42.
+
+In order to assign a value to a variable, you use the special assignment operator, which in R is the `<-` symbol (a less-than sign followed by a dash), which is supposed to look like a left-pointing arrow. The idea is to make you think of the value on the right "going into" the new variable on the left.
+
+If you want to change the value of that variable, you can just assign it a new value:
+
+```{r}
+my_result <- 87 + 2^4
+print(my_result)
+```
+
+When you just start programming, it may be tempting to use overly simple variable names, especially if you are learning from examples that use variable names like `x` or `my_result`. But it's really helpful to spend a little energy thinking of good variable names.  Please don't be that person who names every data frame "data" or "mydata" or "df". My example above is just that kind of mistake, but in this case, it's because the code doesn't *mean* anything.
+
+To recall from the [Unit 1 reading](data_basics_reading.qmd#defining-data), data is important because of what it *means*. So the more meaningful our variable names are, the easier it will be to keep things straight in our own heads, because that's already enough of a challenge.
+
+It's also important to know that *case* matters in R's variable names. For example, a variable called `Data` is different than one called `data`. My recommendation is that you should try to stick to all-lowercase variable names, because otherwise you have to remember your own capitalization rules, and that's just more mental overhead. 
+
+Finally, if your variable names are descriptive, they may start to contain multiple words in the name, but you cannot include spaces in the name of a variable! There are different conventions for how to handle this, but I prefer to use underscores as "word separators" in variable names. Other options are fine if you already have habits from another programming language, but using underscores is a pretty standard style for R programmers.
+
+Putting these tips together, if I had a data set from IMDB, I'd probably call it `imdb` instead of somethign generic like `data`, because it helps me keep track of what it represents. There's nothing wrong with using `IMDB` as the variable name, but then again, I just have to remember if I'm using capital letters or not, and it's just easier to remember if I just always make all variables lower-case. 
+
+If I did some work to clean up this data set and wanted to assign the cleaned-up version to a new variable, I'd probably call it something like `imdb_cleaned`, again because it describes what it is. Naming it something like `imbd2` wouldn't tell me anything, and could be hard to remember ("which one was the `2` version again?"). And if I went on from there and compiled some stats by song, I might call the result `imdb_cleaned_bysong` or maybe just `imdb_bysong`. You get the idea. At some point it can get to be too much if your variable name turns into a long description, but in general people could stand to be more descriptive with their variable names.
+
+
+# Using functions
+
+## Functions *do* things
+
+While we may use structures like vectors or data frames (covered in other tutorials) to act as *containers* for data, most of the time we want to actually *do* stuff with data, and that's what *functions* are for.  To put it another way, functions are the "verbs" of the R language.
+
+I won't discuss how to *create* your own functions yet (it's actually very easy), but for now I'll just focus on how to *use* functions.
+
+The syntax for running a function is always the same:
+
+> function_name(argument1, argument2, ...)
+
+Every function has a name, which is essentially the same kind of thing as a variable name. It just refers back to an object that's made up of code, instead of an object that contains other kinds of data values.
+
+Following the name, you must use parentheses. That's what tells R, "I want to run this function." This is why you'll sometimes see functions with just a pair of parentheses with nothing between them, because even if you don't need to pass it any arguments, you still need the parentheses.
+
+On example of this is the `objects()` function, which prints out a list of all the objects in your "workspace", which is basically the objects that are currently in memory that you can access.  Run the following, and you should see `my_result` listed (at least, if you ran the code above assigning a value to `my_result`), plus any other variables/objects you have created in this session of R.
+
+```{r}
+objects()
+```
+
+The `objects` function doesn't need an argument, because by default it shows you the contents of your "Global Environment" workspace.  But if you want to run the function, you still need the parentheses.
+
+If you just entered `objects` without the parentheses, R would actually print out the code that is represented in the `objects` function.
+
+## Using *arguments* in functions
+
+So while some functions can just run like this with nothing in the parentheses, most of the time, you will use *arguments*. Arguments are the values that go inside the parentheses of the function, and they are separated by commas. You can think about arguments as the "input" values of the function. In other words, it's what the function needs to know in order to do its job.
+
+For example, the function `rnorm` will generate random samples from a normal distribution (we will get to what all that means soon!), and the only argument it really needs is a number to tell it how many samples to generate.  Try running the following:
+
+```{r}
+rnorm(10)
+```
+
+Every time you run it, you'll get different numbers. Now try deleting the 10 and see what happens (see below).  It will give you an error and tell you that an argument is missing.
+
+```{r, eval = FALSE}
+rnorm()
+```
+
+Most functions actually have several arguments. So if you enter in several values separated by commas, how does R know which value goes with which argument? It turns out that R has a few different ways of doing this, which makes specifying arguments pretty convenient.
+
+First off, arguments have *names*, and if you specify their names using the `=` ("single equal-sign") operator, you can enter them in any order. For example, in that `rnorm()` error message above, it tells you that `argument "n" is missing`.  So we could specify the code as:
+
+```{r}
+rnorm(n = 10)
+```
+
+The syntax here is that you put the name of the argument first, followed by a `=` symbol, followed by a value, and spaces are optional. Note that when we are assigning values to arguments, we use the `=` sign, not the "assignment arrow" `<-` symbol. In this example, we are just being very explicit about which argument we want that `10` to go to.
+
+A second way that R knows which arguments are which is by the *order* they come in. For example, the `rnorm()` function has three arguments: `n`, `mean`, and `sd`, in that order. So if we give three values *without* names, then R assumes we are providing the arguments in order. So the following two lines of code are identical. The first uses explicit argument names, and the second just provides the arguments in order.
+
+```{r}
+rnorm(n = 5, mean = 100, sd = 10)
+rnorm(5, 100, 10)
+```
+
+## Default values for arguments
+
+If you were paying careful attention, you might have noticed that in the code above we used three arguments, but the first time we ran `rnorm()`, we only gave it a single argument. Why was that good enough?
+
+Many functions in R have *default values* for some (or even all!) of their arguments. This is helpful because with many functions, there are some "standard" values that make sense, and if you don't have to enter those in every time, it's convenient. 
+
+For example, in our `rnorm()` function, the `mean` and `sd` arguments default to 0 and 1, respectively. This means that if we only give `rnorm()` a value for its `n` argument (representing the number of samples we want), then it will give us samples with a mean of 0 and a standard deviation of 1. These are good choices for defaults, because they represent the values that correspond to what's called the *standard normal* distribution (which we will discuss in Unit 2).
+
+So in essence, the default argument values in R are chosen by whoever wrote the definition of that function. Since R is a language for statistical analysis, this means most of the default values are chosen based on common practices or whatever the author thought were good "starting place" values.
+
+That said, one nice thing about default values is that we can easily change them. Changing values of an argument are sort of like changing the "settings" or "options" that the function uses to produce a result. Try running each of the following and look at how the overall pattern of values changes:
+
+```{r}
+rnorm(10)
+rnorm(10, mean = 30)
+rnorm(10, sd = 10)
+rnorm(10, mean = 30, sd = 10)
+```
+
+You should see different patterns according to the different arguments, which you can see as changing the "settings" of the function. Recall that the default of `mean` is 0 and the default of `sd` is 1.If you don't notice any differences, edit the values to be larger to make more extreme patterns.
+
+Finally, it's important to know that not all arguments have default values. Remember how we got an error when we tried running `rnorm()` without any arguments?  This is because there is *no* default value for `n`. This makes sense, because if you want to generate samples, you ought to at least tell R how many samples you want. But again, this is a choice made by the author of the `rnorm()` function. Different functions may differ on how many arguments have defaults or not.
+
+## Mixing order, names and defaults
+
+Now examine the following closely:
+
+```{r, eval = FALSE}
+rnorm(n = 10, mean = -10, sd = 17)
+rnorm(10, -10, 17)
+rnorm(10, sd = 17, mean = -10)
+```
+
+It turns out that these three lines are identical.[^identical] They illustrate how flexible R is when it comes to specifying arguments. In the first example, we give all three arguments with their names, in the default order. In the second line, we simply give the arguments in order, and R knows what to do with them. It's just a little riskier to do this, because we need to be confident that *we* are putting things in the order that R expects. 
+
+[^identical]: You can run these yourself to verify. Just remember that this function is generating random numbers, so the actual values will be different, but you should play around with them enough to convince yourself that these lines do all do the exact same thing.
+
+The third line is maybe the most representative of typical practice when you are using R for real analysis. The first argument is given without the name, but it represents the argument that doesn't have a default, `n`. It's important to note that in R, arguments without defaults always come before arguments with defaults. Again, for `rnorm()`, we just know that we need to tell it how many samples to generate. Then the `mean` and `sd` arguments are specified, because we want something different from the defaults. But notice that they are "out of order." This is okay!
+
+Basically, if you specify arguments by *name*, they can come in any order. This is nice because it means you don't have to worry about both order and name. As long as you have the order right *or* the names right when specifying arguments, R can essentially figure out what you mean. This is one of those design features of R that really comes in handy for day-to-day use.
+
+To sum this up, in practice, what people commonly do is:
+
+1. specify *required* arguments[^required] in order
+    - maybe only providing names if you sometimes have trouble remembering the order 
+2. provide *names* for arguments that normally have *default* values
+    - not because you have to, but just because those are the arguments that people are naturally less familiar with, so providing names just helps make the code more clear
+
+[^required]: *Required* arguments are arguments that do *not* have a default value.
+
+At this point, you may be asking yourself:
+
+> How do I know what the arguments are, which ones have defaults, and what are those default values?
+
+This is where we get to talk about the great internal help system in R.
+
+# Getting help
+
+The last thing I want to cover in this document is a brief intro to how to get help in R.
+
+Most importantly, I would suggest you start with R's built-in help system before you resort to Google. R has a very robust internal help system, and very good internal documentation. It takes some practice to learn how to read the documentation, but once you do, it will be a lifesaver, and it's much more reliable than trying to find everything on the internet or (heavens forbid) using AI.
+
+Most of the time, what you will need help on is a function, because you're trying to understand what it does, or what arguments it needs, or what the arguments are named, or what the defaults are, and so on.
+
+There are two ways to access the help file for a function. The following two things are identical (so I usually just go with the first):
+
+```{r, eval = FALSE}
+?rnorm
+help(rnorm)
+```
+
+First, note that in both cases, we don't use the parentheses following `rnorm`, because we don't want to *run* the `rnorm` function here, we are trying to get *help* on the `rnorm` function.
+
+Depending on where you are running R, either of these lines will bring up the official help document for the `rnorm` function. In RStudio, this is typically the pane in the lower right.
+
+This particular example shows another common occurrence in R, that some functions come in "families." So here, we asked for help on `rnorm`, but we got the help for `dnorm`, `pnorm`, and `qnorm` too!  That's because the authors of these functions decided to basically combine the help page for all of these functions, because they're closely related.
+
+All of the sections of the help file are helpful, but we'll just focus on the top few for now.  There is always a Description that tells you basically what this function does. Then there is always a Usage section, and this is the part that tells you:
+
+- what the arguments are called
+- the order of the arguments
+- and the default values of arguments, if there are any
+
+So if we look down to the `rnorm` line under Usage, we see: 
+
+> rnorm(n, mean = 0, sd = 1)
+
+This is telling us that the arguments are `n`, `mean`, and `sd`, in that order, and that `mean` has a default value of 0 and `sd` has a default value of 1. Notice how the argument `n` is not followed by an equals `=` sign. This tells you that it does not have a default, and if an argument doesn't have a default, then a value *must* be supplied for that argument when the function is run.
+
+Now you should be able to understand that error we get when we try to run the following:
+
+```{r, eval = FALSE}
+rnorm()
+```
+
+Below Usage, there is an Arguments section, which tells you exactly what each argument is expecting.  Sometimes you think you are giving a function what it needs, but if it's not working like you think it should, checking the help may reveal that you needed to provide an argument in a slightly different format or something.
+
+The other sections in the help file are more optional, and not every function has all of the other sections. But they are almost always helpful, if you take the time to read them. For example, sometimes the *examples* (always the last thing in the help file) make it easier to understand exactly how to use the arguments to get different kinds of results.
+
+# What's next?
+
+Of course there is a lot more to the R language, but this document covers enough of the "ground rules" that you should be able to continue on.  I will incorporate other tips and examples throughout the course, but the goal is to use R in order to explore statistics and data analysis, not to go through an exhaustive exploration of the R language.
+
+In the rest of Unit 1, we will focus on some of the core data structures in R, *vectors* and *data frames*.  When you're ready, proceed to the [tutorial on vectors](R_basics_vectors.qmd)!

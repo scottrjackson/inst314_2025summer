@@ -8,24 +8,33 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - lessons.qmd
-    right:
-      - about.qmd
+#    right:
+#      - about.qmd
   sidebar:
     style: "docked"
     search: true
     contents:
-      - section: "Lessons"
+      - section: "Preliminaries"
         contents:
-          - data_basics.qmd
+        - href: installing_R_RStudio.qmd
+          text: "Installing R and RStudio"
+      - section: "Unit 1: Starting with the Basics"
+        contents:
+          - href: data_basics_reading.qmd
+            text: "Concepts Reading: some basic data concepts"
+          - section: "Code Tutorials"
+            contents:
+              - href: R_basics_fundamentals.qmd
+                text: "Getting started with R"
+              - href: R_basics_vectors.qmd
+                text: "Vectors: a basic building block of data in R"
+              - href: R_basics_dataframes.qmd
+                text: "Data Frames: the most useful data structure in R"
 
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      dark: darkly
+      light: flatly
     css: styles.css
     toc: true
-
-
-
