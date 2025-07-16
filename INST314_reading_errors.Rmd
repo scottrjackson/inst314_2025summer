@@ -1,0 +1,337 @@
+---
+title: "INST 314 Unit 4: assessing regression models by examining errors"
+author: "Dr. Scott Jackson"
+date: "2024-07-01"
+output:
+  tufte::tufte_handout: default
+  tufte::tufte_html: default
+---
+
+```{r, echo=FALSE}
+library(tufte)
+library(tidyverse)
+library(HistData)
+pl_men <- filter(PearsonLee, gp %in% "fs")
+```
+
+```{r, echo=FALSE, message=FALSE}
+expand_data <- function(pl_row) {
+    child <- pl_row$child
+    parent <- pl_row$parent
+    freq <- pl_row$frequency * 4
+    expanded_data <- data.frame(child = rep(child, freq),
+                                parent = rep(parent, freq))
+    return(expanded_data)
+}
+
+pl_men_obs <- select(pl_men, child, parent, frequency) %>% rowwise() %>%
+    do(expand_data(.))
+
+colnames(pl_men_obs) <- c("son_height", "father_height")
+pl_men_obs$observation <- 1:nrow(pl_men_obs)
+pl_men_obs <- select(pl_men_obs, c("observation", "father_height", "son_height"))
+
+pl_men_counted <- pl_men_obs %>% group_by(son_height, father_height) %>%
+    summarize(count = n()) %>% ungroup()
+```
+
+
+# What's in this document?
+
+This is the primary reading for the fourth unit of the course. It was written using R Markdown, so I am providing both the (easier-to-read) PDF rendering as well as the R Markdown "source", if you find that to be useful.
+
+In Unit 3, we introduced the *linear model* as a way of analyzing relationships between variables. We learned how to fit models and how to understand and interpret the parameters of the model, namely the *intercept* and the *slope*.
+
+The main goal of the present document is to go the next step to discuss how we can start thinking about whether our model is a *good* model or not, by thinking about the *patterns of errors* that our model might be making.
+
+I will call attention to key terminology with margin notes. I will also ramble about side thoughts in margin notes as well. Sometimes the margin notes will be numbered,[^sidenote] like footnotes that connect to a specific part of the main text.  Sometimes they're unnumbered, just hanging out whenever you feel like reading them.
+
+```{marginfigure}
+This is a margin note.
+```
+
+[^sidenote]: This is a numbered side-note.
+
+R code illustrating the concepts here will be explained in more detail in other documents.
+
+# What makes a model good?
+
+In Unit 3, I made the claim that the *linear model* is a useful model for understanding relationships in our data. Let's take a step back and think about this. Recall that the point of a *model* is to provide us a (relatively) simple description of our data that we can inspect, use to make predictions, and so on. Once you wrap your head around the linear model, I think we can agree that it's a fairly simple model, since it just has two parameters, the *intercept* and the *slope* of the regression line.[^regressionline] Well, simple is nice, but is it actually a *good* model?
+
+[^regressionline]: And recall that the *regression line* is the line that gives us the simple "shape" of the relationship. It tells us as one variable increases, does the other increase or decrease, and how steep is the increase/decrease?
+
+This raises an important question: how can we judge if a model is good? What if we have two different models and we would like to compare them? Can we quantify how good a model is? The good news is that yes, there are methods for assessing and quantifying just how good a model is. The key concept that we will use to explore assessing models is the concept of *errors*.
+
+# Errors revisited
+
+We already started thinking about errors in Unit 3, because that's the core of how the Ordinary Least Squares (OLS) algorithm works, by minimizing the (squared) errors between our model and our data. To recap:
+
+```{marginfigure}
+Note that focusing on errors is not the only way to assess models. There is another line of work in statistics that focuses on a concept called *likelihood*, which is yet another term that has a technical meaning in statistics that is related to but not the same as the common-sense meaning of the word. We will mention likelihood again when we discuss the AIC statistic, but we will not delve deeply into it.
+```
+
+- The *linear model* describes a line (called the *regression line*), using the standard geometry of intercept and slope.
+- That line represents our model's predictions. For any value $x$ that represents a predictor, if you know the intercept and slope of the line, you can compute $y$, which represents the value you are predicting. So if we have a model of the line describing the relationship between a father's height and the height of his son, if we know the father's height ($x$), we can compute a prediction for the son's height ($y$), and this $[x, y]$ point falls on our regression line.
+- But these predictions are almost never (exactly) right!
+- The distance between a *prediction* (i.e., a point on the line) and an *observation* (i.e., a data point we actually collect and see) is called the *error*.
+- The OLS algorithm takes the *squared* errors and finds the line that minimizes those. This is what "fitting a model to data" means. 
+
+```{marginfigure}
+MAKE A DIAGRAM OF ERROR FROM REGRESSION LINE
+```
+
+In other words, the OLS algorithm means that we have the *best fitting line* for our data, minimizing the errors. But the "best fitting" line isn't necessarily a good fit.[^anscombe] This is the topic we are concerned with now.
+
+[^anscombe]: Remember "Anscombe's Quartet"? Those are all "best fit" lines in terms of OLS, but when we look at the data and the line, we can clearly tell there are some differences in terms of how well it really seems to fit.
+
+# The importance of error patterns
+
+The key concept we want to explore here is that while OLS only cares about the *quantity* of errors, in the real world, we also care about the *pattern* of errors. This is because most of the time our models are not perfect, and if our "best" model makes systematic errors of a certain kind, this can lead to real problems. For example, imagine if we had a model of some kind of social service impact, but the model errors for a certain marginalized group of people were very different from the errors of other groups. Depending on what kinds of decisions the model was supposed to help with, the result could be serious inequity in the way services were implemented. Understanding model errors can be hugely important for real-world impact!
+
+# Where are errors in the model?
+
+Turning back to the linear model, you might recall our linear equation from Unit 3:
+
+> $y = \alpha + \beta{}x$
+
+This has the following parts:
+
+- $y$ is the response variable, the variable we are trying to predict
+- $x$ is the predictor variable, the variable we are using make predictions about $y$
+- $\alpha$ is what we call the *intercept* parameter, that gives us a kind of "overall" adjustment, or the value of $y$ when $x$ is zero
+- $\beta$ is the *slope* parameter that tells us how steep the line is (larger numbers are steeper) and whether the line is going up or down (positive numbers mean the line goes up to the right, negative numbers mean the line goes down to the right)
+
+But where are the errors? Well it turns out that this is not exactly the full model. The full model is more properly given as:
+
+> $y = \alpha + \beta{}x + \epsilon$
+
+```{marginfigure}
+The $\epsilon$ is a small Greek letter epsilon, but we usually just call it the "error" terms, and use epsilon because it looks like "e" for "error." Some textbooks may use different symbols. Note also that there are other mathematical ways of expressing errors in a linear equation. We are picking this one because it's easy to understand and easy to implement in R.
+```
+Or if we want to get more precise:
+
+> $y_i = \alpha + \beta{}x_i + \epsilon_i$
+
+The second equation is basically an equation for figuring out individual values. If we talk about $x$ as the entire predictor variable (like the entire column of data in your data frame), then you can think about the rows being numbered from 1 to however many values you have. And we can use the little subscript $i$ to mean "the data from row $i$".
+
+So the equation translates as follows. To get a specific value of the response variable $y$ (like predicting a certain son's height), you need to know the specific value of the predictor $x$ (like the specific father we are predicting for), which we call $x_i$. You take that value, multiply it by the slope $\beta$ and add the intercept $\alpha$, and that slope and intercept are the same for all the $x$'s. But then the final step is that you need to add the specific error value (aka *residual*) for that person, in order to get the actual final observed value.
+
+```{marginfigure}
+Another term for an error (in the way that we mean it here) is *residual*. So when we talk about the *residuals* of a (linear) model, we are talking about the errors, specifically the "raw" errors, not the squared errors.
+```
+
+# The distribution of errors
+
+Okay, now that we know how errors are expressed in our model, we can start to be a little more precise about what we mean by exploring "patterns" of errors. With the equation above, we have now made it clear that our errors are just a list of numbers, with one "error" value for each row of our data, representing the difference between the *observed* $y$ variable and the *predicted* $y$ value. Basically the list of numbers that measures how "off" the linear model predictions are for each data point. 
+
+So if our errors are a list of numbers just like our data variables, then when we say "pattern" of errors, what we really mean is the *distribution* of errors, in the same sense as when we talked about single variables. In other words, just like regular data variables have a mathematical distribution (like a uniform distribution, or a normal distribution, or one of the infinite number of other distributions out there), errors also have a mathematical distribution.
+
+Our question can now be rephrased from "patterns" of errors to "distribution" of errors. But what distribution(s) should we expect errors to take?
+
+Stepping back a bit, one thing we have not been explicit about yet is that all models have *assumptions*. Model assumptions are sort of like background concepts or "rules", and if those assumptions are true (or at least mostly true), and the rules are followed, then the math of the model works out. When the rules are not followed, we talk about assumptions being "violated,"[^violations] and if model assumptions are violated, then we have to be very cautious about using the model, or it might be an indication that we need a different model.
+
+[^violations]: This is again a technical stats term. It's unfortunate that we have inherited awkward or even violent-sounding terminology, but it's just one of the challenges of working with statistics. The terms mean very specific things, and there is always resistance to coming up with new terms for old concepts.
+
+For our purposes, the idea is that the linear model makes assumptions about the distribution of errors, and so an important part of understanding if your model is a *good* model is to check this assumptions. In short, we need to check the distribution of the error term $\epsilon$ in the model. But what do we expect? What's the assumption? This turns out to be a very interesting result that follows from concepts we've already discussed.
+
+# The assumption of normally-distributed errors
+
+First, think a little about what an error literally is in some real data, like our father-son heights. An error is how "off" our model predictions are, for each son's height we are trying to predict. And the error value $\epsilon_i$ will be small for some people and large for others. For example, if a person's data is very close to the regression line -- very close to our model's prediction -- the error will be very small, like predicting a height of 68 inches for someone who is 68.2 inches tall, which would result in an error (aka *residual*) of 0.2 inches. For other people, the error might be very large, like predicting a height of 68 inches for someone who turns out to be 74 inches tall (residual error of 6 inches). So we naturally expect that there is variation with respect to how close our model's guesses are, from person to person.
+
+But why does our model make errors? Why is our prediction ability not perfect? Think about our example with heights. We know just from everyday experience that if a father has multiple sons (with the same mother, even), they will not all be the exact same height, even if they tend to be close to the father's height. Now think of all the reasons this could be. Maybe the mother's diet during pregnancy was a little different. Maybe the sons ate slightly different diets or had different activities in childhood. Maybe there's some slight biological or genetic differences, since the genes of (non-twin) siblings are slightly different. Maybe all of the above! In other words, it's easy to imagine that there are many "random" factors[^random] that might contribute to height, beyond just the height of one's father.
+
+[^random]: Meaning "randomly related to one another." For example, someone's diet has to do with their life circumstances, and is probably not at all related to whatever small genetic mutations might affect their height, at least during development. So by "random," what we really mean is that the factors are "independent" or unrelated to each other.
+
+Does this remind you of anything? Think back to Unit 2, when we described the powerful mathematical result of what happens when you have a distribution of numbers that are each the sum or average of many different unrelated factors. It's the Central Limit Theorem! If we add up (or take the average of) a bunch of randomly-related factors, we tend to end up with a normal distribution. 
+
+And it turns out that this is one of the key assumptions of the linear regression model: that **errors are normally distributed**. In other words, we have a straight line[^nopun] of logic that connects us from the Central Limit Theorem to explain why we assume that the error term in the linear regression model follows a normal distribution. Errors typically exist as the sum of a bunch of unexplained factors, and the CLT tells us that this means the distribution should tend towards the normal distribution.
+
+[^nopun]: No pun intended!
+
+Another way you can think about the $\epsilon$ in our revised linear model equation above is that it stands for "all the other stuff we don't know that also affects the outcome $y$." It is *unexplained variance*: variation in the outcome variable that we are not (yet) measuring.
+
+# Examining simple errors: modeling means
+
+In order to see this in action, let's take this a step at a time. First, let's think about the simple concept of an average or *mean* value. You probably know how to calculate an average; you add up all the numbers and divide by how many numbers there are. But it goes deeper than this, and it's directly related to our concept of the linear model.
+
+Consider just the heights of sons in our sample data set. If we didn't know anything about their fathers or anything else, could we still make a guess about likely heights?  Of course! You obviously wouldn't guess 12 inches or 120 inches or something ridiculous. But it turns out that if you can get the mean of the data, *that's* the best guess. In other words, the mean of our `son_heights` variable is the value that minimizes the (squared) errors from our guesses.
+
+We can easily demonstrate this by fitting an "intercept-only" model.  In other words, if we take our linear model:
+
+> $y = \alpha + \beta{}x + \epsilon$
+
+... and drop the slope parameter, have just the intercept and the error term:
+
+> $y = \alpha + \epsilon$
+
+This can be visually represented as just a flat line (since the slope equals zero). We can plot this if instead of a meaningful $x$-axis we just randomly order the points along the axis, while keeping the actual values of the heights of sons on the $y$-axis (though again jittered and made partially transparent to mitigate overplotting).
+
+```{r}
+son_lm_int <- lm(son_height ~ 1, pl_men_obs)
+son_intercept <- son_lm_int$coefficients[1]
+son_mean <- mean(pl_men_obs$son_height)
+son_mean
+son_intercept
+pl_men_obs$son_pred<- predict(son_lm_int)
+pl_men_obs$son_resid <- resid(son_lm_int)
+
+ggplot(pl_men_obs, aes(x = runif(nrow(pl_men_obs)), y = son_height)) +
+geom_jitter(alpha = 0.05) + 
+theme_bw() +
+scale_x_continuous(name = "random order", breaks = NULL) +
+ylab("heights of sons (inches)") +
+geom_hline(yintercept = son_intercept, color = "blue") +
+annotate("text", label = round(son_intercept, 1), color = "blue", x = 0.1, y = son_intercept, vjust = -1)
+```
+
+And if we furthermore fit this model,[^intmodel] we get an intercept estimate of XX, which is the same value we get if we simply compute the average height using R's `mean()` function.
+
+[^intmodel]: In R, following the code from the R Guide on Regression Fitting, the model would look like: `lm(son_height ~ 1, data = pl)`
+
+```{r}
+son_lm_int <- lm(son_height ~ 1, pl_men_obs)
+son_intercept <- son_lm_int$coefficients[1]
+son_mean <- mean(pl_men_obs$son_height)
+son_mean
+son_intercept
+pl_men_obs$son_pred<- predict(son_lm_int)
+pl_men_obs$son_resid <- resid(son_lm_int)
+
+```
+
+
+# sections
+
+```{r}
+
+ggplot(pl_men_obs, aes(son_height)) + geom_histogram(binwidth = 2) 
+pl_lm <- lm(son_height ~ 1 + father_height, pl_men_obs)
+pl_lm_int <- pl_lm$coefficients[1]
+pl_lm_slope <- pl_lm$coefficients[2]
+
+son_lm_int <- lm(son_height ~ 1, pl_men_obs)
+son_intercept <- son_lm_int$coefficients[1]
+son_mean <- mean(pl_men_obs$son_height)
+son_mean
+son_intercept
+pl_men_obs$son_pred<- predict(son_lm_int)
+pl_men_obs$son_resid <- resid(son_lm_int)
+
+ggplot(pl_men_obs, aes(x = son_resid)) + geom_histogram(binwidth = 2)
+son_sd <- sd(pl_men_obs$son_height)
+summary(pl_lm)
+summary(son_lm_int)
+sd(resid(pl_lm))
+
+SSR <- sum((predict(pl_lm) - son_mean)^2)
+SSE <- sum(resid(pl_lm)^2)
+SST <- sum((pl_men_obs$son_height - son_mean)^2)
+SSR/SST
+SSE/SST
+
+SSE/SST + SSR/SST
+
+t.test(pl_men_obs$son_height, var.equal = TRUE)
+
+
+```
+
+
+Simulating data from the model
+
+```{r}
+pl_error_sd <- sd(pl_lm$residuals)
+
+
+ggplot(pl_men_obs, aes(father_height, son_height)) + geom_jitter(alpha = .1)
+
+pl_lm_error <- rnorm(nrow(pl_men_obs), mean = 0, sd = pl_error_sd)
+pl_lm_sim <- pl_lm_int + pl_lm_slope * pl_men_obs$father_height + pl_lm_error
+
+ggplot(pl_men_obs, aes(father_height, pl_lm_sim)) + geom_jitter(alpha = .1)
+
+```
+
+Simulated outliers
+
+```{r}
+set.seed(4242)
+n_sim <- 30
+true_slope <- 0.7
+true_intercept <- 0
+true_error_sd <- 0.5
+x <- rnorm(n_sim)
+y <- 0.7 * x + rnorm(n_sim, sd = .5)
+simdata <- data.frame(x, y)
+lm_xy <- lm(y ~ 1 + x, data = simdata)
+(lm_xy_coefs <- lm_xy$coefficients)
+summary(lm_xy)
+
+extreme_x <- 12
+(extreme_y <- true_intercept + true_slope * extreme_x + rnorm(1, mean = 0, sd = true_error_sd))
+outlier_x <- 2
+outlier_intercept <- 2
+outlier_slope <- 3
+(outlier_y <- outlier_intercept + outlier_slope * outlier_x + rnorm(1, 0, true_error_sd))
+simdata_extreme <- rbind(simdata, data.frame(x = extreme_x, y = extreme_y))
+simdata_outlier <- rbind(simdata, data.frame(x = outlier_x, y = outlier_y))
+
+ggplot(simdata_extreme, aes(x, y)) + geom_point() +
+  geom_abline(intercept = true_intercept, slope = true_slope, color = "blue") +
+  geom_smooth(method = "lm", color = "red", linetype = 2)
+
+ggplot(simdata_outlier, aes(x, y)) + geom_point() +
+  geom_abline(intercept = true_intercept, slope = true_slope, color = "blue") +
+  geom_smooth(method = "lm", color = "red", linetype = 2)
+
+summary(lm(y ~ 1 + x, simdata_outlier))
+```
+
+
+# Sequence of reading
+
+- Errors
+  - Big Message: understanding *pattern of errors* is an important step
+  - Uncertainty: is the model "good"? Is there a "better" one?
+  - Back to Means: intercept model as a model of means
+  - Adding the Error term to the linear model
+	- SD of means = error SD
+	- Examining Residuals:
+	- Resids should be Normal
+	- Extreme residuals are Outliers
+	- Examining Outliers in Code Practice
+	- Plot RESID by PREDICT: errors should spread normally 
+	- Simulating data from the model
+	- Overall metrics:
+	- R-squared: sums of squares, ratio of "explained variance" to "unexplained variance"
+	- AIC: can only compare models fitted to the same Y data (not transformed)
+- Inference
+  - From errors to Confidence intervals: quantifying uncertainty
+  - The t-distribution (DoFs, plot comparison to normal, etc.)
+  - Getting quantiles of the norm or t
+  - Setting quantiles = setting "confidence" levels
+  - Constructing the CI
+  - NHST
+  
+Challenge 4
+1. Plot scatterplots of data and fit models (linear and log)
+2. Plot and examine residuals (comparing models)
+3. Plot data simulation from models (comparing)
+4. Get fit stats for both models: SD of error, R^2, AIC
+5. Examine residuals of log-log model (with text)
+
+Challenge 5
+1. Fit model
+2. Report coefficient table, including t and p-values
+3. Compute CI around slope parameter (of some arbitrary %s)
+4. Plot simulated slopes within CI
+5. Interpret NHST for p-value
+
+Final Challenge
+1. Plot data with scatterplot
+2. Plot data with boxplot
+3. Dummy-code pred
+4. Fit models
+5. Plot and discuss residuals
+6. Print and interpret slopes (and directions) as group differences
+7. Run equivalent (Student's and Welch's) t-tests

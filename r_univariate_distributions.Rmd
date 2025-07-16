@@ -1,0 +1,447 @@
+---
+title: "Generating, describing, and plotting univariate distributions in R"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Simulations in statistics
+
+In the study and application of statistics, *simulations* play an important role. For our purposes here, the concept of a simulation is to generate values based on a particular generating process (which may be a distribution), in order to study what *samples* of that process look like.
+
+## Simulating dice rolls
+
+For example, we used the concept of rolling dice to present the idea of a generating process in the reading. We discussed how *theoretically*, each number on a die should come up the same number of times, on average, but *empirically* getting exactly the same counts of each number is unlikely.
+
+We can use simulations in R to see this in action. We can also use this as an example for graphing.
+
+But first, let's talk about the `sample` function. This function has four arguments:
+
+- `x`: the vector of values to be sampled from
+- `size`: how many values to sample
+- `replace`: whether to sample "with replacement" or not
+- `prob`: a vector of probabilities, for weighting which values are most likely to be selected
+
+Remember that we can use the command: `?sample` to see the help file and get the above information.
+
+But here's what this means. First, we need to decide what values to sample from. The idea here is like having a bag of values (can be numbers, but can also be a set of strings, or any other type of data we want), and all of the things in the "bag" are the `x` vector. Then we need to say how many values we want to pull out of this bag. 
+
+The concept of "replacement" is part of the "bag" analogy. The question is, if you pull a value from the "bag", do you replace it (i.e., put it back in the bag) before you draw your next number?  An example of sampling without replacement would be like drawing a hand of cards in a card game like poker. If you draw the King of Hearts, you can't draw it again because it's already been drawn. It wasn't "replaced" back into the deck when you drew it. An example of sampling "with replacement" would be if you had a bag of the numbers 1 through 10, but whenever you drew a number, you would write the result down, but then put the number back. Since you are replacing it, it would be possible to draw the same number multiple times.
+
+What about our dice-rolling example? Well first, the vector of values we are sample from is clear, it's the numbers 1, 2, 3, 4, 5, and 6. Remember that in R, we can use the construction `1:6` to stand for a vector of the integers from 1 to 6.
+
+Now let's say we want to sample from these number 600 times. That would be the `size` argument.
+
+We will ignore the `prob` argument, because we want this to be a "fair" die, that has an equal chance of rolling any of the numbers.
+
+But what about replacement? Should this be with replacement, or not? (Think about it for a minute.)
+
+The answer is that it needs to be *with* replacement. First of all, if we didn't replace the values, we would run out after just six rolls! It would be like somehow removing each side as we rolled them. But also, the generating process is that each time we roll, we are still sampling a number from the same set of six numbers, and that never changes.
+
+In the `sample` function in R, the `replace` argument is `FALSE` by default (which you can tell if you look at the help file using `?sample`). So this just means that when we use the function, we need to make sure to use `replace = TRUE` if we want to sample with replacement.
+
+So let's do this in code now. We will first use the `sample` function to generate 600 rolls of a die, and assign that to a variable `die_rolls`. We can then use the `xtabs` function to see how many of each number was rolled in those 600 rolls.
+
+```{r}
+set.seed(42)
+die_rolls <- sample(1:6, 600, replace = TRUE)
+xtabs(~ die_rolls)
+```
+
+Remember that our *theoretical* distribution is that every value is selected with the same probability. We can see that the *empirical* distribution here is close, but not exact! Luckily enough, we did get exactly 100 rolls of "1", but then we got 117 rolls of "2", which seems like a lot more than 100!
+
+This is a perfectly valid result, and it helps illustrate that even if we know the generating process, any actually observed data set is likely to depart from that theoretical ideal.
+
+But before we proceed further, we need to talk a little about how "randomness" works in R.
+
+## Randomness in R
+
+The topic of mathematical randomness is actually very complex and interesting.  Before computers were readily available, there were actually books of random numbers produced that statisticians could use to "generate" random values by flipping to a random page and putting their finger down without looking. With computers, in some ways it's just as challenging because (normal digital) computers are good at deterministic computing (they produce a predictable result based on the input), but not inherently good at "randomness."
+
+Long story short, the numbers generated in R (and in virtually all standard statistical software programs) are technically called *pseudo-random*, which means "not actually random", and in practice they function a little like those old books.  The good news for us is that a lot of very smart people have worked hard to make R's "random" numbers "random enough" to work for our purposes. In other words, they have the same statistical properties that "true" random numbers would have, so we can use them in our analyses. If this topic is intriguing to you, I recommend looking at the help file for `?Random` and reading the details and references.
+
+But one of the side benefits of using pseudo-random numbers is that if we really want to, we can reproduce *exact* results, even if there is something random about the process. It would be as if you were using a robot to pick numbers out of the old number books, and you could tell it to use the same sequence of motions each time, in order to exactly reproduce the same set of "random" numbers.
+
+This is what the `set.seed` function does. If you use this function, you give it some integer value, and you are basically setting the "state" of the random number generator based on that value. I did this in the code chunk above so that when you run this code, you will get the exact same results, as long as you don't change the `set.seed` value.  
+
+So take a minute to try it out: first, try running the code chunk above a few times, and see how it gets the same result every time. Now change the number inside the `set.seed` function, and you'll see that now you get a slightly different set of results when you run the chunk, but then that wil be consistent each time you runt that. Finally, comment-out or delete the `set.seed` line, and you'll see that you get a different set of results every time you run the chunk.
+
+# Plotting the dice results
+
+Now, it's time to turn to visualization! Plotting and visualizing data is a really important part of EDA.
+
+## Plotting in R: getting started with the `ggplot2` package
+
+R actually has two distinct systems for creating graphs and plots. "Base" graphics and "grid" graphics. Base graphics are the older system, and for some things they are a bit simpler, but they are not as flexible, and ultimately start to become harder and harder to work with, the more we want to do with them.
+
+In contrast, the "grid" system uses a more complex underlying system to give us a more unified system of controlling graphical output. In practice, the most popular package for plotting data in R is called `ggplot2`, and it's built on top of the grid system. So while not many people learn all the nuts and bolts of the grid system, it is really useful to learn the methods of `ggplot2`.
+
+That said, `ggplot2` does have a bit of a learning curve. But once you understand how it works, you can approach data visualization with a common framework and you can produce an amazing array of different kinds of plots and graphs.
+
+## Basic `ggplot2` usage to plot our dice rolls
+
+Before we do anything, make sure you have installed the `ggplot2` package. If you haven't already, check the Notebook called `r_basics_packages.Rmd`.
+
+The advice in that file is to put your `library` statements at the top of the file, but since we are just now introducing the `ggplot2` package, we can just do that now. Make sure to run this code chunk, and if it tells you you don't have the package installed, please see the `r_basics_packages.Rmd` Notebook on installing the package before proceeding.
+
+```{r}
+library(ggplot2)
+```
+
+## The structure of a `ggplot2` graph
+
+The unique thing about how `ggplot2` works is that you build your graphs in *layers*. Each layer adds or changes something about how the graph is constructed or displayed.
+
+The first layer starts with the `ggplot` function. NOTE: the name of the *package* is `ggplot2` (because this was an overhaul of the original `ggplot` package), but the main *function* is just called `ggplot`.
+
+What this function does is set up the main parameters of the graph, which is usually something like the x-axis and y-axis, and the name of the data frame where the data is coming from.
+
+In our case, we just want to plot the counts of numbers in the `die_rolls` vector. But we can use the `as.data.frame` function to easily convert the table that `xtabs` gives us into a proper data frame:
+
+```{r}
+die_results <- as.data.frame(xtabs(~ die_rolls))
+head(die_results)
+```
+
+This is a good opportunity to practice one of the principles from the previous unit, which was to rename our columns to be a bit more consistent. Since we are talking about the counts of how many times each "face" of our theoretical die was rolled, let's rename the columns accordingly:
+
+```{r}
+colnames(die_results) <- c("die_face", "counts")
+head(die_results)
+```
+
+Now we can start building our graph. The other special concept from `ggplot2` that we need to introduce is the concept of an *aesthetic*, which is a bit of jargon from the data visualization literature, which basically means "mapping from data to a visual property." In `ggplot2`, there is a function called `aes` which stands for "aesthetic", and in that function is where you set different graph properties to the value of different *variables* (i.e., columns) in your data.
+
+So put this all together, and we will start our graph with the following "base" layer. The first argument of the `ggplot` function is to say what the data frame is that we're plotting from. The second is an `aes` function that sets up out basic mapping. We specify that the x-axis values should come from the `die_face` column, because we basically want a bar graph where we have a bar for each of the die faces, and we set the y-axis values to come from the `counts` column, because we want the height of each bar to reflect the counts.
+
+```{r}
+die_counts_plot <- ggplot(data = die_results, aes(x = die_face, y = counts))
+print(die_counts_plot)
+```
+
+So far so good, but it just looks like an empty graph!
+
+This is because we haven't yet said what *shape* (or in `ggplot2` terminology, *geom*) that we want to plot. So we need to add another layer that says, "okay, now that you know the data mappings, display this data as a bar graph."  However, there's one thing we do need to specify. In `ggplot2`, the default setting for bar graphs is to graph a summary of the data rather than to graph the actual values in the column. But we want the latter; we want the bars to graph the literal numbers in the `counts` column. In order to do this, we need to specify `stat = "identity"` inside of the `geom_bar` function.
+
+Here's what it looks like to add this layer to our existing graph object and then display it:
+
+```{r}
+die_counts_plot <- die_counts_plot + geom_bar(stat = "identity")
+print(die_counts_plot)
+```
+
+Hooray! Now we can see the visual of the "flat" uniform distribution. It's not *perfectly* flat, as we discussed, but it's pretty flat, as far as distributions go.
+
+## Plotting again, with different numbers
+
+In order to illustrate how this shape changes and varies if we change the number of die rolls, let's put all this code together again. But this time, let's generate a LOT more rolls, to see if it gets flatter.
+
+(Side note about code: this time, I put both layers of the `ggplot` graph in at once, using the `+`. But I also used a line return after the `+`. I did this just to make the code a little more readable. R allows this because when it sees the `+` at the end of the line, it knows we're not done yet, so it interprets the next line of code as basically just a continuation of the same line. RStudio adds some indentation when you do this, but unlike Python, that indentation doesn't actually matter, it's just to make it easier to read.)
+
+```{r}
+number_of_rolls = 60000
+more_die_rolls <- sample(1:6, number_of_rolls, replace = TRUE)
+more_results <- as.data.frame(xtabs(~ more_die_rolls))
+colnames(more_results) <- c("die_face", "counts")
+die_plot2 <- ggplot(data = more_results, aes(x = die_face, y = counts)) +
+  geom_bar(stat = "identity")
+print(die_plot2)
+```
+
+That's a lot more flat!
+
+Now take a minute to play around with the value assigned to the `number_of_rolls` variable and re-run the chunk of code over and over to see different results. Make the number of rolls small, like 20 or 30, run that a few times to see the shape change. Then make it larger, and see if you can decide what you think is "large enough" before the distribution really starts looking flat.
+
+
+# Finding a normal distribution in dice
+
+Now that we have a method of generating numbers and plotting the resulting distribution, let's start to explore the normal distribution.
+
+Recall from the reading: the Central Limit Theorem tells us that when we average (or sum) many different processes together, that average (or sum) will tend to follow the normal distribution.
+
+This means that even though the distribution of numbers generated by an *individual* die is a uniform distribution (if the die is fair), once we add up (or average) *many* dice rolled at the same time, the distribution of *that* result will tend towards normal.
+
+In other words, if we:
+
+1. roll a *bunch* of dice and add them together,
+2. then write *that* number on the slip of paper that goes into the bag,
+3. then draw numbers from that bag (data collection)
+	
+the numbers will tend to follow a normal distribution
+
+Let's see this in action! First, run the following code, which simulates rolling 30 (six-sided) dice, adding them up, and recording that number, and then repeating that process 10,000 times.  Note that the `size` parameter in our `sample` function is now the number of dice rolled each time, so we need the `replicate` function, which lets us repeat a process many times, and it outputs the results of those repetitions to a vector, which we are assigning to a variable called `all_rolls`.
+
+(Side note: this use of `replicate` could also be accomplished with a for-loop. R has for-loops and while-loops like other languages, but for our purposes, the `replicate` function here is a bit simpler. Also note that I used even more line-returns in the middle of the `sample` function, again just to make it a little easier to read than if it were all squished into one long line.)
+
+```{r}
+number_of_dice_rolled <- 30 # <- change this number to change the shape
+number_of_rolls <- 10    # <- change this to make it more variable
+
+roll_values <- replicate(number_of_rolls, 
+                         sum(sample(x = 1:6, 
+                                    size = number_of_dice_rolled, 
+                                    replace = TRUE)))
+```
+
+
+Now that we've generated the numbers, let's use a slightly different graph called a *histogram*. The concept is similar as before, but now that we have a lot of different values, not just the 6 die faces, we don't really want a different bar for each value that we get. Instead, what a histogram does is it takes the raw data -- the long vector of numbers representing each of the summed rolls -- and it puts those values into "bins", and plots the count of how many values are in that bin.
+
+For example, if we're rolling 30 dice each time, we're generating numbers between 30 and 180 (all 1's vs. all 6's). If each bin has a "width" of 5, it would mean (for example) that all of the values from 101 to 105 would be in one bin, the values 106 to 110 would be in the next bin, etc. Then the height of each bin (as a bar) is the count of how many values fell into that bin.
+
+This is a simple way to show the overall "shape" of the distribution, because the taller bins represent the most common or likely values and the short bins represent more infrequent or unlikely values.
+
+The main parameter to play with when creating a histogram is the "width" of the bin. Run the code below to create a histogram with a bin basically for each value, but then play around with making the bin size larger to see how the visualization changes.
+
+(Side note on code: this time, since we are not calculating the counts ourselves, we don't need to convert the raw rolls into a table, so we just skip the step. We also just do the whole `ggplot` call at once, without assigning it to a variable. Either way is valid, I'm just showing you different options.)
+
+```{r}
+histogram_bin_width <- 1    # <- change this to adjust the bin width
+
+ggplot(data = NULL, aes(x = roll_values)) +
+    geom_histogram(binwidth = histogram_bin_width)
+
+```
+
+If you run the code without changing the values I started with above, the resulting histogram should look pretty close to a normal distribution. This is the Central Limit Theorem in action!
+
+Play around with the variable values in the code above to get a feel for how they affect the distribution. As the number of dice rolled get smaller, it will look less and less normal, because recall that the Central Limit Theorem says that as the number of independent processes gets higher, the more it will follow a normal distribution.  When you get to rolling just one die, you'll be back to the flat uniform distribution
+
+Playing around with the number of rolls (i.e., the number of times you record a new roll) is like playing around with how much "data" you've collected.  Even though we know exactly what the distributions are (because we're picking them and using them to generate random data), you can see that low amounts of data can lead to some very strange looking *empirical* distributions. For example, go from rolling 30 dice 10,000 times (which looks very close to a normal distribution) to rolling 30 dice just 20 times. It will look a lot less normal! The important thing to understand is that the *theoretical* distribution only changes with the number of dice being rolled. The fact that it doesn't look very normal when you only do a few rolls is reflecting the fact that sometimes you need a lot of data to be able to really get a good idea of what the underlying distribution is.
+
+Playing around with the bin width of the histogram is a good way to get a sense of how the visualization can change how things appear. Note that when you do this, you're not changing anything about the *data* or the *distribution*, you're only changing how the *visualization* process works.
+
+## An easier way to generate normal numbers
+
+The above is basically a demo of the CLT: showing that even though individual dice follow a uniform distribution, the average of many dice rolls follows a normal distribution.
+
+But if you wanted to generate numbers from a normal distribution, you can do that directly, too! Here's an example in R, generating 10,000 numbers from a continuous normal distribution with a mean of 30 and a standard deviation of 6, and plotted with a histogram:
+
+```{r}
+normal_sample <- rnorm(10000, mean = 30, sd = 6)
+ggplot(data = NULL, aes(x = normal_sample)) + geom_histogram(binwidth = 1)
+```
+
+Again, feel free to play around with some of the values. What happens if you adjust the standard deviation (`sd`) parameter? The `mean`? The number of values generated?
+
+## Density plots
+
+The great thing about histograms is that they show your actual data, warts and all. They are invaluable when you are starting off with EDA, because especially if you play around with the bin width, you might stumble across some odd gaps or a couple of extreme outliers, or other patterns you might not notice otherwise.
+
+However, sometimes you also would like to plot something that smooths over the bumps to give you more of a clear picture of the curve of the distribution. That's what a density plot can be good for.
+
+Here's an example of a density plot of some random numbers, in comparison to the previous histogram.
+
+```{r}
+normal_sample2 <- rnorm(10000, mean = 30, sd = 6)
+ggplot(data = NULL, aes(x = normal_sample2)) + geom_density()
+
+```
+
+And here's an example with both.  If you want to superimpose a density plot over a histogram, you need to tell your plotting software to scale the histogram by *density* instead of counts.  Here's how to do this in R:
+
+```{r}
+normal_sample3 <- rnorm(10000, mean = 30, sd = 6)
+ggplot(data = NULL, aes(x = normal_sample3)) +
+    geom_histogram(aes(y = after_stat(density)), 
+                   fill = "gray", binwidth = 1) +
+    geom_density()
+
+```
+
+Note that I changed the "fill" color of the histogram to make it lighter so the density curve is more easily visible. In this plot, you can see what I mean that the density plot is like a "smoothed" histogram.
+
+## Numeric summaries
+
+Plotting histograms and density plots are extremely helpful, but sometimes you would like to summarize a set of numbers in a simpler way. This is what summary statistics are good for. But just remember, summary statistics are a very poor replacement for plots when it comes to exploratory data analysis.
+
+We have already covered mean and median. Recall that the mean is the same as getting an *average* value, and the median is the *middle* value, such that half of the data is higher and half is lower.
+
+The concept of the median can be generalized with the concept of *quantiles*, which are set at any percentages you want, not just the 50% of the median. It's common for people to examine the "quartiles", which are the 25%, 50%, and 75% quantiles. That is, the 25% quantile is the value where 25% of the numbers are smaller than it, the 50% quantile is the same as the median, and the 75% quantile is the number where 75% of the numbers are smaller than it. The 0% quantile is another way of saying the minimum, and the 100% quantile is the same as the maximum.
+
+The code below shows how the R function `quantile()` can be used on a set of numbers to compute quartiles by default, or any other quantiles as specified:
+
+```{r}
+more_random_numbers <- rnorm(1000)
+quartiles_of_randoms <- quantile(more_random_numbers)
+arbitrary_quantiles <- c(0.13, 0.44, 0.89)
+weird_quantiles_of_randoms <- quantile(more_random_numbers,
+                                       probs = arbitrary_quantiles)
+
+print(c("The minimum, quartiles, and maximum values are:", quartiles_of_randoms))
+print(c("Some arbitrary quantiles are:", weird_quantiles_of_randoms))
+```
+
+## Numeric summaries and normal distributions
+
+One of the properties of normal distributions is that they are perfectly symmetric, which means that their mean, median, and mode are all at the same value.  In other words, the average value (the mean) is also the "middle" value (the median), and both of those are also the most likely/common value of the distribution (the mode).
+
+One of the ways to see this graphically is to plot vertical lines superimposed over a density plot.
+
+Let's generate a large number of normal *variates* (another way of saying "numbers pulled from a normal distribution"), plot the density curve, and plot a vertical line at the (empirical) mean:
+
+```{r}
+random_normals <- rnorm(10000, mean = 5, sd = 2)
+random_normals_mean <- mean(random_normals)
+
+ggplot(data = NULL, aes(x = random_normals)) + geom_density() +
+    geom_vline(aes(xintercept = random_normals_mean), color = "red")
+```
+
+You can play around with these values, but as long as there are a lot
+of numbers being generated, the calculated mean will be quite close to
+both the "theoretical" mean (the mean we used in the first line to
+generate the values in the first place) as well as the mode of the
+density plot.
+
+You can see the same thing for the median:
+
+```{r}
+random_normals <- rnorm(10000, mean = 5, sd = 2)
+random_normals_median <- median(random_normals)
+
+ggplot(data = NULL, aes(x = random_normals)) + geom_density() +
+    geom_vline(aes(xintercept = random_normals_median), linetype = 2, color = "blue")
+```
+
+Or even quantiles:
+
+```{r}
+random_normals <- rnorm(10000, mean = 5, sd = 2)
+random_normals_quantiles <- quantile(random_normals,
+                                     c(0.025, 0.05, 0.25, 0.75, 0.95, 0.975))
+
+ggplot(data = NULL, aes(x = random_normals)) + geom_density() +
+    geom_vline(aes(xintercept = random_normals_quantiles), linetype = 2, color = c("blue", "green", "red", "red", "green", "blue")) + theme_minimal()
+```
+
+A couple of plotting tips:
+
+- using `theme_minimal()` is an easy way to have a "cleaner" look with a lighter background
+- I passed a vector of colors to the `geom_vline()` function because I knew I was creating multiple lines and I wanted them colored differently. Just be aware that for this trick, the number of colors in the vector has to be the same as the number of lines you're drawing, which is why each color is listed twice (in reverse order)
+	  
+Play around with the code above to get used to plotting vertical lines
+superimposed over density plots and/or histograms.
+
+# Practice with the `iris` data
+
+Generating random numbers and simulating "fake" data is a very valuable tool, but let's go through some of the same processes above with real data, which is usually not as neat as simulated data.
+
+Let's try out some of these things with a simple data set that is already in R, the `iris` data set. Since the `iris` data comes pre-loaded, you don't have to read it in to use it. But since it's new to us, let's use some of the ways we've already seen to get some idea of what's in it.
+
+First, look at the first few rows of data.
+
+```{r}
+head(iris)
+```
+
+In R, most pre-loaded data sets also come with an informative help file, which you can access like so:
+
+```{r}
+help(iris)
+```
+
+You can see from this help file that the data contain measurements (in centimeters) of different parts of various specimens of three different species of iris.  This data set is extremely common as a way to illustrate some concepts, especially clustering concepts.
+
+But looking at the first few rows is an easy way to get an idea of how many columns there are, what their names are, and what kind of data is in each column.
+
+Before, we also examined some summary stats, like the minimum, maximum, mean, and median. However, it may be better to just go ahead and start with a histogram, because a single histogram tells you a lot more than all of those summary numbers.
+
+## Histograms with `iris` data
+
+Plot a histogram of `Sepal.Length`, and play around with the bin width. Notice that the bin width is on the scale of the variable being plotted, so you have to pay attention to that when considering good bin width choices. As you explore some different bin widths, do you notice any different patterns? Does the distribution look normal? What do you see?
+
+```{r}
+histogram_bin_width = 0.2
+ggplot(iris, aes(x = Sepal.Length)) + 
+  geom_histogram(binwidth = histogram_bin_width)
+```
+
+Now do the same for `Sepal.Width`
+
+```{r}
+histogram_bin_width = 0.1
+ggplot(iris, aes(x = Sepal.Width)) + 
+  geom_histogram(binwidth = histogram_bin_width)
+```
+
+Now do the same for `Petal.Length`
+
+```{r}
+histogram_bin_width = 0.2
+ggplot(iris, aes(x = Petal.Length)) + 
+  geom_histogram(binwidth = histogram_bin_width)
+```
+
+Which of these looks the most like a normal distribution? To my eye, the `Sepal.Width` might look the most normal, except for that tall "spike" at the mode.
+
+## Generating and plotting theoretical densities
+
+The first thing you might notice is how "messy" or different these distributions look. As you look at distributions, you might start to wonder "well, how close to a normal distribution is this?"
+
+Interestingly, there is not a single foolproof method for assessing "how close" an empirical distribution is to a theoretical one. There are some tests, but those can be very sensitive, meaning that when you have a lot of data, even very small departures from a "perfect" normal distribution can be detected.
+
+In the end, visual judgments may be the most robust way to decide how "normal" something looks. So in order to facilitate this, it would be nice if we could superimpose a perfect theoretical normal distribution on top of our data, to get a clear visual comparison.
+
+So let's learn how to do just that!
+
+The first step is to learn how to generate theoretical *densities*. The concept of a density is that it's the relative probability of observing a value, given a distribution. When we did the density plots above, that's what we were plotting. But those plots were *empirical* densities, based on our sample data. What we want here are *theoretical* densities that match the normal distribution.
+
+So what we want is to be able to say, "okay, for every value on the x-axis, what is the probability density for that value?" In order to do this, we can follow the steps below. The idea here is that we want to use a distribution with parameters that match the parameters we see in our data and generate density values from that distribution, then plot that over our histograms to be able to compare the shapes.
+
+1. First, recall the parameters that are needed to specify your distribution. For the normal distribution, that is the mean and the standard deviation.
+2. Compute those parameters from the data in the variable you're examining.
+3. Next, generate the density values corresponding to the vaalues in the variable, using the appropriate *density function*
+4. Then plot!
+
+The only really new function here is for step 4: the density function. The good news is that R has lots of different density functions, for different theoretical distributions. Here we want the density function for the normal distribution, which is just `dnorm`. All you do is give `dnorm` your x values and the parameters (mean and sd) of your distribution, and it gives you back densities that correspond to your x values.
+
+Here are the steps in code, for getting densities based on the `Sepal.Width` variable in the `iris` data.
+
+```{r}
+# get the mean and sd of the variable we are examining
+mu <- mean(iris$Sepal.Width)
+sigma <- sd(iris$Sepal.Width)
+
+# compute the densities for the observed values
+y_densities <- dnorm(iris$Sepal.Width, mean = mu, sd = sigma)
+
+```
+
+Now, in order to plot the theoretical curve on top of the data, we need to do what we did above, plotting a histogram on the density scale, and then adding a layer for the theoretical densities we just computed.
+
+
+```{r}
+ggplot(iris, aes(Sepal.Width)) + 
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.1) +
+  geom_line(aes(y = y_densities))
+```
+
+Now we can see what shape we *should* see, if our data indeed followed a normal distribution. In this case, you can see that the curve seems pretty close, just except for that big "spike" in the middle.  But overall this is not bad.
+
+Compare this to if we took the same steps with the `Petal.Length` variable:
+
+```{r}
+# get the mean and sd of the variable we are examining
+mu <- mean(iris$Petal.Length)
+sigma <- sd(iris$Petal.Length)
+
+# compute the densities for the observed values
+y_densities <- dnorm(iris$Petal.Length, mean = mu, sd = sigma)
+
+ggplot(iris, aes(Petal.Length)) + 
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.1) +
+  geom_line(aes(y = y_densities))
+```
+
+That is *definitely* non-normal!  We didn't really need to plot the theoretical densities here, of course, since there is very clearly two separate modes in this variable, which suggest that it's more like two distinct (possibly normal) distributions, not a single simple distribution.
+
+
+# Next steps
+
+At this point, we have developed a lot of tools in order to explore single variables, and with a combination of plots and summaries, we can examine our numerical (*continuous* or *interval*) variables in the process of performing *exploratory data analysis* (EDA). 
+
+Being able to compare *empirical* (observed) data distributions to *theoretical* distributions like the normal distribution is a powerful way for us to check our assumptions. Maybe we have expectations that our variables should be normally distributed, or maybe we have no idea and we just want to check. Using the techniques explained here will let us do that.
+
+After the Reading and going finishing this Notebook, you should be ready to tackle the Knowledge Check 2 and Code Practice 2, before continuing on to the next Challenge.
+
+Good luck, and as always, keep asking questions!
