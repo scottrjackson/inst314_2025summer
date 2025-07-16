@@ -1,0 +1,110 @@
+---
+title: "R Basics: installing and loading packages"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Packages in R
+
+One of the best features of R is it's huge library of free and open-source *packages*. Packages are R's system of being able to add functions, objects, classes, and data to our session. "Base" R has a lot of functionality already, but for more specialized kinds of analysis or other functions (like graphing), there are many excellent packages to add functionality.
+
+## Where do you get packages?
+
+R has a standard way of creating packages, and there are a number of good tutorials and tools to make it relatively easy to create your own packages. However, most users get by just fine by installing and using packages from freely available repositories.
+
+The most common way to get packages is from the official repository called the Comprehensive R Archive Network (CRAN). However, getting a package on CRAN takes a little time and administrative overhead, so sometimes you may find a package that is hosted elsewhere, like GitHub or SourceForge.
+
+When you get a package from CRAN, much like when you download R to begin with, you may have to pick a "mirror" -- one of many identical sites hosted over the world that provide the service of distributing R code. Depending on your settings, your installation may pick a mirror for you. Either way, when you get a package from CRAN, it's coming from one of the mirrors, and if you are asked to pick, just pick one that is geographically in a similar region as you are.
+
+## How do you get packages?
+
+This couldn't be simpler (at least, most of the time). There are really just two steps. The *installation* process is a one-time process. It involves downloading code from CRAN (or somewhere else), and unpacking or "building" the code in a location on your machine where your installation of R can find it. It does this all automatically, you don't need to make any decisions here.
+
+Once it's installed, you do NOT need to re-install it, unless you want to download a newer version, or unless you change your base installation version of R (like upgrading from 4.4.0 to 4.4.1).
+
+Let's do this now for the graphing package we will use, `ggplot2`. Run the code chunk below to install this package.
+
+```{r}
+install.packages("ggplot2")
+```
+
+## How do you use the package?
+
+If you imagine that R is like your personal workshop for doing statistics, installing a new package is like going to the hardware store, buying a cool new tool kit, and then coming home and "installing" it into a special drawer in your workbench. Once it's installed, you don't need to go back to the store.
+
+But you *do* need to get it out of the special drawer when you want to use it. In R, this means you need to *load* the package during the session you are using it. You only need to load it once, until you start a new session. In other words, "loading" a package is like taking the tool kit out of its drawer so that you can work with those tools.
+
+We do this using the `library` function. So after you have installed the `ggplot2` package, you can run the following:
+
+```{r}
+library(ggplot2)
+```
+
+If you get an error message, then this more than likely means it was not correctly installed.
+
+## What can go wrong during installation, how can you tell, and what can you do about it?
+
+When you run `install.packages`, it will not only install the package you asked for, but all of the packages that are *dependencies* of the package you are installing (plus all of the dependencies' dependencies, and so on). This is great, because it means R's package system is doing all the work for you to make sure you have everything you need in order to use the package.
+
+However, sometimes it means that you are installing a lot of packages at once, and sometimes things can go wrong during the installation process.
+
+In general, a lot of stuff gets printed to the console when a package is being installed, but at the very end, if you see a message that an installation "exited with non-zero status", it means something didn't quite work right.
+
+In order to figure out what to do, you may need to scroll back through all the console print-outs, and see if there are any warnings or error messages.
+
+The most common thing is that a package may depend on some other piece of software that isn't directly managed by R's package system. For example, if you are on a Windows machine, you will likely need to install the *Rtools* software. This is additional software that provides some utilities that are common on macOS and Linux systems, but which are not typically part of a normal Windows installation.
+
+In this case, *Rtools* can be found if you go to the *r-project* site where you downloaded R the first time, and on the page where you can choose to download "base" R, you should see a link a little lower down to download an installer for Rtools.
+
+In other cases, depending on the packages you're installing, you might need some other utilities or programs. But the pattern is the same: if you "exit the installation with a non-zero status", you should look through the messages to see if it tells you what you're missing.
+
+If you run into problems with installation of any packages in this course, please ask for help!
+
+Fortunately, package installation in R is usually pretty headache free, and besides the common need for Rtools on Windows, installation problems are usually pretty rare.
+
+# A few "best practice" recommendations on loading packages
+
+## Put all `library` statements at the top of your script
+
+Since you only need to load a package once per session, it's a good habit to put all of your `library` statements at the very beginning of the file, so you can load all of your packages in one place, and then you're good to go.
+
+This also have the benefit of making it clear to people who look at your code what packages they will need in order to run your code. That's a lot more friendly than making someone get halfway through your script before they realize they need to install some other package.
+
+## Loading order and "masking"
+
+One of the challenges of a system like R that has so many packages is that with so many different authors contributing packages, at some point there may be two different packages that provide a function that happens to be called the same thing.
+
+Fortunately, R has a very reasonable system for handling so-called "namespace clashes." First, whenever you load a package, R will warn you with statements like:
+
+> The following object(s) is/(are) masked from package 'package:XXXX'
+
+For example, one popular package with a lot of useful miscellaneous functions is the `MASS` package by the statistician Frank Harrell. Another popular package is the `dplyr` package for manipulating data by statistician Hadley Wickham. Both of these packages have a function called `select`. So if you run `library(dplyr)` and then `library(MASS)`, you will get a message saying that the object `select` is `masked from 'package:dplyr'`.
+
+What this means is that if an object is "masked", then it is simply not the "default" object of that name. So if `MASS` and `dplyr` both have a `select` function, but the one from `dplyr` is masked, then if you just say `select(something)`, you will be using the one from `MASS`.
+
+## Strategy 1: worry about the order of `library` statements
+
+One way to manage this is just to make sure you `library` things in the right order, so that the most "important" packages go last. Because packages loaded later will mask the previous ones, not vice versa. In the example above, I personally rarely use the `select` function from `MASS`, and I very frequently use the `select` function from `dplyr`, so I basically try to make sure I library `MASS` first, then `dplyr`, so that the `MASS` version will be masked.
+
+If you accidentally do them out of order, there is not a good way to "unlibrary" a package. You may just need to re-start your R session in order to start from scratch.
+
+## Strategy 2: use the "package specific" syntax for the masked function
+
+The best way to make *sure* that you are using a specific function from a specific package is to use R's special syntax for this purpose. This looks like:
+
+> `packagename::functionname()`
+
+So in the example above, if I wanted to make sure I was using the `select` function from the `dplyr` package, instead of the normal:
+
+> `select(df, cols)`
+
+I could use the special syntax:
+
+> `dplyr::select(df, cols)`
+
+This will ensure, no matter what is masking what, that I am using the function I am intending to use.
+
+
+
+
