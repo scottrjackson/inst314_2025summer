@@ -30,6 +30,13 @@ website:
                 text: "Vectors: a basic building block of data in R"
               - href: R_basics_dataframes.qmd
                 text: "Data Frames: the most useful data structure in R"
+      - section: "Unit 2: Univariate Distributions"
+        contents:
+          - href: univariate_reading.qmd
+            text: "Concepts Reading: univariate distributions"
+#          - section: "Code Tutorials"
+#            contents:
+#              - href: 
 
 format:
   html:
