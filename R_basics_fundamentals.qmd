@@ -339,6 +339,23 @@ Below Usage, there is an Arguments section, which tells you exactly what each ar
 
 The other sections in the help file are more optional, and not every function has all of the other sections. But they are almost always helpful, if you take the time to read them. For example, sometimes the *examples* (always the last thing in the help file) make it easier to understand exactly how to use the arguments to get different kinds of results.
 
+## Feedback from R: Errors and Warnings
+
+This is a bit of a miscellaneous topic, but I think understanding it can help new users of R navigate things when they run into problems. Running into problems is normal, and just part of the programming cycle!
+
+R has two major categories of "problems": *errors* and *warnings*. The way to think about both of these is that they are ways for the programmers of R to communicate with you, the user.  In a nutshell:
+
+- **Errors** happen when something goes wrong and the code *doesn't work at all*. The message you get is supposed to give you some clues about what may be the problem, but it can take some experience and/or sleuthing before you understanding exactly what an error message may be trying to tell you.
+- **Warnings** happen when the designer of a function is trying to tell you, "well, I *technically* did what you asked me to do, but just in case, I'm going to give you some additional info in case this isn't really the result you wanted."
+
+So the first distinction to notice is that when an *error* happens, the code basically doesn't run. You asked R to do something, and it said "no." In contrast, when a *warning* happens, the code *did* run, and it gave you a result. It's just giving you a heads-up, in case the result wasn't actually what you wanted.
+
+For example, it's pretty common to get warnings having to do with missing data. When you get to the topic of [coercion](R_basics_vectors.qmd#Coercion) in the next tutorial, you'll learn about what happens when you try to tell R to force data to be a number when R doesn't know how to make it a number. In short, it does the best it can, but when it doesn't have a way of doing it, it'll replace that value with a missing value (`NA`). But it will also *warn* you about this, giving you the message: `Warning: NAs introduced by coercion`. This basically means, "okay, I did what you asked me to, but just FYI, the result now has some missing values that weren't there before."
+
+The main point here is that as you are learning R and trying to make sense of things, one of the first things to notice about any messages you get back is whether it's an error or a warning. But don't ignore warnings just because you can! They can sometimes reveal that something unexpected is happening, and you may be making a mistake that you wouldn't catch otherwise.
+
+As a final point, some package authors are extremely liberal with warnings. The popular set of packages known as the `tidyverse` has many functions that will warn you about *everything*, almost to the point of being annoying. So just be aware that ultimately, warnings and error messages are just little notes sent to you by the human who programmed the function(s) you're using, and those humans can make interesting choices sometimes, and part of learning R is learning about how different authors handle things differently.
+
 # What's next?
 
 Of course there is a lot more to the R language, but this document covers enough of the "ground rules" that you should be able to continue on.  I will incorporate other tips and examples throughout the course, but the goal is to use R in order to explore statistics and data analysis, not to go through an exhaustive exploration of the R language.

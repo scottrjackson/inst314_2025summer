@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lessons home – INST 314 (Summer 2025)</title>
+<title>R Basics: installing and loading packages – INST 314 (Summer 2025)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -39,8 +73,8 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-87cd5c4c137eb48cdca371794a3979d3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-686b15c34b244653d4c55e362e50c6f0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4b6583dcda6280174f32155222df5637.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b6ff45b646ffb8f1caf16cae185cd76d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,15 +102,16 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<meta name="quarto:status" content="draft">
 
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed">
+<body class="nav-sidebar docked nav-fixed slimcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -106,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Lessons home</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Unit 2: Univariate Distributions</a></li><li class="breadcrumb-item"><a href="./R_basics_packages.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_basics_packages.html">Using R packages</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -198,6 +233,35 @@ ul.task-list li input[type="checkbox"] {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./univariate_distributions_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_packages.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Using R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_univariate_distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating, visualizing, and exploring univariate distributions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
       </ul>
   </li>
     </ul>
@@ -210,16 +274,31 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#where-do-i-start" id="toc-where-do-i-start" class="nav-link active" data-scroll-target="#where-do-i-start">Where do I start?</a></li>
+  <li><a href="#packages-in-r" id="toc-packages-in-r" class="nav-link active" data-scroll-target="#packages-in-r">Packages in R</a>
+  <ul class="collapse">
+  <li><a href="#where-do-you-get-packages" id="toc-where-do-you-get-packages" class="nav-link" data-scroll-target="#where-do-you-get-packages">Where do you get packages?</a></li>
+  <li><a href="#how-do-you-get-packages" id="toc-how-do-you-get-packages" class="nav-link" data-scroll-target="#how-do-you-get-packages">How do you get packages?</a></li>
+  <li><a href="#how-do-you-use-the-package" id="toc-how-do-you-use-the-package" class="nav-link" data-scroll-target="#how-do-you-use-the-package">How do you use the package?</a></li>
+  <li><a href="#what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it" id="toc-what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it" class="nav-link" data-scroll-target="#what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it">What can go wrong during installation, how can you tell, and what can you do about it?</a></li>
+  <li><a href="#rstudio-installation-messages" id="toc-rstudio-installation-messages" class="nav-link" data-scroll-target="#rstudio-installation-messages">RStudio installation messages</a></li>
+  </ul></li>
+  <li><a href="#a-few-best-practice-recommendations-on-loading-packages" id="toc-a-few-best-practice-recommendations-on-loading-packages" class="nav-link" data-scroll-target="#a-few-best-practice-recommendations-on-loading-packages">A few “best practice” recommendations on loading packages</a>
+  <ul class="collapse">
+  <li><a href="#put-all-library-statements-at-the-top-of-your-script" id="toc-put-all-library-statements-at-the-top-of-your-script" class="nav-link" data-scroll-target="#put-all-library-statements-at-the-top-of-your-script">Put all <code>library</code> statements at the top of your script</a></li>
+  <li><a href="#loading-order-and-masking" id="toc-loading-order-and-masking" class="nav-link" data-scroll-target="#loading-order-and-masking">Loading order and “masking”</a></li>
+  <li><a href="#strategy-1-worry-about-the-order-of-library-statements" id="toc-strategy-1-worry-about-the-order-of-library-statements" class="nav-link" data-scroll-target="#strategy-1-worry-about-the-order-of-library-statements">Strategy 1: worry about the order of <code>library</code> statements</a></li>
+  <li><a href="#strategy-2-use-the-package-specific-syntax-for-the-masked-function" id="toc-strategy-2-use-the-package-specific-syntax-for-the-masked-function" class="nav-link" data-scroll-target="#strategy-2-use-the-package-specific-syntax-for-the-masked-function">Strategy 2: use the “package specific” syntax for the masked function</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Unit 2: Univariate Distributions</a></li><li class="breadcrumb-item"><a href="./R_basics_packages.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_basics_packages.html">Using R packages</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Lessons home</h1>
+<h1 class="title">R Basics: installing and loading packages</h1>
 </div>
 
 
@@ -236,11 +315,105 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="where-do-i-start" class="level1">
-<h1>Where do I start?</h1>
+<section id="packages-in-r" class="level1 page-columns page-full">
+<h1>Packages in R</h1>
+<p>One of the best features of R is it’s huge library of free and open-source <em>packages</em>. Packages are R’s system of being able to add functions, objects, classes, and data to our session. “Base” R has a lot of functionality already, but for more specialized kinds of analysis or other functions (like graphing), there are many excellent packages to add functionality.</p>
+<p>The goal of this tutorial is to explain the basics of how this system works, so that you can make the most of the huge ecosystem of great R packages.</p>
+<section id="where-do-you-get-packages" class="level2">
+<h2 class="anchored" data-anchor-id="where-do-you-get-packages">Where do you get packages?</h2>
+<p>R has a standard way of creating packages, and there are a number of good <a href="https://r-pkgs.org/">tutorials</a> and tools to make it relatively easy to create your own packages. However, most users get by just fine by installing and using packages from freely available repositories.</p>
+<p>The most common way to get packages is from the official repository called the Comprehensive R Archive Network (CRAN). However, getting a package onto CRAN takes a little time and administrative overhead, so sometimes you may find a package that is hosted elsewhere, like GitHub or the Bioconductor repository.</p>
+<p>When you get a package from CRAN, much like when you download R to begin with, you may have to pick a “mirror” – one of many identical sites hosted over the world that provide the service of distributing R code. Depending on your settings, your installation may pick a mirror for you. Either way, when you get a package from CRAN, it’s coming from one of the mirrors, and if you are asked to pick, just pick one that is geographically in a similar region as you are.</p>
+</section>
+<section id="how-do-you-get-packages" class="level2">
+<h2 class="anchored" data-anchor-id="how-do-you-get-packages">How do you get packages?</h2>
+<p>This couldn’t be simpler (at least, most of the time). There are really just two steps. The <em>installation</em> process is a one-time process. It involves downloading code from CRAN (or somewhere else), and unpacking or “building” the code in a location on your machine where your installation of R can find it. It does this all automatically, so you don’t need to make any decisions here.</p>
+<p>Once it’s installed, you do NOT need to re-install it, unless you want to download a newer version, or unless you change your base installation version of R (like upgrading from 4.5.0 to 4.5.1).</p>
+<p>Let’s do this now for the graphing package we will use in this course, <code>ggplot2</code>. Run the code chunk below to install this package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-do-you-use-the-package" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="how-do-you-use-the-package">How do you use the package?</h2>
+<p>If you imagine that your installation of R is like your personal workshop for doing statistics, installing a new package is like going to the hardware store, buying a cool new tool kit, and then coming home and “installing” it into a special drawer in your workbench. Once it’s installed, you don’t need to go back to the store, unless you want a newer version, or unless you are building a new workshop (i.e., working in a new installation of base R).</p>
+<p>But you <em>do</em> need to get those shiny new tools out of the special drawer when you want to use them. In R, this means you need to <em>load</em> the package during the session you are using it. You only need to load it once, until you start a new session. In other words, “loading” a package is like taking the tool kit out of its drawer so that you can work with those tools. When the session is done, the tools go back into the drawer, so they will need to be loaded again when you start a new session.</p>
+<p>We do this using the <code>library</code> function. So after you have installed the <code>ggplot2</code> package, you can run the following:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you get an error message, then this more than likely means it was not correctly installed.</p>
+<p>So just to be clear: you only need to run <code>install.packages("packagename")</code> <strong>once</strong>, in order to download and install a given package, but then you need to <em>load</em> that package with <code>library(packagename)</code> <strong>once every session</strong> when you want to use something from that package.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Note also that you use quotes around the package name when installing, but not when you use <code>library()</code></p></div></div></section>
+<section id="what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it" class="level2">
+<h2 class="anchored" data-anchor-id="what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it">What can go wrong during installation, how can you tell, and what can you do about it?</h2>
+<p>When you run <code>install.packages()</code>, it will not only install the package you asked for, but all of the packages that are <em>dependencies</em> of the package you are installing (plus all of the dependencies’ dependencies, and so on). This is great, because it means R’s package system is doing all the work for you to make sure you have everything you need in order to use the package. This is pretty common, and a sign of a healthy programming community, because it shows how package authors frequently build on the work of others.</p>
+<p>However, sometimes it means that you are installing a lot of packages at once, and sometimes things can go wrong during the installation process.</p>
+<p>In general, a lot of stuff gets printed to the console when a package is being installed, but at the very end, if you see a message that an installation “exited with non-zero status”, it means something didn’t quite work right.</p>
+<p>In order to figure out what to do, you may need to scroll back through all the console print-outs, and see if there are any <a href="./R_basics_fundamentals.html#feedback-from-r-errors-and-warnings">warnings or error messages</a>.</p>
+<p>The most common thing that can go wrong is that a package may depend on some other piece of software that isn’t directly managed by R’s package system. For example, if you are on a Windows machine, you will likely need to install the <em>Rtools</em> software at some point. This is additional software that provides some utilities that are common on macOS and Linux systems, but which are not typically part of a normal Windows installation.</p>
+<p>In this case, <em>Rtools</em> can be found if you go to the <em>r-project</em> site where you downloaded R the first time, and on the page where you can choose to download “base” R, you should see a link a little lower down to download an installer for Rtools.</p>
+<p>In other cases, depending on the packages you’re installing, you might need some other utilities or programs. But the pattern is the same: if you “exit the installation with a non-zero status”, you should look through the messages to see if it tells you what you’re missing.</p>
+<p>If you think you’ve addressed the issue, just try re-running <code>install.packages()</code>, to see if you can get through it without any problems. Once you finally get through the process cleanly, you should be all set.</p>
+<p>If you run into problems with installation of any packages in this course, please ask for help!</p>
+<p>Fortunately, package installation in R is usually pretty headache free, and besides the common need for Rtools on Windows, installation problems are usually pretty rare.</p>
+</section>
+<section id="rstudio-installation-messages" class="level2">
+<h2 class="anchored" data-anchor-id="rstudio-installation-messages">RStudio installation messages</h2>
+<p>Recent installations of RStudio also try to assist you with the installation process. For example, if you open up a script or notebook, and RStudio notices that it uses packages that you don’t have installed, it will actually display a small pop-up notice at the top of the window to let you know, and if it knows where to find the package (say, on CRAN), it will even give you a link you can click which will run <code>install.packages()</code> for you.</p>
+<p>In general, I have had a good experience with RStudio making these suggestions. In other words, if RStudio is making a suggestion, it’s typically a good idea to follow it, and just install what it recommends. I have never had “bloatware” kinds of issues by following RStudio’s prompts.</p>
+<p>Of course, as always, you should be aware of what you’re installing, just in case.</p>
+</section>
+</section>
+<section id="a-few-best-practice-recommendations-on-loading-packages" class="level1">
+<h1>A few “best practice” recommendations on loading packages</h1>
+<section id="put-all-library-statements-at-the-top-of-your-script" class="level2">
+<h2 class="anchored" data-anchor-id="put-all-library-statements-at-the-top-of-your-script">Put all <code>library</code> statements at the top of your script</h2>
+<p>Since you only need to load a package once per session, it’s a good habit to put all of your <code>library()</code> statements at the very beginning of the file, so you can load all of your packages in one place, and then you’re good to go.</p>
+<p>This also has the benefit of making it clear to people who look at your code what packages they will need in order to run your code. That’s a lot more friendly than making someone get halfway through your script or notebook before they realize they need to install some other package.</p>
+</section>
+<section id="loading-order-and-masking" class="level2">
+<h2 class="anchored" data-anchor-id="loading-order-and-masking">Loading order and “masking”</h2>
+<p>One of the challenges of a system like R that has so many packages is that with so many different authors contributing packages, at some point there may be two different packages that provide a function that happens to be called the same thing.</p>
+<p>Fortunately, R has a very reasonable system for handling so-called “namespace clashes.” First, whenever you load a package, R will warn you with statements like:</p>
+<blockquote class="blockquote">
+<p>The following object(s) is/(are) masked from package ‘package:XXXX’</p>
+</blockquote>
+<p>For example, one popular package with a lot of useful miscellaneous functions is the <code>MASS</code> package (which stands for <a href="https://link.springer.com/book/10.1007/978-0-387-21706-2">Modern Applied Statistics with S</a>. Another popular package is the <code>dplyr</code> package for manipulating data by statistician Hadley Wickham. Both of these packages have a function called <code>select</code>. So if you run <code>library(dplyr)</code> and then <code>library(MASS)</code>, you will get a message saying that the object <code>select</code> is <code>masked from 'package:dplyr'</code>.</p>
+<p>If an object is “masked”, then it is simply not the “default” object of that name. So if <code>MASS</code> and <code>dplyr</code> both have a <code>select()</code> function, but the one from <code>dplyr</code> is masked, then if you just say <code>select(something)</code>, you will be using the <code>select</code> function from <code>MASS</code>.</p>
+<p>Fortunately, there are a few ways to manage these masking conflicts.</p>
+</section>
+<section id="strategy-1-worry-about-the-order-of-library-statements" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-1-worry-about-the-order-of-library-statements">Strategy 1: worry about the order of <code>library</code> statements</h2>
+<p>One way to manage this is just to make sure you <code>library</code> things in the right order, so that the most “important” packages go last, because packages loaded later will mask the previous ones. In the example of <code>select()</code> above, I personally rarely use the <code>select()</code> function from <code>MASS</code>, and I very frequently use the <code>select()</code> function from <code>dplyr</code>, so I basically try to make sure I library <code>MASS</code> first, then <code>dplyr</code>, so that the <code>MASS</code> version will be masked.</p>
+<p>If you accidentally do them out of order, there is not a good way to “unlibrary” a package during a session. You may just need to re-start your R session in order to start from scratch.</p>
+</section>
+<section id="strategy-2-use-the-package-specific-syntax-for-the-masked-function" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-2-use-the-package-specific-syntax-for-the-masked-function">Strategy 2: use the “package specific” syntax for the masked function</h2>
+<p>The best way to make <em>sure</em> that you are using a specific function from a specific package is to use R’s special syntax for this purpose. This looks like:</p>
+<blockquote class="blockquote">
+<p><code>packagename::functionname()</code></p>
+</blockquote>
+<p>So in the example above, if I wanted to make sure I was using the <code>select()</code> function from the <code>dplyr</code> package, instead of the normal:</p>
+<blockquote class="blockquote">
+<p><code>select(df, cols)</code></p>
+</blockquote>
+<p>I could use the special syntax:</p>
+<blockquote class="blockquote">
+<p><code>dplyr::select(df, cols)</code></p>
+</blockquote>
+<p>This will ensure, no matter what is masking what, that I am using the function I am intending to use.</p>
+</section>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>At this point you should be able to install and load packages in R, and hopefully you have a little better understanding of how this works, and what to do if your packages ever have conflicts.</p>
+<p>I am intentionally trying to keep the number of packages needed in this course fairly low, but out of the literal <a href="https://cran.rstudio.com/web/packages/index.html"><em>tens of thousands</em></a> of R packages just on CRAN alone, there are many wonderful things made available by the R community. One of the biggest reasons that R has maintained a very strong presence in modern data science is because of the huge variety of high-quality packages out there.</p>
+<p>Enjoy!</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

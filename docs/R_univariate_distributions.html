@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Generating, describing, and plotting univariate distributions in R – INST 314 (Summer 2025)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4b6583dcda6280174f32155222df5637.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b6ff45b646ffb8f1caf16cae185cd76d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<meta name="quarto:status" content="draft">
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">INST 314 (Summer 2025)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Unit 2: Univariate Distributions</a></li><li class="breadcrumb-item"><a href="./R_basics_packages.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_univariate_distributions.html">Simulating, visualizing, and exploring univariate distributions</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installing_R_RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing R and RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 1: Starting with the Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_basics_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: some basic data concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_fundamentals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vectors: a basic building block of data in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Frames: the most useful data structure in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 2: Univariate Distributions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./univariate_distributions_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_univariate_distributions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Simulating, visualizing, and exploring univariate distributions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-in-this-tutorial" id="toc-whats-in-this-tutorial" class="nav-link active" data-scroll-target="#whats-in-this-tutorial">What’s in this tutorial?</a></li>
+  <li><a href="#what-should-you-do-before-starting-this-tutorial" id="toc-what-should-you-do-before-starting-this-tutorial" class="nav-link" data-scroll-target="#what-should-you-do-before-starting-this-tutorial">What should you do before starting this tutorial?</a></li>
+  <li><a href="#simulations-in-statistics" id="toc-simulations-in-statistics" class="nav-link" data-scroll-target="#simulations-in-statistics">Simulations in statistics</a>
+  <ul class="collapse">
+  <li><a href="#simulating-dice-rolls" id="toc-simulating-dice-rolls" class="nav-link" data-scroll-target="#simulating-dice-rolls">Simulating dice rolls</a></li>
+  <li><a href="#randomness-in-r" id="toc-randomness-in-r" class="nav-link" data-scroll-target="#randomness-in-r">Randomness in R</a></li>
+  </ul></li>
+  <li><a href="#plotting-the-dice-results" id="toc-plotting-the-dice-results" class="nav-link" data-scroll-target="#plotting-the-dice-results">Plotting the dice results</a>
+  <ul class="collapse">
+  <li><a href="#plotting-in-r-getting-started-with-the-ggplot2-package" id="toc-plotting-in-r-getting-started-with-the-ggplot2-package" class="nav-link" data-scroll-target="#plotting-in-r-getting-started-with-the-ggplot2-package">Plotting in R: getting started with the <code>ggplot2</code> package</a></li>
+  <li><a href="#basic-ggplot2-usage-to-plot-our-dice-rolls" id="toc-basic-ggplot2-usage-to-plot-our-dice-rolls" class="nav-link" data-scroll-target="#basic-ggplot2-usage-to-plot-our-dice-rolls">Basic <code>ggplot2</code> usage to plot our dice rolls</a></li>
+  <li><a href="#the-structure-of-a-ggplot2-graph" id="toc-the-structure-of-a-ggplot2-graph" class="nav-link" data-scroll-target="#the-structure-of-a-ggplot2-graph">The structure of a <code>ggplot2</code> graph</a></li>
+  <li><a href="#adding-an-annotation-line" id="toc-adding-an-annotation-line" class="nav-link" data-scroll-target="#adding-an-annotation-line">Adding an annotation line</a></li>
+  <li><a href="#plotting-again-with-different-numbers" id="toc-plotting-again-with-different-numbers" class="nav-link" data-scroll-target="#plotting-again-with-different-numbers">Plotting again, with different numbers</a></li>
+  </ul></li>
+  <li><a href="#finding-a-normal-distribution-in-dice" id="toc-finding-a-normal-distribution-in-dice" class="nav-link" data-scroll-target="#finding-a-normal-distribution-in-dice">Finding a normal distribution in dice</a>
+  <ul class="collapse">
+  <li><a href="#an-easier-way-to-generate-normal-numbers" id="toc-an-easier-way-to-generate-normal-numbers" class="nav-link" data-scroll-target="#an-easier-way-to-generate-normal-numbers">An easier way to generate normal numbers</a></li>
+  <li><a href="#density-plots" id="toc-density-plots" class="nav-link" data-scroll-target="#density-plots">Density plots</a></li>
+  <li><a href="#numeric-summaries" id="toc-numeric-summaries" class="nav-link" data-scroll-target="#numeric-summaries">Numeric summaries</a></li>
+  <li><a href="#numeric-summaries-and-normal-distributions" id="toc-numeric-summaries-and-normal-distributions" class="nav-link" data-scroll-target="#numeric-summaries-and-normal-distributions">Numeric summaries and normal distributions</a></li>
+  </ul></li>
+  <li><a href="#practice-with-the-iris-data" id="toc-practice-with-the-iris-data" class="nav-link" data-scroll-target="#practice-with-the-iris-data">Practice with the <code>iris</code> data</a>
+  <ul class="collapse">
+  <li><a href="#histograms-with-iris-data" id="toc-histograms-with-iris-data" class="nav-link" data-scroll-target="#histograms-with-iris-data">Histograms with <code>iris</code> data</a></li>
+  <li><a href="#generating-and-plotting-theoretical-densities" id="toc-generating-and-plotting-theoretical-densities" class="nav-link" data-scroll-target="#generating-and-plotting-theoretical-densities">Generating and plotting theoretical densities</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Unit 2: Univariate Distributions</a></li><li class="breadcrumb-item"><a href="./R_basics_packages.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_univariate_distributions.html">Simulating, visualizing, and exploring univariate distributions</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Generating, describing, and plotting univariate distributions in R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="whats-in-this-tutorial" class="level1">
+<h1>What’s in this tutorial?</h1>
+</section>
+<section id="what-should-you-do-before-starting-this-tutorial" class="level1">
+<h1>What should you do before starting this tutorial?</h1>
+<ul>
+<li>Make sure you have gone through the <a href="./univariate_distributions_reading.html">Concepts reading on univariate distributions</a> and have worked through the Knowledge Checks, because the topics we explore here are based on that initial understanding of concepts.</li>
+<li>Install the <code>ggplot2</code> package, as described in the <a href="./R_basics_packages.html">tutorial about R packages</a>.</li>
+</ul>
+</section>
+<section id="simulations-in-statistics" class="level1 page-columns page-full">
+<h1>Simulations in statistics</h1>
+<p>In the study and application of statistics, <em>simulations</em> play an important role. For our purposes here, the concept of a simulation is to generate values based on a particular generating process (which may be a distribution), in order to study what <em>samples</em> of that process look like.</p>
+<section id="simulating-dice-rolls" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="simulating-dice-rolls">Simulating dice rolls</h2>
+<p>For example, <a href="./univariate_distributions_reading.html#univariate-distributions">in the reading</a> we used the concept of rolling dice to present the idea of a <em>generating process</em>. We discussed how <em>theoretically</em>, each number on a die should come up the same number of times, on average, but <em>empirically</em> getting exactly the same counts of each number is unlikely.</p>
+<p>The great thing about simulations is that you can actually test out things like this, and see them in action. This is especially helpful when the concepts are a little unintuitive or surprising. We will explore simulating this particular result, and we will use some graphics code to visualize it.</p>
+<p>First, let’s talk about the <code>sample</code> function. This function has four arguments:</p>
+<ul>
+<li><code>x</code>: the vector of values to be sampled from</li>
+<li><code>size</code>: how many values to sample</li>
+<li><code>replace</code>: whether to sample “with replacement” or not</li>
+<li><code>prob</code>: a vector of probabilities, for weighting which values are most likely to be selected</li>
+</ul>
+<p>Remember that you can use the command: <code>?sample</code> to see the help file and get the above information, examples, and more.</p>
+<p>But for now, let’s talk through each of these arguments to understand what the <code>sample</code> function is doing. First, we need to decide what values to sample from. The idea is like our earlier concept of having a bag of values that represents our <em>population</em> (can be numbers, but can also be a set of strings, or any other type of data we want), and all of the things in the “bag” are the <code>x</code> vector that we need to specify when we use <code>sample()</code>.</p>
+<p>For the <code>size</code> argument, we are just telling it how many values we want to pull out of this bag.</p>
+<p>The concept of <em>replacement</em> can be understood in terms of our “bag” analogy. The question is, if you pull a value from the bag, do you <em>replace</em> it (i.e., put it back in the bag) before you draw your next number? An example of sampling <strong>without replacement</strong> would be like drawing a hand of cards in a card game like poker. If you draw the King of Hearts, and then draw your next card, the next card cannot be a King of Hearts because there’s only one of those, and it’s not in the deck anymore, it’s in your hand! It wasn’t “replaced” back into the deck when you drew it.</p>
+<p>In contrast, an example of sampling “with replacement” would be if you had a bag of the numbers 1 through 10, but whenever you drew a number, you would write the result down, but then put the number back. Since you are replacing it, it would be possible to draw the same number multiple times.</p>
+<p>Finally, the <code>prob</code> argument is used if some things were more likely to get pulled from the bag than others.</p>
+<p>So how do we specify these arguments to fit our dice-rolling example?</p>
+<p>Well first, the vector of values we are sampling from is clear, it’s the numbers 1, 2, 3, 4, 5, and 6, because that’s what’s on the faces of our die.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Remember that in R, we can use the construction <code>1:6</code> to stand for a vector of the integers from 1 to 6.</p></div></div><p>Now let’s say we want to sample from these number 600 times. Setting the <code>size</code> argument to 600 will give us 600 samples.</p>
+<p>We will ignore the <code>prob</code> argument, because we want this to be a “fair” die, that has an equal chance of rolling any of the numbers. But if we wanted to simulate a “loaded” or “weighted” die, where some numbers were more likely than others, we could use this argument to specify the probability of each of the faces.</p>
+<p>But what about <em>replacement</em>? Should this be <em>with</em> replacement, or <em>without</em>? (Think about it for a minute before going on.)</p>
+<p>The answer is that it needs to be <em>with</em> replacement. First of all, if we didn’t replace the values, we would run out after just six rolls! The analogy would be like somehow removing each side as we rolled them. But to think about it a little less concretely, the generating process is that each time we roll, we still sample a number from the same set of six numbers, and that never changes, no matter how many times we roll.</p>
+<p>In the <code>sample</code> function in R, the <code>replace</code> argument is <code>FALSE</code> by default (which you can tell if you look at the help file using <code>?sample</code>). So this just means that when we use the function, we need to make sure to use <code>replace = TRUE</code> if we want to sample with replacement.</p>
+<p>So let’s do this in code now. We will first use the <code>sample</code> function to generate 600 rolls of a die, and assign that to a variable <code>die_rolls</code>. We can then use the <code>xtabs</code> function to see how many of each number was rolled in those 600 rolls.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>die_rolls <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">600</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span> die_rolls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>die_rolls
+  1   2   3   4   5   6 
+100 117  91  92 101  99 </code></pre>
+</div>
+</div>
+<p>Remember that our <em>theoretical</em> distribution says that every value is selected with the same probability. We can see that the <em>empirical</em> distribution here is close, but not exact. Luckily enough, we <em>did</em> get exactly 100 rolls of “1”, but then we got 117 rolls of “2”, which seems like a lot more than 100!</p>
+<p>Does this mean there is something wrong with our dice? Not at all! This is a perfectly valid result, and it helps illustrate that even if we know the generating process, any actually observed data set is likely to depart from that theoretical ideal.</p>
+<p>But before we proceed further, we need to talk a little about how <em>randomness</em> works in R.</p>
+</section>
+<section id="randomness-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="randomness-in-r">Randomness in R</h2>
+<p>The topic of mathematical randomness is actually very complex and interesting. Before computers were readily available, there were actually books of random numbers produced that statisticians could use to “generate” random values by flipping to a random page and putting their finger down without looking. With computers, in some ways it’s just as challenging because (“classical” digital) computers are good at deterministic computing (they produce a predictable result based on the input), but not inherently good at <em>randomness</em>.</p>
+<p>It turns out that the numbers generated in R (and in virtually all standard statistical software) are technically called <em>pseudo-random</em>, which means “not actually random”, and in practice they function a little like those old books. The good news for us is that a lot of very smart people have worked hard to make R’s “random” numbers “random enough” to work for our purposes. In other words, they have the same statistical properties that “true” random numbers would have, so we can use them in our analyses. If this topic is intriguing to you, I recommend looking at the help file for <code>?Random</code> and reading the details and references.</p>
+<p>One of the side benefits of using pseudo-random numbers is that if we really want to, we can reproduce <em>exact</em> results, even if there is something random about the process. It would be as if you were using a robot to pick numbers out of the old number books, and you could tell it to use the same sequence of motions each time, in order to exactly reproduce the same set of “random” numbers.</p>
+<p>This is what the <code>set.seed()</code> function does. If you use this function, you give it some integer value, and you are basically setting the “starting state” of the random number generator based on that value. I did this in the code chunk above so that when you run this code, you will get the exact same results as I do, every time, as long as you don’t change the <code>set.seed()</code> value.</p>
+<p>So take a minute to try it out: first, try running the code chunk above a few times, and see how it gets the same result every time. Now change the number inside the <code>set.seed()</code> function, and you’ll see that now you get a slightly different set of results when you run the chunk, but then that will be consistent each time you run that new seed. Finally, comment-out or delete the <code>set.seed()</code> line, and you’ll see that you get a different set of results every time you run the chunk.</p>
+<p>In practical terms, what all this means is that there are a number of “random” generators in R, but they are all <em>pseudo</em>-random, and if you ever want to be able to replicate a “random” result exactly, you can use <code>set.seed()</code> to control the starting state of the random number generator.</p>
+</section>
+</section>
+<section id="plotting-the-dice-results" class="level1 page-columns page-full">
+<h1>Plotting the dice results</h1>
+<p>Now, it’s time to turn to visualization! Plotting and visualizing data is a really important part of EDA.</p>
+<section id="plotting-in-r-getting-started-with-the-ggplot2-package" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-in-r-getting-started-with-the-ggplot2-package">Plotting in R: getting started with the <code>ggplot2</code> package</h2>
+<p>R actually has two distinct systems for creating graphs and plots. “Base” graphics and “grid” graphics. Base graphics are the older system, and for some things they are a bit simpler, but they are not as flexible, and ultimately start to become harder and harder to work with, the more we want to do with them.</p>
+<p>In contrast, the “grid” system uses a more unified system of controlling graphical output. In practice, the most popular package for plotting data in R is called <code>ggplot2</code>, and it’s built on top of the grid system. So while not many people learn all the nuts and bolts of the grid system <em>per se</em>, it is really useful to learn the methods of <code>ggplot2</code>.</p>
+<p>That said, <code>ggplot2</code> does have a bit of a learning curve. But once you understand how it works, you can approach data visualization with a common framework and you can produce an amazing array of different kinds of plots and graphs.</p>
+</section>
+<section id="basic-ggplot2-usage-to-plot-our-dice-rolls" class="level2">
+<h2 class="anchored" data-anchor-id="basic-ggplot2-usage-to-plot-our-dice-rolls">Basic <code>ggplot2</code> usage to plot our dice rolls</h2>
+<p>Before we do anything, make sure you have installed the <code>ggplot2</code> package. Consult the <a href="./R_basics_packages.html">tutorial on packages</a> if you need to review how to do that.</p>
+<p>The advice in that tutorial is to put your <code>library</code> statements at the top of the file, but since we are just now introducing the <code>ggplot2</code> package, we can just do that now. Make sure to run the following code chunk, and if it tells you you don’t have the package installed, please see the <code>r_basics_packages.Rmd</code> Notebook on installing the package before proceeding. In the future, we will put <code>library()</code> calls like this at the very beginning of our notebooks/scripts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-structure-of-a-ggplot2-graph" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-structure-of-a-ggplot2-graph">The structure of a <code>ggplot2</code> graph</h2>
+<p>The unique thing about how <code>ggplot2</code> works is that you build your graphs in <em>layers</em>. Each layer adds or changes something about how the graph is constructed or displayed.</p>
+<p>The first layer starts with the <code>ggplot()</code> function.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> What this function does is set up the main parameters of the graph, which is usually something like the x-axis and y-axis, and the name of the data frame where the data is coming from.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Note that the name of the <em>package</em> is <code>ggplot2</code>, but the main <em>function</em> is just called <code>ggplot()</code>. The history here is that <a href="https://hadley.nz/">Hadley Wickham</a>, the original author of <code>ggplot2</code>, along with a ton of other very popular and influential packages, first developed the <code>ggplot</code> package as part of his PhD dissertation in statistics. But he quickly decided that he could do a much better job, and re-implemented the whole package from scratch, and instead of just making it the next version of the <code>ggplot</code> package, he decided it was a big enough re-write to make it an independent package which he called <code>ggplot2</code>. This just goes to show that even brilliant people like Wickham can make silly version-naming decisions. In any case, the end result is that everyone uses <code>ggplot2</code>, and we all just ignore what the “2” in the package name means.</p></div></div><p>In our case, we just want to plot the counts of numbers in the <code>die_rolls</code> vector. We can use the <code>as.data.frame()</code> function to easily convert the table that <code>xtabs()</code> gives us into a proper data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>die_results <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">xtabs</span>(<span class="sc">~</span> die_rolls))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(die_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  die_rolls Freq
+1         1  100
+2         2  117
+3         3   91
+4         4   92
+5         5  101
+6         6   99</code></pre>
+</div>
+</div>
+<p>This is a good opportunity to practice one of the principles from the <a href="./R_basics_dataframes.html">previous unit</a>, which was to rename our columns to be a bit more consistent. Since we are talking about the counts of how many times each “face” of our theoretical die was rolled, let’s rename the columns accordingly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(die_results) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"die_face"</span>, <span class="st">"counts"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(die_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  die_face counts
+1        1    100
+2        2    117
+3        3     91
+4        4     92
+5        5    101
+6        6     99</code></pre>
+</div>
+</div>
+<p>Now we can start building our graph. The other special concept from <code>ggplot2</code> that we need to introduce is the concept of an <em>aesthetic</em>, which is a bit of jargon from the data visualization literature, which basically means “mapping from data to a visual property.” In <code>ggplot2</code>, there is a function called <code>aes</code> which stands for “aesthetic”, and inside that function is where you use arguments to set different graph properties to the value of different <em>variables</em> (i.e., columns) in your data.</p>
+<p>Let’s put this all together. We will start our graph with the following “base” layer. The first argument of the <code>ggplot</code> function is to say what the data frame is that we’re plotting from. The second is an <code>aes</code> function that sets up our basic mapping. We imagine that we would like a bar graph where we have a bar for each die face, with the height of the bar indicating how many of that value we got in our sample. So inside <code>aes()</code> we specify that the x-axis values should come from the <code>die_face</code> column, and the y-axis values should come from the <code>counts</code> column.</p>
+<p>We can save this <code>ggplot</code> object to a variable, and then use <code>print()</code> to display it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>die_counts_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> die_results, <span class="fu">aes</span>(<span class="at">x =</span> die_face, <span class="at">y =</span> counts))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(die_counts_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So far so good, but it just looks like an empty graph!<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;But notice that the axis labels and values seem to make sense. You can think of the base <code>ggplot</code> layer as setting up the initial axes and scales of the graph.</p></div></div><p>This is because we haven’t yet said what <em>shape</em> (or in <code>ggplot2</code> terminology, <em>geom</em>) that we want to plot. So we need to add another layer that says, “okay, now that you know the data mappings, display this data as a bar graph.” There is a <code>geom_bar()</code> in <code>ggplot2</code>, but that geom doesn’t literally plot the actual values by default. So what we want is a function called <code>geom_col()</code>.</p>
+<p>Here’s what it looks like to add this layer to our existing graph object and then display it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>die_counts_plot <span class="ot">&lt;-</span> die_counts_plot <span class="sc">+</span> <span class="fu">geom_col</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(die_counts_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hooray! Now we can see the visual of the “flat” uniform distribution. It’s not <em>perfectly</em> flat, as we discussed, but it’s pretty flat, as far as distributions go.</p>
+</section>
+<section id="adding-an-annotation-line" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="adding-an-annotation-line">Adding an annotation line</h2>
+<p>In this case, we might want to draw a kind of reference line, to help us understand what we are looking at. For example, when we looked at the raw numbers, we noticed that there were in fact exactly 100 rolls of “1”, just like our theoretical distribution would predict. But that’s harder to see, given the values that <code>ggplot2</code> has selected for our axis tick-marks.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;There are also ways to modify the tick-marks, but right now, adding a horizontal line is a little better for our purposes.</p></div></div><p>So let’s add another layer to our plot, just a horizontal line that marks where “100” is, because that’s our predicted value for each count, based on our theoretical distribution. In order to do that, we can just add the <code>geom_hline()</code> and specify the <code>yintercept</code> argument. Finally, we can make it a dashed line using the <code>linetype</code> argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>die_counts_plot <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">100</span>, <span class="at">linetype =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now it’s easier to see that while the “5” and “6” results were extremely close to 100, only the “1” results were exactly at the predicted frequency of 100.</p>
+</section>
+<section id="plotting-again-with-different-numbers" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="plotting-again-with-different-numbers">Plotting again, with different numbers</h2>
+<p>In order to illustrate how this shape changes and varies if we change the number of die rolls, let’s put all this code together again. But this time, let’s generate a LOT more rolls, to see if it gets flatter.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;This time, I put both layers of the <code>ggplot</code> graph in at once, using the <code>+</code>. But I also used a line return after the <code>+</code>. I did this just to make the code a little more readable, and so you don’t necessarily have to scroll to see the whole line. R allows this because when it sees the <code>+</code> at the end of the line, it knows we’re not done yet, so it interprets the next line of code as basically just a continuation of the same line. RStudio helpful adds some indentation when you do this, but unlike languages like Python, that indentation doesn’t actually matter, it’s just to make it easier to read.</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>number_of_rolls <span class="ot">=</span> <span class="dv">60000</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>more_die_rolls <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, number_of_rolls, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>more_results <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">xtabs</span>(<span class="sc">~</span> more_die_rolls))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(more_results) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"die_face"</span>, <span class="st">"counts"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>die_plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> more_results, <span class="fu">aes</span>(<span class="at">x =</span> die_face, <span class="at">y =</span> counts)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(die_plot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>That’s a lot more flat!</p>
+<p>Now take a minute to play around with the value assigned to the <code>number_of_rolls</code> variable and re-run the chunk of code over and over to see different results. Make the number of rolls small, like 20 or 30, run that a few times to see the shape change. Then make it larger, and see if you can decide what you think is “large enough” before the distribution really starts looking flat.</p>
+</section>
+</section>
+<section id="finding-a-normal-distribution-in-dice" class="level1">
+<h1>Finding a normal distribution in dice</h1>
+<p>Now that we have a method of generating numbers and plotting the resulting distribution, let’s start to explore the normal distribution.</p>
+<p>Recall from the reading: the Central Limit Theorem tells us that when we average (or sum) many different processes together, that average (or sum) will tend to follow the normal distribution.</p>
+<p>This means that even though the distribution of numbers generated by an <em>individual</em> die is a uniform distribution (if the die is fair), once we add up (or average) <em>many</em> dice rolled at the same time, the distribution of <em>that</em> result will tend towards normal.</p>
+<p>In other words, if we:</p>
+<ol type="1">
+<li>roll a <em>bunch</em> of dice and add them together,</li>
+<li>then write <em>that</em> number on the slip of paper that goes into the bag,</li>
+<li>then draw numbers from that bag (data collection)</li>
+</ol>
+<p>the numbers will tend to follow a normal distribution</p>
+<p>Let’s see this in action! First, run the following code, which simulates rolling 30 (six-sided) dice, adding them up, and recording that number, and then repeating that process 10,000 times. Note that the <code>size</code> parameter in our <code>sample</code> function is now the number of dice rolled each time, so we need the <code>replicate</code> function, which lets us repeat a process many times, and it outputs the results of those repetitions to a vector, which we are assigning to a variable called <code>all_rolls</code>.</p>
+<p>(Side note: this use of <code>replicate</code> could also be accomplished with a for-loop. R has for-loops and while-loops like other languages, but for our purposes, the <code>replicate</code> function here is a bit simpler. Also note that I used even more line-returns in the middle of the <code>sample</code> function, again just to make it a little easier to read than if it were all squished into one long line.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>number_of_dice_rolled <span class="ot">&lt;-</span> <span class="dv">30</span> <span class="co"># &lt;- change this number to change the shape</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>number_of_rolls <span class="ot">&lt;-</span> <span class="dv">10</span>    <span class="co"># &lt;- change this to make it more variable</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>roll_values <span class="ot">&lt;-</span> <span class="fu">replicate</span>(number_of_rolls, </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">sum</span>(<span class="fu">sample</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">size =</span> number_of_dice_rolled, </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that we’ve generated the numbers, let’s use a slightly different graph called a <em>histogram</em>. The concept is similar as before, but now that we have a lot of different values, not just the 6 die faces, we don’t really want a different bar for each value that we get. Instead, what a histogram does is it takes the raw data – the long vector of numbers representing each of the summed rolls – and it puts those values into “bins”, and plots the count of how many values are in that bin.</p>
+<p>For example, if we’re rolling 30 dice each time, we’re generating numbers between 30 and 180 (all 1’s vs.&nbsp;all 6’s). If each bin has a “width” of 5, it would mean (for example) that all of the values from 101 to 105 would be in one bin, the values 106 to 110 would be in the next bin, etc. Then the height of each bin (as a bar) is the count of how many values fell into that bin.</p>
+<p>This is a simple way to show the overall “shape” of the distribution, because the taller bins represent the most common or likely values and the short bins represent more infrequent or unlikely values.</p>
+<p>The main parameter to play with when creating a histogram is the “width” of the bin. Run the code below to create a histogram with a bin basically for each value, but then play around with making the bin size larger to see how the visualization changes.</p>
+<p>(Side note on code: this time, since we are not calculating the counts ourselves, we don’t need to convert the raw rolls into a table, so we just skip the step. We also just do the whole <code>ggplot</code> call at once, without assigning it to a variable. Either way is valid, I’m just showing you different options.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>histogram_bin_width <span class="ot">&lt;-</span> <span class="dv">1</span>    <span class="co"># &lt;- change this to adjust the bin width</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> roll_values)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> histogram_bin_width)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you run the code without changing the values I started with above, the resulting histogram should look pretty close to a normal distribution. This is the Central Limit Theorem in action!</p>
+<p>Play around with the variable values in the code above to get a feel for how they affect the distribution. As the number of dice rolled get smaller, it will look less and less normal, because recall that the Central Limit Theorem says that as the number of independent processes gets higher, the more it will follow a normal distribution. When you get to rolling just one die, you’ll be back to the flat uniform distribution</p>
+<p>Playing around with the number of rolls (i.e., the number of times you record a new roll) is like playing around with how much “data” you’ve collected. Even though we know exactly what the distributions are (because we’re picking them and using them to generate random data), you can see that low amounts of data can lead to some very strange looking <em>empirical</em> distributions. For example, go from rolling 30 dice 10,000 times (which looks very close to a normal distribution) to rolling 30 dice just 20 times. It will look a lot less normal! The important thing to understand is that the <em>theoretical</em> distribution only changes with the number of dice being rolled. The fact that it doesn’t look very normal when you only do a few rolls is reflecting the fact that sometimes you need a lot of data to be able to really get a good idea of what the underlying distribution is.</p>
+<p>Playing around with the bin width of the histogram is a good way to get a sense of how the visualization can change how things appear. Note that when you do this, you’re not changing anything about the <em>data</em> or the <em>distribution</em>, you’re only changing how the <em>visualization</em> process works.</p>
+<section id="an-easier-way-to-generate-normal-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="an-easier-way-to-generate-normal-numbers">An easier way to generate normal numbers</h2>
+<p>The above is basically a demo of the CLT: showing that even though individual dice follow a uniform distribution, the average of many dice rolls follows a normal distribution.</p>
+<p>But if you wanted to generate numbers from a normal distribution, you can do that directly, too! Here’s an example in R, generating 10,000 numbers from a continuous normal distribution with a mean of 30 and a standard deviation of 6, and plotted with a histogram:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>normal_sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="dv">6</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> normal_sample)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Again, feel free to play around with some of the values. What happens if you adjust the standard deviation (<code>sd</code>) parameter? The <code>mean</code>? The number of values generated?</p>
+</section>
+<section id="density-plots" class="level2">
+<h2 class="anchored" data-anchor-id="density-plots">Density plots</h2>
+<p>The great thing about histograms is that they show your actual data, warts and all. They are invaluable when you are starting off with EDA, because especially if you play around with the bin width, you might stumble across some odd gaps or a couple of extreme outliers, or other patterns you might not notice otherwise.</p>
+<p>However, sometimes you also would like to plot something that smooths over the bumps to give you more of a clear picture of the curve of the distribution. That’s what a density plot can be good for.</p>
+<p>Here’s an example of a density plot of some random numbers, in comparison to the previous histogram.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>normal_sample2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="dv">6</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> normal_sample2)) <span class="sc">+</span> <span class="fu">geom_density</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And here’s an example with both. If you want to superimpose a density plot over a histogram, you need to tell your plotting software to scale the histogram by <em>density</em> instead of counts. Here’s how to do this in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>normal_sample3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="dv">6</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> normal_sample3)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fill =</span> <span class="st">"gray"</span>, <span class="at">binwidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that I changed the “fill” color of the histogram to make it lighter so the density curve is more easily visible. In this plot, you can see what I mean that the density plot is like a “smoothed” histogram.</p>
+</section>
+<section id="numeric-summaries" class="level2">
+<h2 class="anchored" data-anchor-id="numeric-summaries">Numeric summaries</h2>
+<p>Plotting histograms and density plots are extremely helpful, but sometimes you would like to summarize a set of numbers in a simpler way. This is what summary statistics are good for. But just remember, summary statistics are a very poor replacement for plots when it comes to exploratory data analysis.</p>
+<p>We have already covered mean and median. Recall that the mean is the same as getting an <em>average</em> value, and the median is the <em>middle</em> value, such that half of the data is higher and half is lower.</p>
+<p>The concept of the median can be generalized with the concept of <em>quantiles</em>, which are set at any percentages you want, not just the 50% of the median. It’s common for people to examine the “quartiles”, which are the 25%, 50%, and 75% quantiles. That is, the 25% quantile is the value where 25% of the numbers are smaller than it, the 50% quantile is the same as the median, and the 75% quantile is the number where 75% of the numbers are smaller than it. The 0% quantile is another way of saying the minimum, and the 100% quantile is the same as the maximum.</p>
+<p>The code below shows how the R function <code>quantile()</code> can be used on a set of numbers to compute quartiles by default, or any other quantiles as specified:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>more_random_numbers <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>quartiles_of_randoms <span class="ot">&lt;-</span> <span class="fu">quantile</span>(more_random_numbers)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>arbitrary_quantiles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.13</span>, <span class="fl">0.44</span>, <span class="fl">0.89</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>weird_quantiles_of_randoms <span class="ot">&lt;-</span> <span class="fu">quantile</span>(more_random_numbers,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">probs =</span> arbitrary_quantiles)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="st">"The minimum, quartiles, and maximum values are:"</span>, quartiles_of_randoms))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                  
+"The minimum, quartiles, and maximum values are:" 
+                                               0% 
+                              "-3.74011711271895" 
+                                              25% 
+                             "-0.662906663475643" 
+                                              50% 
+                            "-0.0301726410468927" 
+                                              75% 
+                              "0.693901967621219" 
+                                             100% 
+                               "2.98886013235066" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="st">"Some arbitrary quantiles are:"</span>, weird_quantiles_of_randoms))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                            13% 
+"Some arbitrary quantiles are:"             "-1.11207803941771" 
+                            44%                             89% 
+           "-0.158973029069408"              "1.24719176952534" </code></pre>
+</div>
+</div>
+</section>
+<section id="numeric-summaries-and-normal-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="numeric-summaries-and-normal-distributions">Numeric summaries and normal distributions</h2>
+<p>One of the properties of normal distributions is that they are perfectly symmetric, which means that their mean, median, and mode are all at the same value. In other words, the average value (the mean) is also the “middle” value (the median), and both of those are also the most likely/common value of the distribution (the mode).</p>
+<p>One of the ways to see this graphically is to plot vertical lines superimposed over a density plot.</p>
+<p>Let’s generate a large number of normal <em>variates</em> (another way of saying “numbers pulled from a normal distribution”), plot the density curve, and plot a vertical line at the (empirical) mean:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>random_normals <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>random_normals_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(random_normals)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> random_normals)) <span class="sc">+</span> <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> random_normals_mean), <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can play around with these values, but as long as there are a lot of numbers being generated, the calculated mean will be quite close to both the “theoretical” mean (the mean we used in the first line to generate the values in the first place) as well as the mode of the density plot.</p>
+<p>You can see the same thing for the median:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>random_normals <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>random_normals_median <span class="ot">&lt;-</span> <span class="fu">median</span>(random_normals)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> random_normals)) <span class="sc">+</span> <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> random_normals_median), <span class="at">linetype =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Or even quantiles:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>random_normals <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>random_normals_quantiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(random_normals,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>, <span class="fl">0.975</span>))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> random_normals)) <span class="sc">+</span> <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> random_normals_quantiles), <span class="at">linetype =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>)) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A couple of plotting tips:</p>
+<ul>
+<li>using <code>theme_minimal()</code> is an easy way to have a “cleaner” look with a lighter background</li>
+<li>I passed a vector of colors to the <code>geom_vline()</code> function because I knew I was creating multiple lines and I wanted them colored differently. Just be aware that for this trick, the number of colors in the vector has to be the same as the number of lines you’re drawing, which is why each color is listed twice (in reverse order)</li>
+</ul>
+<p>Play around with the code above to get used to plotting vertical lines superimposed over density plots and/or histograms.</p>
+</section>
+</section>
+<section id="practice-with-the-iris-data" class="level1">
+<h1>Practice with the <code>iris</code> data</h1>
+<p>Generating random numbers and simulating “fake” data is a very valuable tool, but let’s go through some of the same processes above with real data, which is usually not as neat as simulated data.</p>
+<p>Let’s try out some of these things with a simple data set that is already in R, the <code>iris</code> data set. Since the <code>iris</code> data comes pre-loaded, you don’t have to read it in to use it. But since it’s new to us, let’s use some of the ways we’ve already seen to get some idea of what’s in it.</p>
+<p>First, look at the first few rows of data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+</div>
+<p>In R, most pre-loaded data sets also come with an informative help file, which you can access like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can see from this help file that the data contain measurements (in centimeters) of different parts of various specimens of three different species of iris. This data set is extremely common as a way to illustrate some concepts, especially clustering concepts.</p>
+<p>But looking at the first few rows is an easy way to get an idea of how many columns there are, what their names are, and what kind of data is in each column.</p>
+<p>Before, we also examined some summary stats, like the minimum, maximum, mean, and median. However, it may be better to just go ahead and start with a histogram, because a single histogram tells you a lot more than all of those summary numbers.</p>
+<section id="histograms-with-iris-data" class="level2">
+<h2 class="anchored" data-anchor-id="histograms-with-iris-data">Histograms with <code>iris</code> data</h2>
+<p>Plot a histogram of <code>Sepal.Length</code>, and play around with the bin width. Notice that the bin width is on the scale of the variable being plotted, so you have to pay attention to that when considering good bin width choices. As you explore some different bin widths, do you notice any different patterns? Does the distribution look normal? What do you see?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>histogram_bin_width <span class="ot">=</span> <span class="fl">0.2</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length)) <span class="sc">+</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> histogram_bin_width)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now do the same for <code>Sepal.Width</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>histogram_bin_width <span class="ot">=</span> <span class="fl">0.1</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Width)) <span class="sc">+</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> histogram_bin_width)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now do the same for <code>Petal.Length</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>histogram_bin_width <span class="ot">=</span> <span class="fl">0.2</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Petal.Length)) <span class="sc">+</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> histogram_bin_width)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Which of these looks the most like a normal distribution? To my eye, the <code>Sepal.Width</code> might look the most normal, except for that tall “spike” at the mode.</p>
+</section>
+<section id="generating-and-plotting-theoretical-densities" class="level2">
+<h2 class="anchored" data-anchor-id="generating-and-plotting-theoretical-densities">Generating and plotting theoretical densities</h2>
+<p>The first thing you might notice is how “messy” or different these distributions look. As you look at distributions, you might start to wonder “well, how close to a normal distribution is this?”</p>
+<p>Interestingly, there is not a single foolproof method for assessing “how close” an empirical distribution is to a theoretical one. There are some tests, but those can be very sensitive, meaning that when you have a lot of data, even very small departures from a “perfect” normal distribution can be detected.</p>
+<p>In the end, visual judgments may be the most robust way to decide how “normal” something looks. So in order to facilitate this, it would be nice if we could superimpose a perfect theoretical normal distribution on top of our data, to get a clear visual comparison.</p>
+<p>So let’s learn how to do just that!</p>
+<p>The first step is to learn how to generate theoretical <em>densities</em>. The concept of a density is that it’s the relative probability of observing a value, given a distribution. When we did the density plots above, that’s what we were plotting. But those plots were <em>empirical</em> densities, based on our sample data. What we want here are <em>theoretical</em> densities that match the normal distribution.</p>
+<p>So what we want is to be able to say, “okay, for every value on the x-axis, what is the probability density for that value?” In order to do this, we can follow the steps below. The idea here is that we want to use a distribution with parameters that match the parameters we see in our data and generate density values from that distribution, then plot that over our histograms to be able to compare the shapes.</p>
+<ol type="1">
+<li>First, recall the parameters that are needed to specify your distribution. For the normal distribution, that is the mean and the standard deviation.</li>
+<li>Compute those parameters from the data in the variable you’re examining.</li>
+<li>Next, generate the density values corresponding to the vaalues in the variable, using the appropriate <em>density function</em></li>
+<li>Then plot!</li>
+</ol>
+<p>The only really new function here is for step 4: the density function. The good news is that R has lots of different density functions, for different theoretical distributions. Here we want the density function for the normal distribution, which is just <code>dnorm</code>. All you do is give <code>dnorm</code> your x values and the parameters (mean and sd) of your distribution, and it gives you back densities that correspond to your x values.</p>
+<p>Here are the steps in code, for getting densities based on the <code>Sepal.Width</code> variable in the <code>iris</code> data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the mean and sd of the variable we are examining</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris<span class="sc">$</span>Sepal.Width)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(iris<span class="sc">$</span>Sepal.Width)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the densities for the observed values</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>y_densities <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(iris<span class="sc">$</span>Sepal.Width, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, in order to plot the theoretical curve on top of the data, we need to do what we did above, plotting a histogram on the density scale, and then adding a layer for the theoretical densities we just computed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(Sepal.Width)) <span class="sc">+</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">binwidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> y_densities))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we can see what shape we <em>should</em> see, if our data indeed followed a normal distribution. In this case, you can see that the curve seems pretty close, just except for that big “spike” in the middle. But overall this is not bad.</p>
+<p>Compare this to if we took the same steps with the <code>Petal.Length</code> variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the mean and sd of the variable we are examining</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris<span class="sc">$</span>Petal.Length)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(iris<span class="sc">$</span>Petal.Length)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the densities for the observed values</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>y_densities <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(iris<span class="sc">$</span>Petal.Length, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(Petal.Length)) <span class="sc">+</span> </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">binwidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> y_densities))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_univariate_distributions_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>That is <em>definitely</em> non-normal! We didn’t really need to plot the theoretical densities here, of course, since there is very clearly two separate modes in this variable, which suggest that it’s more like two distinct (possibly normal) distributions, not a single simple distribution.</p>
+</section>
+</section>
+<section id="next-steps" class="level1">
+<h1>Next steps</h1>
+<p>At this point, we have developed a lot of tools in order to explore single variables, and with a combination of plots and summaries, we can examine our numerical (<em>continuous</em> or <em>interval</em>) variables in the process of performing <em>exploratory data analysis</em> (EDA).</p>
+<p>Being able to compare <em>empirical</em> (observed) data distributions to <em>theoretical</em> distributions like the normal distribution is a powerful way for us to check our assumptions. Maybe we have expectations that our variables should be normally distributed, or maybe we have no idea and we just want to check. Using the techniques explained here will let us do that.</p>
+<p>After the Reading and going finishing this Notebook, you should be ready to tackle the Knowledge Check 2 and Code Practice 2, before continuing on to the next Challenge.</p>
+<p>Good luck, and as always, keep asking questions!</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = true;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,10 +1,6 @@
 ---
 title: "INST 314 Unit 4: assessing regression models by examining errors"
-author: "Dr. Scott Jackson"
-date: "2024-07-04"
-output:
-  tufte::tufte_handout: default
-  tufte::tufte_html: default
+draft: true
 ---
 
 ```{r, echo=FALSE}

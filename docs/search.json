@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "INST 314: Statistics for Information Science",
-    "section": "",
-    "text": "What’s on this site\nWelcome! If you are registered for the 2025 Summer II session of INST 314 (section 21) at the University of Maryland, with Scott Jackson as your instructor, you are in the right place.\nThis is where I am hosting the main instructional mnaterials including:\n\nThe weekly readings for each Unit, including practice Knowledge Checks.\nThe weekly code tutorials for each Unit.\n\nOther materials like the Practice exercises, weekly Challenges, data files, etc. are available on the official course site on ELMS.\n\n\nHow to use this site\n\nThe navigation is mainly on the left-hand side. The selections are grouped, so there is an item for each Unit, but then under each Unit there is a Concepts Reading, and then a set of Code Tutorials. The latter are broken into multiple files as well.\nOnce you’re on a page, there should be a list of sections on the right hand side to help you navigate to specific topics. I’m hoping this is helpful when you want to return to a section for review.\nAll of these materials are intended to be read through from beginning to end (though of course you can take breaks). If you try to skip around and read sections out of order, it might not make as much sense.\nI will be adding material and additional resources as we go through the course, so this is still a work in progress.\nThere’s a little toggle in the upper right if you want to switch between light and dark color schemes.\n\n\n\nCode and Code Tutorials\n\nThis site is created using Quarto, which means the pages are mostly written in a flavor of R Markdown.\nThis also means there will be sections of code and results, especially in the Code Tutorials.\nYou should be running all of the code yoruself on your own machine as you work through the material.\nYou can either copy & paste the code from this site, or you can just download the .qmd source files, either by cloning this entire repository off of GitHub, or by visiting the course site on ELMS and downloading them from the Modules section of that site."
-  },
-  {
     "objectID": "R_basics_fundamentals.html",
     "href": "R_basics_fundamentals.html",
     "title": "R Basics: fundamentals of working with R",
@@ -63,7 +56,7 @@
     "href": "R_basics_fundamentals.html#using-arguments-in-functions",
     "title": "R Basics: fundamentals of working with R",
     "section": "Using arguments in functions",
-    "text": "Using arguments in functions\nSo while some functions can just run like this with nothing in the parentheses, most of the time, you will use arguments. Arguments are the values that go inside the parentheses of the function, and they are separated by commas. You can think about arguments as the “input” values of the function. In other words, it’s what the function needs to know in order to do its job.\nFor example, the function rnorm will generate random samples from a normal distribution (we will get to what all that means soon!), and the only argument it really needs is a number to tell it how many samples to generate. Try running the following:\n\nrnorm(10)\n\n [1]  0.7965748 -0.2349396  1.3247517  0.4388958  2.1711147  1.1412401\n [7]  0.1537557  2.0340569  0.5982573  2.1574210\n\n\nEvery time you run it, you’ll get different numbers. Now try deleting the 10 and see what happens (see below). It will give you an error and tell you that an argument is missing.\n\nrnorm()\n\nMost functions actually have several arguments. So if you enter in several values separated by commas, how does R know which value goes with which argument? It turns out that R has a few different ways of doing this, which makes specifying arguments pretty convenient.\nFirst off, arguments have names, and if you specify their names using the = (“single equal-sign”) operator, you can enter them in any order. For example, in that rnorm() error message above, it tells you that argument \"n\" is missing. So we could specify the code as:\n\nrnorm(n = 10)\n\n [1] -0.5672638  0.8361274  0.3135270  1.6947685 -0.9991935  2.6123040\n [7]  0.0972927  0.0704026 -1.0248264  0.6004358\n\n\nThe syntax here is that you put the name of the argument first, followed by a = symbol, followed by a value, and spaces are optional. Note that when we are assigning values to arguments, we use the = sign, not the “assignment arrow” &lt;- symbol. In this example, we are just being very explicit about which argument we want that 10 to go to.\nA second way that R knows which arguments are which is by the order they come in. For example, the rnorm() function has three arguments: n, mean, and sd, in that order. So if we give three values without names, then R assumes we are providing the arguments in order. So the following two lines of code are identical. The first uses explicit argument names, and the second just provides the arguments in order.\n\nrnorm(n = 5, mean = 100, sd = 10)\n\n[1]  79.61446 100.67370 110.71073 109.95952 107.99800\n\nrnorm(5, 100, 10)\n\n[1]  88.83407  94.65678 105.47573 100.31342 118.68041",
+    "text": "Using arguments in functions\nSo while some functions can just run like this with nothing in the parentheses, most of the time, you will use arguments. Arguments are the values that go inside the parentheses of the function, and they are separated by commas. You can think about arguments as the “input” values of the function. In other words, it’s what the function needs to know in order to do its job.\nFor example, the function rnorm will generate random samples from a normal distribution (we will get to what all that means soon!), and the only argument it really needs is a number to tell it how many samples to generate. Try running the following:\n\nrnorm(10)\n\n [1]  0.4136986 -0.8004320  0.6900616  1.5062662  0.2241073 -1.0394522\n [7]  0.5218444 -0.2684706  0.7286738  1.0489361\n\n\nEvery time you run it, you’ll get different numbers. Now try deleting the 10 and see what happens (see below). It will give you an error and tell you that an argument is missing.\n\nrnorm()\n\nMost functions actually have several arguments. So if you enter in several values separated by commas, how does R know which value goes with which argument? It turns out that R has a few different ways of doing this, which makes specifying arguments pretty convenient.\nFirst off, arguments have names, and if you specify their names using the = (“single equal-sign”) operator, you can enter them in any order. For example, in that rnorm() error message above, it tells you that argument \"n\" is missing. So we could specify the code as:\n\nrnorm(n = 10)\n\n [1]  0.05468181 -1.58023963 -0.31148319  0.26142978 -2.43986590  1.03036659\n [7]  1.33737437 -0.00404514  1.30821417 -1.40706402\n\n\nThe syntax here is that you put the name of the argument first, followed by a = symbol, followed by a value, and spaces are optional. Note that when we are assigning values to arguments, we use the = sign, not the “assignment arrow” &lt;- symbol. In this example, we are just being very explicit about which argument we want that 10 to go to.\nA second way that R knows which arguments are which is by the order they come in. For example, the rnorm() function has three arguments: n, mean, and sd, in that order. So if we give three values without names, then R assumes we are providing the arguments in order. So the following two lines of code are identical. The first uses explicit argument names, and the second just provides the arguments in order.\n\nrnorm(n = 5, mean = 100, sd = 10)\n\n[1] 127.54002  93.20690  93.26928  89.17972  80.46650\n\nrnorm(5, 100, 10)\n\n[1]  91.56482 101.13522 102.83898 104.48064 109.72901",
     "crumbs": [
       "Home",
       "Unit 1: Starting with the Basics",
@@ -76,7 +69,7 @@
     "href": "R_basics_fundamentals.html#default-values-for-arguments",
     "title": "R Basics: fundamentals of working with R",
     "section": "Default values for arguments",
-    "text": "Default values for arguments\nIf you were paying careful attention, you might have noticed that in the code above we used three arguments, but the first time we ran rnorm(), we only gave it a single argument. Why was that good enough?\nMany functions in R have default values for some (or even all!) of their arguments. This is helpful because with many functions, there are some “standard” values that make sense, and if you don’t have to enter those in every time, it’s convenient.\nFor example, in our rnorm() function, the mean and sd arguments default to 0 and 1, respectively. This means that if we only give rnorm() a value for its n argument (representing the number of samples we want), then it will give us samples with a mean of 0 and a standard deviation of 1. These are good choices for defaults, because they represent the values that correspond to what’s called the standard normal distribution (which we will discuss in Unit 2).\nSo in essence, the default argument values in R are chosen by whoever wrote the definition of that function. Since R is a language for statistical analysis, this means most of the default values are chosen based on common practices or whatever the author thought were good “starting place” values.\nThat said, one nice thing about default values is that we can easily change them. Changing values of an argument are sort of like changing the “settings” or “options” that the function uses to produce a result. Try running each of the following and look at how the overall pattern of values changes:\n\nrnorm(10)\n\n [1] -0.3448963  1.0154312  0.5076629  1.0975216  0.4880646  0.7370158\n [7]  0.5678738 -0.2687003 -1.3879383 -0.6537299\n\nrnorm(10, mean = 30)\n\n [1] 28.79822 29.65214 31.95170 30.31433 30.50122 28.26873 29.80729 29.59241\n [9] 30.13764 30.96090\n\nrnorm(10, sd = 10)\n\n [1]  -0.4744123   3.4630303   1.6361987  -1.2753485   0.1336913 -14.3688318\n [7] -11.3685173   0.7640895  -7.5017273   5.1079612\n\nrnorm(10, mean = 30, sd = 10)\n\n [1] 22.579319 36.103099 20.682545 28.916039 30.999468 32.175430 29.607294\n [8]  8.888866 28.757611 39.336722\n\n\nYou should see different patterns according to the different arguments, which you can see as changing the “settings” of the function. Recall that the default of mean is 0 and the default of sd is 1.If you don’t notice any differences, edit the values to be larger to make more extreme patterns.\nFinally, it’s important to know that not all arguments have default values. Remember how we got an error when we tried running rnorm() without any arguments? This is because there is no default value for n. This makes sense, because if you want to generate samples, you ought to at least tell R how many samples you want. But again, this is a choice made by the author of the rnorm() function. Different functions may differ on how many arguments have defaults or not.",
+    "text": "Default values for arguments\nIf you were paying careful attention, you might have noticed that in the code above we used three arguments, but the first time we ran rnorm(), we only gave it a single argument. Why was that good enough?\nMany functions in R have default values for some (or even all!) of their arguments. This is helpful because with many functions, there are some “standard” values that make sense, and if you don’t have to enter those in every time, it’s convenient.\nFor example, in our rnorm() function, the mean and sd arguments default to 0 and 1, respectively. This means that if we only give rnorm() a value for its n argument (representing the number of samples we want), then it will give us samples with a mean of 0 and a standard deviation of 1. These are good choices for defaults, because they represent the values that correspond to what’s called the standard normal distribution (which we will discuss in Unit 2).\nSo in essence, the default argument values in R are chosen by whoever wrote the definition of that function. Since R is a language for statistical analysis, this means most of the default values are chosen based on common practices or whatever the author thought were good “starting place” values.\nThat said, one nice thing about default values is that we can easily change them. Changing values of an argument are sort of like changing the “settings” or “options” that the function uses to produce a result. Try running each of the following and look at how the overall pattern of values changes:\n\nrnorm(10)\n\n [1]  1.3290287  1.5151775 -1.6533005  1.1219116  0.2658870  0.3731311\n [7] -1.2753886  2.7895987  1.5983659 -0.4713273\n\nrnorm(10, mean = 30)\n\n [1] 30.71231 31.10422 29.16341 30.57544 29.86379 29.22206 29.92105 29.82222\n [9] 30.48362 29.02539\n\nrnorm(10, sd = 10)\n\n [1]  -0.1057329   4.0658336   4.5352768   2.2829404   6.2544304  -0.8847415\n [7] -12.0314546  13.4839478  13.4462261  -5.9750140\n\nrnorm(10, mean = 30, sd = 10)\n\n [1] 30.05773 46.14433 36.73587 18.31384 47.25788 24.19417 39.90165 34.76403\n [9] 29.09793 34.72154\n\n\nYou should see different patterns according to the different arguments, which you can see as changing the “settings” of the function. Recall that the default of mean is 0 and the default of sd is 1.If you don’t notice any differences, edit the values to be larger to make more extreme patterns.\nFinally, it’s important to know that not all arguments have default values. Remember how we got an error when we tried running rnorm() without any arguments? This is because there is no default value for n. This makes sense, because if you want to generate samples, you ought to at least tell R how many samples you want. But again, this is a choice made by the author of the rnorm() function. Different functions may differ on how many arguments have defaults or not.",
     "crumbs": [
       "Home",
       "Unit 1: Starting with the Basics",
@@ -98,136 +91,25 @@
     ]
   },
   {
-    "objectID": "installing_R_RStudio.html",
-    "href": "installing_R_RStudio.html",
-    "title": "Installing R and RStudio for INST 314",
+    "objectID": "lessons.html",
+    "href": "lessons.html",
+    "title": "Lessons home",
     "section": "",
-    "text": "This document is meant to be an aid for installing the main tools we will use in this course: R and RStudio. I’ll give you some brief descriptions of these tools and point you towards the resources you’ll need to install them. Details about how to use them will be covered throughout the course.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
+    "text": "Where do I start?"
   },
   {
-    "objectID": "installing_R_RStudio.html#huh-what-do-you-mean-why-do-i-need-both-of-these",
-    "href": "installing_R_RStudio.html#huh-what-do-you-mean-why-do-i-need-both-of-these",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Huh? What do you mean? Why do I need both of these?",
-    "text": "Huh? What do you mean? Why do I need both of these?\nSo to be a little more specific:\n\nR is a programming language, which means we write code in the “R language” to do our statistical analysis, make graphics, etc.\nR is a type of language called an interpreted language, which means that you can write R code (the language) with any kind of text editor,1 but you need a program called an interpreter that will actually execute the code.\nSo when we say “install R”, what we really mean is “install an R interpreter, so that we can run R code on our machine.” This is what we will go over in this document.\nR is free and open-source,2 and while there are a few different interpreters out there, the most common is one distributed by the R Foundation, sometimes known as “GNU R”.\nGNU R comes with a very bare-bones GUI (graphical user interface) to be able to write and run R, but it’s not the most convenient way to interact with R.\nRStudio is a product from a company called Posit,3 which is essentially a specialized text editor for writing R code, and it has many useful features.\nBecause Posit is a commercial company, there are paid (“Pro”) and “Server” versions of RStudio, but these are mainly useful if you want to use R in a corporate context.\nThe free (no cost) version of RStudio is perfectly great for individual users, and that’s what we will use in this course.\nWhen you install RStudio, it will essentially “find” the version of R you have installed, and will make use of that whenever you ask it to run code. But RStudio is just the interface to R, it does not include R.\nSo in the end, you need to install R in order to be able to run R code, and you should install RStudio in order to make it easier to write R code.\n\n1 Note that there are many other good text editors out there. I personally use an editor called Emacs, because I have put in the time to be able to use Emacs for (almost) everything I do. But editors like Emacs or Vim (both of which have been around a loooong time but are still up-to-date) can have a steep learning curve. RStudio hits a sweet spot of being pretty easy to learn how to use, but very useful when writing R code.\nBut also note that programs like Microsoft Word or Apple’s Pages are NOT text editors, they are word processors, which deal a lot with the formatting and layout of text. A good text editor just focuses on the simple text itself.2 R was founded on open-source principles, and it has been released under the GNU license since 1997. In a nutshell, this means that not only is it free to use and distribute R, but you can inspect every line of code of R (if you so desire), and you can make any kinds of modifications you like to the R installation on your machine.\nThis open-source quality is one of the main reasons R has been so successful. Since it can be easily used and extended by anyone, including bleeding-edge academic statisticians, it is extremely hard for a single commercial product to keep up with all of the features and capabilities that are developed by the R community. The openness also creates an environment of trust, because you can inspect (and alter, if needed) every algorithm or routine in R, so you don’t have to just blindly trust a commercial company.3 RStudio used to be the name of the company, too, and only relatively recently changed their name to Posit, though it’s mainly the same people. While it’s a commercial company, RStudio is headed up by some of the most prolific and influential contributors to R (such as Hadley Wickham), and especially since the RStudio product is still free and excellent, the company is widely respected and highly regarded in the R community.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "INST 314: Statistics for Information Science",
+    "section": "",
+    "text": "What’s on this site\nWelcome! If you are registered for the 2025 Summer II session of INST 314 (section 21) at the University of Maryland, with Scott Jackson as your instructor, you are in the right place.\nThis is where I am hosting the main instructional mnaterials including:\n\nThe weekly readings for each Unit, including practice Knowledge Checks.\nThe weekly code tutorials for each Unit.\n\nOther materials like the Practice exercises, weekly Challenges, data files, etc. are available on the official course site on ELMS.\n\n\nHow to use this site\n\nThe navigation is mainly on the left-hand side. The selections are grouped, so there is an item for each Unit, but then under each Unit there is a Concepts Reading, and then a set of Code Tutorials. The latter are broken into multiple files as well.\nOnce you’re on a page, there should be a list of sections on the right hand side to help you navigate to specific topics. I’m hoping this is helpful when you want to return to a section for review.\nAll of these materials are intended to be read through from beginning to end (though of course you can take breaks). If you try to skip around and read sections out of order, it might not make as much sense.\nI will be adding material and additional resources as we go through the course, so this is still a work in progress.\nThere’s a little toggle in the upper right if you want to switch between light and dark color schemes.\n\n\n\nCode and Code Tutorials\n\nThis site is created using Quarto, which means the pages are mostly written in a flavor of R Markdown.\nThis also means there will be sections of code and results, especially in the Code Tutorials.\nYou should be running all of the code yoruself on your own machine as you work through the material.\nYou can either copy & paste the code from this site, or you can just download the .qmd source files, either by cloning this entire repository off of GitHub, or by visiting the course site on ELMS and downloading them from the Modules section of that site."
   },
   {
-    "objectID": "installing_R_RStudio.html#pick-a-mirror",
-    "href": "installing_R_RStudio.html#pick-a-mirror",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Pick a mirror",
-    "text": "Pick a mirror\nSince R is open-source and the R Foundation is non-profit, there is a longstanding history of R being distributed from multiple sites across the globe. These are called mirrors, because they all host basically the exact same set of web page and download content, just in different sites, to make it easier to manage the load of people accessing and downloading R.\nThe network of mirrors is called the Comprehensive R Archive Network (CRAN). CRAN hosts not only the source code for the “core” installation of R, but also the code for many, many packages (over 20,000 at the time of writing). However, there are also many useful packages and code available in other places, like GitHub or personal websites. CRAN is simply the most common or “centralized” place to get R code.\nSo to download and install R, you just need to go to the following URL, which may ask you to pick a mirror. In general, it’s a good idea to just pick something that’s relatively close to you geographically:\nhttps://cran.r-project.org/",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#download-for-your-os",
-    "href": "installing_R_RStudio.html#download-for-your-os",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Download for your OS",
-    "text": "Download for your OS\nR also runs on Windows, macOS, and (many flavors of) Linux. Once you pick a mirror you should see links to “Download and Install R” for your operating system. So just click the link and follow the instructions! You just may want to double-check your operating system to remind yourself what you have, and make sure to download the installer or set of files that is appropriate for your version.\nIf you are in doubt about 32- or 64-bit, it’s safe to assume 64-bit, unless your machine is really old.\nFeel free to contact the instructor (or UMD IT) if you need any assistance with installation.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#run-the-installer",
-    "href": "installing_R_RStudio.html#run-the-installer",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Run the installer",
-    "text": "Run the installer\nGenerally, when you run the installer after downloading it, you should just pick the default installation options as you go. If you have any questions about the different options, again please feel free to reach out to your instructor.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#verify-your-installation",
-    "href": "installing_R_RStudio.html#verify-your-installation",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Verify your installation",
-    "text": "Verify your installation\nOnce you have R installed, you can run R code! If you try to start R, what your interface looks like will depend somewhat on what your operating system is. But most likely you will see a window open somewhere that displays the following text (or something close to it; your platform may differ):\nR version 4.5.1 (2025-06-13) -- \"Great Square Root\"\nCopyright (C) 2025 The R Foundation for Statistical Computing\nPlatform: x86_64-pc-linux-gnu\n\nR is free software and comes with ABSOLUTELY NO WARRANTY.\nYou are welcome to redistribute it under certain conditions.\nType 'license()' or 'licence()' for distribution details.\n\n  Natural language support but running in an English locale\n\nR is a collaborative project with many contributors.\nType 'contributors()' for more information and\n'citation()' on how to cite R or R packages in publications.\n\nType 'demo()' for some demos, 'help()' for on-line help, or\n'help.start()' for an HTML browser interface to help.\nType 'q()' to quit R.\nThis is the standard “welcome” text for the most current version of R, version 4.5.1 (from June 13, 2025). If you see this somewhere when you try to run R, then your installation worked! You can just close this console for now.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#download-and-run-installer",
-    "href": "installing_R_RStudio.html#download-and-run-installer",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Download and run installer",
-    "text": "Download and run installer\nRStudio is also easy to install, and since it’s only distributed by Posit (it has many open-source components, but it’s not 100% open-source), you just go here to get it:\nhttps://posit.co/download/rstudio-desktop/\nNote that on this page, “Step 1” says to install R, and they have a link to CRAN, but we already did this step above, so you don’t need to do it again. It’s just a reminder that it’s a good idea to install R first, before you install RStudio, so that when you install RStudio, it can more easily find the version of R you have on your machine.\nAgain, RStudio is available for Windows, macOS, and several versions of Linux, so pick the installer that matches your system, follow the directions, and ask your instructor for help if you run into any problems.\nI recommend using the “installer” download (.exe, .dmg, .deb) instead of the “zip/tarball” option. And again, I recommend the default options when going through the installation process.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#verify-installation",
-    "href": "installing_R_RStudio.html#verify-installation",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Verify installation",
-    "text": "Verify installation\nAfter you have RStudio installed, try starting it up on your machine. The interface has a few different panels (or “Panes”), but by default, the first time you start it, you should see the same welcome text given above on the left pane. In other words, if you start RStudio and it gives you the welcome tex that starts with something like:\nR version 4.5.1 (2025-06-13) -- \"Great Square Root\"\nCopyright (C) 2025 The R Foundation for Statistical Computing\nThen you’re good to go!",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#should-you",
-    "href": "installing_R_RStudio.html#should-you",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Should you?",
-    "text": "Should you?\nAt some point, you may want to install a new version of R. R tends to update roughly every 6 months. Or you may have R already from a previous class or other experience. Should you upgrade?\nIn a nutshell, yes, you should almost always just go ahead and upgrade, unless you have a very specific reason that you need a specific version on your machine. The releases are extremely stable, and always include various improvements and changes, and since they only update R every six months or so, it’s not that onerous to just go ahead and do it.\nBecause R is very stable, it’s also quite backwards-compatible, so it’s rare that having an older version is much of a problem. However, whenever you want to install a new package, if your base version of R is behind, it may warn/complain that the package was built under a different version than your current version. This is another reason why it’s typically less of a headache to just go ahead and update your version of R when a new one comes out, because then you don’t need to worry about it being out of sync with your packages.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#how-to-install-a-new-version-and-what-to-do-about-older-versions",
-    "href": "installing_R_RStudio.html#how-to-install-a-new-version-and-what-to-do-about-older-versions",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "How to install a new version (and what to do about older versions)",
-    "text": "How to install a new version (and what to do about older versions)\nIf you do want to install a new version of R over an existing version, you simply follow the same steps as if you were installing it for the first time.\nOne quirk is that depending on your operating system, this may result in you having multiple versions of R installed on your machine at the same time. This is typically the case with Windows, but not as common with macOS or Linux. This is not necessarily a problem, and the R installation is not gigantic, so unless you are pressed for hard drive space, you may not need to even worry about it. But if you don’t want older versions, you can uninstall those just fine without it interfering with your newer installation.\nAdditionally, all decent R editors (including RStudio) have ways to detect different installations, so you should see that they use the latest version you have installed (though you may need to restart RStudio before it switches).",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
-  },
-  {
-    "objectID": "installing_R_RStudio.html#packages-for-an-updated-installation",
-    "href": "installing_R_RStudio.html#packages-for-an-updated-installation",
-    "title": "Installing R and RStudio for INST 314",
-    "section": "Packages for an updated installation",
-    "text": "Packages for an updated installation\nWhile installing a new version over an older version is usually not a problem, it does mean that you will need to re-install packages. We will discuss package installation in a different tutorial, but I’m just pointing it out here, that packages don’t “carry over” when you install an updated version of the base R installation.",
-    "crumbs": [
-      "Home",
-      "Preliminaries",
-      "Installing R and RStudio"
-    ]
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
   },
   {
     "objectID": "data_basics_reading.html",
@@ -422,11 +304,201 @@
     ]
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "installing_R_RStudio.html",
+    "href": "installing_R_RStudio.html",
+    "title": "Installing R and RStudio for INST 314",
     "section": "",
-    "text": "About this site"
+    "text": "This document is meant to be an aid for installing the main tools we will use in this course: R and RStudio. I’ll give you some brief descriptions of these tools and point you towards the resources you’ll need to install them. Details about how to use them will be covered throughout the course.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#huh-what-do-you-mean-why-do-i-need-both-of-these",
+    "href": "installing_R_RStudio.html#huh-what-do-you-mean-why-do-i-need-both-of-these",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Huh? What do you mean? Why do I need both of these?",
+    "text": "Huh? What do you mean? Why do I need both of these?\nSo to be a little more specific:\n\nR is a programming language, which means we write code in the “R language” to do our statistical analysis, make graphics, etc.\nR is a type of language called an interpreted language, which means that you can write R code (the language) with any kind of text editor,1 but you need a program called an interpreter that will actually execute the code.\nSo when we say “install R”, what we really mean is “install an R interpreter, so that we can run R code on our machine.” This is what we will go over in this document.\nR is free and open-source,2 and while there are a few different interpreters out there, the most common is one distributed by the R Foundation, sometimes known as “GNU R”.\nGNU R comes with a very bare-bones GUI (graphical user interface) to be able to write and run R, but it’s not the most convenient way to interact with R.\nRStudio is a product from a company called Posit,3 which is essentially a specialized text editor for writing R code, and it has many useful features.\nBecause Posit is a commercial company, there are paid (“Pro”) and “Server” versions of RStudio, but these are mainly useful if you want to use R in a corporate context.\nThe free (no cost) version of RStudio is perfectly great for individual users, and that’s what we will use in this course.\nWhen you install RStudio, it will essentially “find” the version of R you have installed, and will make use of that whenever you ask it to run code. But RStudio is just the interface to R, it does not include R.\nSo in the end, you need to install R in order to be able to run R code, and you should install RStudio in order to make it easier to write R code.\n\n1 Note that there are many other good text editors out there. I personally use an editor called Emacs, because I have put in the time to be able to use Emacs for (almost) everything I do. But editors like Emacs or Vim (both of which have been around a loooong time but are still up-to-date) can have a steep learning curve. RStudio hits a sweet spot of being pretty easy to learn how to use, but very useful when writing R code.\nBut also note that programs like Microsoft Word or Apple’s Pages are NOT text editors, they are word processors, which deal a lot with the formatting and layout of text. A good text editor just focuses on the simple text itself.2 R was founded on open-source principles, and it has been released under the GNU license since 1997. In a nutshell, this means that not only is it free to use and distribute R, but you can inspect every line of code of R (if you so desire), and you can make any kinds of modifications you like to the R installation on your machine.\nThis open-source quality is one of the main reasons R has been so successful. Since it can be easily used and extended by anyone, including bleeding-edge academic statisticians, it is extremely hard for a single commercial product to keep up with all of the features and capabilities that are developed by the R community. The openness also creates an environment of trust, because you can inspect (and alter, if needed) every algorithm or routine in R, so you don’t have to just blindly trust a commercial company.3 RStudio used to be the name of the company, too, and only relatively recently changed their name to Posit, though it’s mainly the same people. While it’s a commercial company, RStudio is headed up by some of the most prolific and influential contributors to R (such as Hadley Wickham), and especially since the RStudio product is still free and excellent, the company is widely respected and highly regarded in the R community.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#pick-a-mirror",
+    "href": "installing_R_RStudio.html#pick-a-mirror",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Pick a mirror",
+    "text": "Pick a mirror\nSince R is open-source and the R Foundation is non-profit, there is a longstanding history of R being distributed from multiple sites across the globe. These are called mirrors, because they all host basically the exact same set of web page and download content, just in different sites, to make it easier to manage the load of people accessing and downloading R.\nThe network of mirrors is called the Comprehensive R Archive Network (CRAN). CRAN hosts not only the source code for the “core” installation of R, but also the code for many, many packages (over 20,000 at the time of writing). However, there are also many useful packages and code available in other places, like GitHub or personal websites. CRAN is simply the most common or “centralized” place to get R code.\nSo to download and install R, you just need to go to the following URL, which may ask you to pick a mirror. In general, it’s a good idea to just pick something that’s relatively close to you geographically:\nhttps://cran.r-project.org/",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#download-for-your-os",
+    "href": "installing_R_RStudio.html#download-for-your-os",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Download for your OS",
+    "text": "Download for your OS\nR also runs on Windows, macOS, and (many flavors of) Linux. Once you pick a mirror you should see links to “Download and Install R” for your operating system. So just click the link and follow the instructions! You just may want to double-check your operating system to remind yourself what you have, and make sure to download the installer or set of files that is appropriate for your version.\nIf you are in doubt about 32- or 64-bit, it’s safe to assume 64-bit, unless your machine is really old.\nFeel free to contact the instructor (or UMD IT) if you need any assistance with installation.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#run-the-installer",
+    "href": "installing_R_RStudio.html#run-the-installer",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Run the installer",
+    "text": "Run the installer\nGenerally, when you run the installer after downloading it, you should just pick the default installation options as you go. If you have any questions about the different options, again please feel free to reach out to your instructor.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#verify-your-installation",
+    "href": "installing_R_RStudio.html#verify-your-installation",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Verify your installation",
+    "text": "Verify your installation\nOnce you have R installed, you can run R code! If you try to start R, what your interface looks like will depend somewhat on what your operating system is. But most likely you will see a window open somewhere that displays the following text (or something close to it; your platform may differ):\nR version 4.5.1 (2025-06-13) -- \"Great Square Root\"\nCopyright (C) 2025 The R Foundation for Statistical Computing\nPlatform: x86_64-pc-linux-gnu\n\nR is free software and comes with ABSOLUTELY NO WARRANTY.\nYou are welcome to redistribute it under certain conditions.\nType 'license()' or 'licence()' for distribution details.\n\n  Natural language support but running in an English locale\n\nR is a collaborative project with many contributors.\nType 'contributors()' for more information and\n'citation()' on how to cite R or R packages in publications.\n\nType 'demo()' for some demos, 'help()' for on-line help, or\n'help.start()' for an HTML browser interface to help.\nType 'q()' to quit R.\nThis is the standard “welcome” text for the most current version of R, version 4.5.1 (from June 13, 2025). If you see this somewhere when you try to run R, then your installation worked! You can just close this console for now.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#download-and-run-installer",
+    "href": "installing_R_RStudio.html#download-and-run-installer",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Download and run installer",
+    "text": "Download and run installer\nRStudio is also easy to install, and since it’s only distributed by Posit (it has many open-source components, but it’s not 100% open-source), you just go here to get it:\nhttps://posit.co/download/rstudio-desktop/\nNote that on this page, “Step 1” says to install R, and they have a link to CRAN, but we already did this step above, so you don’t need to do it again. It’s just a reminder that it’s a good idea to install R first, before you install RStudio, so that when you install RStudio, it can more easily find the version of R you have on your machine.\nAgain, RStudio is available for Windows, macOS, and several versions of Linux, so pick the installer that matches your system, follow the directions, and ask your instructor for help if you run into any problems.\nI recommend using the “installer” download (.exe, .dmg, .deb) instead of the “zip/tarball” option. And again, I recommend the default options when going through the installation process.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#verify-installation",
+    "href": "installing_R_RStudio.html#verify-installation",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Verify installation",
+    "text": "Verify installation\nAfter you have RStudio installed, try starting it up on your machine. The interface has a few different panels (or “Panes”), but by default, the first time you start it, you should see the same welcome text given above on the left pane. In other words, if you start RStudio and it gives you the welcome tex that starts with something like:\nR version 4.5.1 (2025-06-13) -- \"Great Square Root\"\nCopyright (C) 2025 The R Foundation for Statistical Computing\nThen you’re good to go!",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#should-you",
+    "href": "installing_R_RStudio.html#should-you",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Should you?",
+    "text": "Should you?\nAt some point, you may want to install a new version of R. R tends to update roughly every 6 months. Or you may have R already from a previous class or other experience. Should you upgrade?\nIn a nutshell, yes, you should almost always just go ahead and upgrade, unless you have a very specific reason that you need a specific version on your machine. The releases are extremely stable, and always include various improvements and changes, and since they only update R every six months or so, it’s not that onerous to just go ahead and do it.\nBecause R is very stable, it’s also quite backwards-compatible, so it’s rare that having an older version is much of a problem. However, whenever you want to install a new package, if your base version of R is behind, it may warn/complain that the package was built under a different version than your current version. This is another reason why it’s typically less of a headache to just go ahead and update your version of R when a new one comes out, because then you don’t need to worry about it being out of sync with your packages.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#how-to-install-a-new-version-and-what-to-do-about-older-versions",
+    "href": "installing_R_RStudio.html#how-to-install-a-new-version-and-what-to-do-about-older-versions",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "How to install a new version (and what to do about older versions)",
+    "text": "How to install a new version (and what to do about older versions)\nIf you do want to install a new version of R over an existing version, you simply follow the same steps as if you were installing it for the first time.\nOne quirk is that depending on your operating system, this may result in you having multiple versions of R installed on your machine at the same time. This is typically the case with Windows, but not as common with macOS or Linux. This is not necessarily a problem, and the R installation is not gigantic, so unless you are pressed for hard drive space, you may not need to even worry about it. But if you don’t want older versions, you can uninstall those just fine without it interfering with your newer installation.\nAdditionally, all decent R editors (including RStudio) have ways to detect different installations, so you should see that they use the latest version you have installed (though you may need to restart RStudio before it switches).",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "installing_R_RStudio.html#packages-for-an-updated-installation",
+    "href": "installing_R_RStudio.html#packages-for-an-updated-installation",
+    "title": "Installing R and RStudio for INST 314",
+    "section": "Packages for an updated installation",
+    "text": "Packages for an updated installation\nWhile installing a new version over an older version is usually not a problem, it does mean that you will need to re-install packages. We will discuss package installation in a different tutorial, but I’m just pointing it out here, that packages don’t “carry over” when you install an updated version of the base R installation.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Installing R and RStudio"
+    ]
+  },
+  {
+    "objectID": "R_basics_dataframes.html",
+    "href": "R_basics_dataframes.html",
+    "title": "R Basics: data frames and reading simple files",
+    "section": "",
+    "text": "In this tutorial, we will discuss how R implements the concept of a data frame. If you haven’t already, you should read through the Data Basics reading, which describes the general concept of a data frame. Here, we will focus on how it works in R.\nThe good news is that data frames are very common in R, and they are implemented in a really useful way. R makes data frames easy to work with and manipulate, and many R functions take advantage of this. When in doubt, get your data into a data frame!",
+    "crumbs": [
+      "Home",
+      "Unit 1: Starting with the Basics",
+      "Code Tutorials",
+      "Data Frames: the most useful data structure in R"
+    ]
+  },
+  {
+    "objectID": "R_basics_dataframes.html#quick-practice",
+    "href": "R_basics_dataframes.html#quick-practice",
+    "title": "R Basics: data frames and reading simple files",
+    "section": "Quick practice",
+    "text": "Quick practice\nSee if you can pull out the following values:\n\nThe 21st through 24th values from the “grams” column. Answer: 244, 271, 243, 230\nThe values from the “feed” column from the 20th, 40th, and 60th rows. Answer: “linseed”, “sunflower”, and “casein”\nThe 35th through 38th rows, both columns. Answer: (table below)\n\n\n\n\ngrams\nfeed\n\n\n\n\n158\nsoybean\n\n\n248\nsoybean\n\n\n423\nsunflower\n\n\n340\nsunflower\n\n\n\nFor more practice, see how many different ways you can think of pulling out these values, using the bracket notation and the $ notation.",
+    "crumbs": [
+      "Home",
+      "Unit 1: Starting with the Basics",
+      "Code Tutorials",
+      "Data Frames: the most useful data structure in R"
+    ]
+  },
+  {
+    "objectID": "R_basics_dataframes.html#boolean-row-selections",
+    "href": "R_basics_dataframes.html#boolean-row-selections",
+    "title": "R Basics: data frames and reading simple files",
+    "section": "Boolean row selections",
+    "text": "Boolean row selections\nHowever, just like we saw with vectors, using logical (boolean) expressions gives us a lot more useful ways of referring to specific values, especially rows. For example, so far we have only peeked at some of the data, and we know that there is a feed called “horsebean”. Maybe we just want to look at only the data for that feed type. We could pull out a subset of the data using this information as follows:\n\nchickwts_horsebeanonly &lt;- chickwts[chickwts$feed %in% \"horsebean\", ]\nnrow(chickwts_horsebeanonly)\n\n[1] 10\n\nprint(chickwts_horsebeanonly)\n\n   grams      feed\n1    179 horsebean\n2    160 horsebean\n3    136 horsebean\n4    227 horsebean\n5    217 horsebean\n6    168 horsebean\n7    108 horsebean\n8    124 horsebean\n9    143 horsebean\n10   140 horsebean\n\n\nIn this way, we created a new data frame that is only the rows from the original data frame where the feed column is “horsebean”, resulting in a data frame that is 10 rows long.\nBut there are a few things in this example I want to unpack:\n\nNote that in the brackets after chickwts, there is a comma, because it’s still [rows, columns].\nThe rows are being selected as the rows where the expression chickwts$feed %in% \"horsebean\" evaluates to TRUE.\nThe columns segment (the part in the brackets after the comma) is blank. Remember that R treats blanks in these dimensions as meaning “everything”. So leaving the columns position blank means “all of the columns.”\nWe could have used the “equals” comparison operator == here instead, like: chickwts$feed == \"horsebean\", but the %in% operator is a little safer, and very useful. We’ll see another example of this shortly.\n\nThis covers the primary ways R has to select certain values and subsets from data frames. We’ll continue to use these throughout, so we’ll get plenty of reminders.",
+    "crumbs": [
+      "Home",
+      "Unit 1: Starting with the Basics",
+      "Code Tutorials",
+      "Data Frames: the most useful data structure in R"
+    ]
+  },
+  {
+    "objectID": "R_basics_dataframes.html#range",
+    "href": "R_basics_dataframes.html#range",
+    "title": "R Basics: data frames and reading simple files",
+    "section": "Range",
+    "text": "Range\nWe will start exploring statistical distributions in the next unit, but for now, just a few summary statistics will help. First, we would like to know what the limits of the data are, or more precisely, the range. What’s the smallest and largest value in the data set? This can be very informative as we start to think about how to analyze the data.\nTo illustrate this, let’s think about our uncertainty before we look at the data. We know the measurements are in grams, and we know generally that chicks are pretty small animals, but not as small as say, an insect. So we would expect them to be somewhere in the hundreds of grams in order of magnitude. A chick weighing thousands of grams would be several pounds heavy, which would not fit our mental model of a baby chick (at least not my mental model!), and a chick just a few grams heavy would seem to be too small to be born yet. So if we saw values outside our expected range, we may have concerns or questions about the data!\nBut beyond that, what do we expect? Do we think the chick weights will all be relatively close or do we think that some chicks may be twice as heavy or more than others? Think to yourself about this, and consider how sure you feel about it. This step of considering what our assumptions are is a really important step in data analysis! And taking a few seconds to think about what we expect before we use R to check can be a good way to highlight interesting or unexpected results.\nAfter you think about it for a bit, it’s time to actually check. There are a few handy functions in R that will compute a minimum, maximum, or both from a vector of values:\n\nmin(chickwts$grams)\n\n[1] 108\n\nmax(chickwts$grams)\n\n[1] 423\n\nrange(chickwts$grams)\n\n[1] 108 423\n\n\nSo we can see that the chick weights range from about 100 grams to more than 400 grams. We can see that this fits with our most general expectations, and that the weights are not surprisingly large or tiny. But it also tells us that the heaviest chick is more than four times as heavy as the smallest. This may be somewhat surprising. In fact, we may want to double-check that this is not an erroneous outlier, but we will get to that in later units. For now, getting just a simple range has really reduced our uncertainty about the values are in the grams variable.",
+    "crumbs": [
+      "Home",
+      "Unit 1: Starting with the Basics",
+      "Code Tutorials",
+      "Data Frames: the most useful data structure in R"
+    ]
+  },
+  {
+    "objectID": "R_basics_dataframes.html#mean-and-median",
+    "href": "R_basics_dataframes.html#mean-and-median",
+    "title": "R Basics: data frames and reading simple files",
+    "section": "Mean and median",
+    "text": "Mean and median\nAfter looking at extreme values, the next thing to look at are “central” values. The two most common are the mean and the median. These are discussed in the Unit 1 reading, so let’s just go on to see how they’re computed in R. The answer is, “very easily”, now that we know how to get the vector of grams values.4\n4 I use the “dollar sign” notation in these examples. Can you also get the brackets notation to work, with the same results?\nmean(chickwts$grams)\n\n[1] 261.3099\n\nmedian(chickwts$grams)\n\n[1] 258\n\n\nAnd there you go! Easy peasy. The fact that the two statistics are very close to each other gives us a little more information, as well. The general idea of central values is that all else equal, if we get a new measurement, we would expect it to be close to the central value, which would mean somewhere around 260 grams in this data. We will explore this concept more in the next unit as well.\nFinally, we may want to combine some of these methods to start asking more detailed questions, like, “how do the weights compare between different feeds?” We will eventually get to more sophisticated methods of making these comparisons, but let’s review the tools we have introduced in this tutorial to look at different mean values for two of the feeds:\n\n\nEach of the commented-out lines does the same thing as the line above it (you can uncomment them to check). Take some time to work out how they do the same thing. There’s no real pros or cons to either method, but you may find one easier to read or wrap your head around than the other.\n\nsoybean_weights &lt;- chickwts$grams[chickwts$feed %in% \"soybean\"]\n# soybean_weights &lt;- chickwts[chickwts$feed %in% \"soybean\", \"grams\"]\nsunflower_weights &lt;- chickwts$grams[chickwts$feed %in% \"sunflower\"]\n# sunflower_weights &lt;- chickwts[chickwts$feed %in% \"sunflower\", \"grams\"]\nmean(soybean_weights)\n\n[1] 246.4286\n\nmean(sunflower_weights)\n\n[1] 328.9167\n\n\nLet’s also take a minute to appreciate the usefulness of the %in% operator. So far, we have used it to check for values that equal a certain value, so it would work similar to the comparison operator ==. However, %in% can also be used to check whether the values on the left are a member of the set of things on the right. In other words, if we put a vector of values after the %in% instead of just a single value, we can get TRUE values for multiple matches.\nFor example, the following code gets the mean value for the data where the feed is either soybean or sunflower:5\n5 If you’re reading this tutorial as a web page, you may need to use the scrollbar in the code chunk to see the entire lines.\nsoybean_and_sunflower_weights &lt;- chickwts$grams[chickwts$feed %in% c(\"soybean\", \"sunflower\")]\nmean(soybean_and_sunflower_weights)\n\n[1] 284.5",
+    "crumbs": [
+      "Home",
+      "Unit 1: Starting with the Basics",
+      "Code Tutorials",
+      "Data Frames: the most useful data structure in R"
+    ]
   },
   {
     "objectID": "R_basics_vectors.html",
@@ -546,75 +618,411 @@
     ]
   },
   {
-    "objectID": "R_basics_dataframes.html",
-    "href": "R_basics_dataframes.html",
-    "title": "R Basics: data frames and reading simple files",
+    "objectID": "R_basics_fundamentals.html#feedback-from-r-errors-and-warnings",
+    "href": "R_basics_fundamentals.html#feedback-from-r-errors-and-warnings",
+    "title": "R Basics: fundamentals of working with R",
+    "section": "Feedback from R: Errors and Warnings",
+    "text": "Feedback from R: Errors and Warnings\nThis is a bit of a miscellaneous topic, but I think understanding it can help new users of R navigate things when they run into problems. Running into problems is normal, and just part of the programming cycle!\nR has two major categories of “problems”: errors and warnings. The way to think about both of these is that they are ways for the programmers of R to communicate with you, the user. In a nutshell:\n\nErrors happen when something goes wrong and the code doesn’t work at all. The message you get is supposed to give you some clues about what may be the problem, but it can take some experience and/or sleuthing before you understanding exactly what an error message may be trying to tell you.\nWarnings happen when the designer of a function is trying to tell you, “well, I technically did what you asked me to do, but just in case, I’m going to give you some additional info in case this isn’t really the result you wanted.”\n\nSo the first distinction to notice is that when an error happens, the code basically doesn’t run. You asked R to do something, and it said “no.” In contrast, when a warning happens, the code did run, and it gave you a result. It’s just giving you a heads-up, in case the result wasn’t actually what you wanted.\nFor example, it’s pretty common to get warnings having to do with missing data. When you get to the topic of coercion in the next tutorial, you’ll learn about what happens when you try to tell R to force data to be a number when R doesn’t know how to make it a number. In short, it does the best it can, but when it doesn’t have a way of doing it, it’ll replace that value with a missing value (NA). But it will also warn you about this, giving you the message: Warning: NAs introduced by coercion. This basically means, “okay, I did what you asked me to, but just FYI, the result now has some missing values that weren’t there before.”\nThe main point here is that as you are learning R and trying to make sense of things, one of the first things to notice about any messages you get back is whether it’s an error or a warning. But don’t ignore warnings just because you can! They can sometimes reveal that something unexpected is happening, and you may be making a mistake that you wouldn’t catch otherwise.\nAs a final point, some package authors are extremely liberal with warnings. The popular set of packages known as the tidyverse has many functions that will warn you about everything, almost to the point of being annoying. So just be aware that ultimately, warnings and error messages are just little notes sent to you by the human who programmed the function(s) you’re using, and those humans can make interesting choices sometimes, and part of learning R is learning about how different authors handle things differently.",
+    "crumbs": [
+      "Home",
+      "Unit 1: Starting with the Basics",
+      "Code Tutorials",
+      "Getting started with R"
+    ]
+  },
+  {
+    "objectID": "univariate_distributions_reading.html",
+    "href": "univariate_distributions_reading.html",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
     "section": "",
-    "text": "In this tutorial, we will discuss how R implements the concept of a data frame. If you haven’t already, you should read through the Data Basics reading, which describes the general concept of a data frame. Here, we will focus on how it works in R.\nThe good news is that data frames are very common in R, and they are implemented in a really useful way. R makes data frames easy to work with and manipulate, and many R functions take advantage of this. When in doubt, get your data into a data frame!",
+    "text": "The overall goal of this reading is to continue the journey of exploratory data analysis by looking more deeply at univariate distributions and analysis, including important theoretical concepts like the Central Limit Theorem.\nI will call attention to key terminology with margin notes. I will also ramble about side thoughts in margin notes as well. Sometimes the margin notes will be numbered,1 like footnotes that connect to a specific part of the main text. Sometimes they’re unnumbered, just hanging out whenever you feel like reading them.\n1 This is a numbered side-note.\nThis is a margin note.\n\nInterspersed in the text below are some Knowledge Checks for quizzing yourself. I encourage you to attempt to answer these as you encounter them, to help force yourself to process and understand the material more thorougly. After working through this entire page, make sure you answer these questions in the Unit 2 Knowledge Check Quiz on ELMS. I recommend writing your answers down in notes as you work through this page, and then just referring to your notes to review and provide answers when you take the quiz on ELMS. This is built-in way for you to review the material as you go.\nIf you have questions, reach out on the course Discord, and/or come to an Open Discussion Zoom session.\nHappy reading!",
     "crumbs": [
       "Home",
-      "Unit 1: Starting with the Basics",
-      "Code Tutorials",
-      "Data Frames: the most useful data structure in R"
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
     ]
   },
   {
-    "objectID": "R_basics_dataframes.html#quick-practice",
-    "href": "R_basics_dataframes.html#quick-practice",
-    "title": "R Basics: data frames and reading simple files",
-    "section": "Quick practice",
-    "text": "Quick practice\nSee if you can pull out the following values:\n\nThe 21st through 24th values from the “grams” column. Answer: 244, 271, 243, 230\nThe values from the “feed” column from the 20th, 40th, and 60th rows. Answer: “linseed”, “sunflower”, and “casein”\nThe 35th through 38th rows, both columns. Answer: (table below)\n\n\n\n\ngrams\nfeed\n\n\n\n\n158\nsoybean\n\n\n248\nsoybean\n\n\n423\nsunflower\n\n\n340\nsunflower\n\n\n\nFor more practice, see how many different ways you can think of pulling out these values, using the bracket notation and the $ notation.",
+    "objectID": "univariate_distributions_reading.html#rolling-dice-a-generating-process",
+    "href": "univariate_distributions_reading.html#rolling-dice-a-generating-process",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "Rolling dice: a generating process",
+    "text": "Rolling dice: a generating process\nOne useful way to think about your data is to think about the generating process of that data. Where did the data come from? What determines the values?\n\n\nNote that a generating process is not the same as the data collection process, though the latter might affect the former. The data collection process is a description of how the data was obtained or recorded. For example, did you call people to ask their opinion on who they will vote for? How did you pick whom to call? Did you make decisions about throwing out some data (for example, if someone gave nonsensical answers)?\nIn contrast, the data generating process is more of a theoretical concept of all of the underlying factors that gave rise to the value that was observed. This could include aspects of data collection, especially if the data collection method introduced any bias, but it is often about unobservable things. For example, what makes a person decide who to vote for? What makes a person decide what to say when someone asks them who they plan to vote for? These are the kinds of things that might be part of the underlying (and unobservable) generating process behind people’s responses to that kind of poll.\nOne of the simplest generating processes to think about is flipping a coin or rolling a die, because it’s something we can do physically. So imagine the following process:\n\nroll a single six-sided (cube) die\nwrite down the number on a slip of paper\nput that slip of paper in a bag\nrepeat steps 1 through 3 many, many times\n\nThe result is that you have a bag full of numbers, generated by a process.",
     "crumbs": [
       "Home",
-      "Unit 1: Starting with the Basics",
-      "Code Tutorials",
-      "Data Frames: the most useful data structure in R"
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
     ]
   },
   {
-    "objectID": "R_basics_dataframes.html#boolean-row-selections",
-    "href": "R_basics_dataframes.html#boolean-row-selections",
-    "title": "R Basics: data frames and reading simple files",
-    "section": "Boolean row selections",
-    "text": "Boolean row selections\nHowever, just like we saw with vectors, using logical (boolean) expressions gives us a lot more useful ways of referring to specific values, especially rows. For example, so far we have only peeked at some of the data, and we know that there is a feed called “horsebean”. Maybe we just want to look at only the data for that feed type. We could pull out a subset of the data using this information as follows:\n\nchickwts_horsebeanonly &lt;- chickwts[chickwts$feed %in% \"horsebean\", ]\nnrow(chickwts_horsebeanonly)\n\n[1] 10\n\nprint(chickwts_horsebeanonly)\n\n   grams      feed\n1    179 horsebean\n2    160 horsebean\n3    136 horsebean\n4    227 horsebean\n5    217 horsebean\n6    168 horsebean\n7    108 horsebean\n8    124 horsebean\n9    143 horsebean\n10   140 horsebean\n\n\nIn this way, we created a new data frame that is only the rows from the original data frame where the feed column is “horsebean”, resulting in a data frame that is 10 rows long.\nBut there are a few things in this example I want to unpack:\n\nNote that in the brackets after chickwts, there is a comma, because it’s still [rows, columns].\nThe rows are being selected as the rows where the expression chickwts$feed %in% \"horsebean\" evaluates to TRUE.\nThe columns segment (the part in the brackets after the comma) is blank. Remember that R treats blanks in these dimensions as meaning “everything”. So leaving the columns position blank means “all of the columns.”\nWe could have used the “equals” comparison operator == here instead, like: chickwts$feed == \"horsebean\", but the %in% operator is a little safer, and very useful. We’ll see another example of this shortly.\n\nThis covers the primary ways R has to select certain values and subsets from data frames. We’ll continue to use these throughout, so we’ll get plenty of reminders.",
+    "objectID": "univariate_distributions_reading.html#process-population-and-sample",
+    "href": "univariate_distributions_reading.html#process-population-and-sample",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "Process, population, and sample",
+    "text": "Process, population, and sample\nNow we can think about how this analogy fits with the kinds of data we are actually interested in. The three important concepts here are :\n\nthe generating process,\nthe population of data that exists (or could exist) in the world, and\nthe sample of data that we actually observe.\n\nIn our simple dice scenario, rolling the die is the generating process, all of the numbers in the bag are the population, and any numbers we pull out of the bag to examine are the sample.\nWhenever we collect data, we are taking a sample. Imagine that the world is a huge bag of numbers and any time we make observations or try to analyze some data, we can only pull a few of those numbers from the bag. For example, if we are interested in the average height of 3-year-old males (perhaps because we want to know if our 3-year-old son is on track, growth-wise), the population (like the entire bag) might be all of the 3-year-old males in the world4, and clearly getting all of that data is not feasible, or even necessary. But we have to collect some data in order to have some idea, so we collect a sample. It might be a large sample or a small sample, but it’s still a sample.\n4 Now think to yourself, “would I really want to compare my kid to all the kids in the world, if I just want to know that he’s on track?” To make this a bit more concrete, imagine you’re from Peru (a country with some of the shortest people on average), would you want to compare your child to the population of children from the Netherlands (a country with some of the tallest people on average)? Thinking carefully about where your sample of data comes from, and what your theoretical population might be are important considerations!How you get your sample is of course really important. Consider how political polls are done. Pollsters collect data by talking to just a sample of people, and then using that data to make guesses about how the entire voting population might vote in an actual election. But not all samples are the same! Asking the first ten people you see in a fancy restaurant in Chevy Chase is different than asking the first ten people you see sleeping in tents in downtown DC. These are all valid data (assuming all of those people are eligible to vote), but they are very different samples, and they may not give you a good picture of the overall pattern in the population that you are trying to draw conclusions about.\nBack to the dice analogy, virtually any actual data collection is like pulling a set of numbers from the bag. If you are somehow in a position to be able to get every number in the bag, you might be able to get the entire population.5 But at the end of the day, what we are really interested in is constructing a model of the generating process itself. How did the pattern of numbers get to be that way?\n5 One more analogy to think about sample vs. population. Let’s say you decide you would like to know how all of your friends intend to vote. You could feasibly ask every single one of your friends, and maybe even trust their responses. This would be a case where your sample is the same as the entire population you care about. But if you then wanted to predict who would win in the actual general election, now you’re trying to predict for a different population, so you’re back to only having a (likely very biased) sample. The point here is that in most cases, if we are able to collect data from an entire population, we rarely care all that much about making claims about that specific group.",
     "crumbs": [
       "Home",
-      "Unit 1: Starting with the Basics",
-      "Code Tutorials",
-      "Data Frames: the most useful data structure in R"
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
     ]
   },
   {
-    "objectID": "R_basics_dataframes.html#range",
-    "href": "R_basics_dataframes.html#range",
-    "title": "R Basics: data frames and reading simple files",
-    "section": "Range",
-    "text": "Range\nWe will start exploring statistical distributions in the next unit, but for now, just a few summary statistics will help. First, we would like to know what the limits of the data are, or more precisely, the range. What’s the smallest and largest value in the data set? This can be very informative as we start to think about how to analyze the data.\nTo illustrate this, let’s think about our uncertainty before we look at the data. We know the measurements are in grams, and we know generally that chicks are pretty small animals, but not as small as say, an insect. So we would expect them to be somewhere in the hundreds of grams in order of magnitude. A chick weighing thousands of grams would be several pounds heavy, which would not fit our mental model of a baby chick (at least not my mental model!), and a chick just a few grams heavy would seem to be too small to be born yet. So if we saw values outside our expected range, we may have concerns or questions about the data!\nBut beyond that, what do we expect? Do we think the chick weights will all be relatively close or do we think that some chicks may be twice as heavy or more than others? Think to yourself about this, and consider how sure you feel about it. This step of considering what our assumptions are is a really important step in data analysis! And taking a few seconds to think about what we expect before we use R to check can be a good way to highlight interesting or unexpected results.\nAfter you think about it for a bit, it’s time to actually check. There are a few handy functions in R that will compute a minimum, maximum, or both from a vector of values:\n\nmin(chickwts$grams)\n\n[1] 108\n\nmax(chickwts$grams)\n\n[1] 423\n\nrange(chickwts$grams)\n\n[1] 108 423\n\n\nSo we can see that the chick weights range from about 100 grams to more than 400 grams. We can see that this fits with our most general expectations, and that the weights are not surprisingly large or tiny. But it also tells us that the heaviest chick is more than four times as heavy as the smallest. This may be somewhat surprising. In fact, we may want to double-check that this is not an erroneous outlier, but we will get to that in later units. For now, getting just a simple range has really reduced our uncertainty about the values are in the grams variable.",
+    "objectID": "univariate_distributions_reading.html#theoretical-vs.-empirical-distributions",
+    "href": "univariate_distributions_reading.html#theoretical-vs.-empirical-distributions",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "Theoretical vs. empirical distributions",
+    "text": "Theoretical vs. empirical distributions\nSo let’s think about rolling a die. There are six sides, so as long as the die is fair, we have an equal chance of getting a 1, 2, 3, 4, 5, or 6, every time we roll the die. So if we pull 600 numbers from our bag of numbers, we might expect to see 100 occurrences of each number, right? But what if we didn’t?\nThink about if we roll the die just 6 times. What do you think the chances are that we would see exactly 1 occurence of each number?\n\n\nYou can try this yourself!\nThe fact is, there are many, many possible ways for lots of die rolls to go, even if the die is fair. If you need to convince yourself, you can try it, and start rolling sequences of 6 rolls at a time, and look at how many different sequences you get. Getting exactly one of each number is actually not all that likely!\nIn other words, our sample is rarely a perfect reflection of the underlying process, even when that process is simple. This is where we come to the concept of empirical vs. theoretical distributions.\nFirst, a distribution is just the term we use to talk about what values are more or less likely or common. So when we look at the numbers we pull from the bag and see how many we have of each, that’s examining the distribution of values. A theoretical distribution is the distribution we expect from a particular mathematical model. So if our model is “each side of the die is equally likely,” then our theoretical distribution if we looked at a sample of 600 numbers would be 100 of each number. In contrast, the numbers we actually observe are the empirical distribution.\nIn other words, the theoretical distribution describes the generating process6, and the empirical distribution describes our data sample.\n6 And since the population we care about is generally hypothetical anyway, we use the theoretical distribution to reason about the population.Both of these are important when we are doing EDA. We want to examine the empirical distribution, because we want to see what the pattern is for the data we actually have. But then we want to think about how those data compare to theoretical distributions, because we want to check our assumptions of the underlying generating processes of the data.",
     "crumbs": [
       "Home",
-      "Unit 1: Starting with the Basics",
-      "Code Tutorials",
-      "Data Frames: the most useful data structure in R"
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
     ]
   },
   {
-    "objectID": "R_basics_dataframes.html#mean-and-median",
-    "href": "R_basics_dataframes.html#mean-and-median",
-    "title": "R Basics: data frames and reading simple files",
-    "section": "Mean and median",
-    "text": "Mean and median\nAfter looking at extreme values, the next thing to look at are “central” values. The two most common are the mean and the median. These are discussed in the Unit 1 reading, so let’s just go on to see how they’re computed in R. The answer is, “very easily”, now that we know how to get the vector of grams values.4\n4 I use the “dollar sign” notation in these examples. Can you also get the brackets notation to work, with the same results?\nmean(chickwts$grams)\n\n[1] 261.3099\n\nmedian(chickwts$grams)\n\n[1] 258\n\n\nAnd there you go! Easy peasy. The fact that the two statistics are very close to each other gives us a little more information, as well. The general idea of central values is that all else equal, if we get a new measurement, we would expect it to be close to the central value, which would mean somewhere around 260 grams in this data. We will explore this concept more in the next unit as well.\nFinally, we may want to combine some of these methods to start asking more detailed questions, like, “how do the weights compare between different feeds?” We will eventually get to more sophisticated methods of making these comparisons, but let’s review the tools we have introduced in this tutorial to look at different mean values for two of the feeds:\n\n\nEach of the commented-out lines does the same thing as the line above it (you can uncomment them to check). Take some time to work out how they do the same thing. There’s no real pros or cons to either method, but you may find one easier to read or wrap your head around than the other.\n\nsoybean_weights &lt;- chickwts$grams[chickwts$feed %in% \"soybean\"]\n# soybean_weights &lt;- chickwts[chickwts$feed %in% \"soybean\", \"grams\"]\nsunflower_weights &lt;- chickwts$grams[chickwts$feed %in% \"sunflower\"]\n# sunflower_weights &lt;- chickwts[chickwts$feed %in% \"sunflower\", \"grams\"]\nmean(soybean_weights)\n\n[1] 246.4286\n\nmean(sunflower_weights)\n\n[1] 328.9167\n\n\nLet’s also take a minute to appreciate the usefulness of the %in% operator. So far, we have used it to check for values that equal a certain value, so it would work similar to the comparison operator ==. However, %in% can also be used to check whether the values on the left are a member of the set of things on the right. In other words, if we put a vector of values after the %in% instead of just a single value, we can get TRUE values for multiple matches.\nFor example, the following code gets the mean value for the data where the feed is either soybean or sunflower:5\n5 If you’re reading this tutorial as a web page, you may need to use the scrollbar in the code chunk to see the entire lines.\nsoybean_and_sunflower_weights &lt;- chickwts$grams[chickwts$feed %in% c(\"soybean\", \"sunflower\")]\nmean(soybean_and_sunflower_weights)\n\n[1] 284.5",
+    "objectID": "univariate_distributions_reading.html#the-uniform-distribution",
+    "href": "univariate_distributions_reading.html#the-uniform-distribution",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "The Uniform distribution",
+    "text": "The Uniform distribution\nFortunately for us, statisticians have developed a wide range of different mathematical models to capture different theoretical distributions. So our task is often a matter of choosing the distribution that best fits our data.\nOne of the simplest distributions is called the uniform distribution. Conceptually, this is a good choice for our dice example7, because the idea is that any value in a uniform distribution has an equal chance of being generated (i.e., the chance of any particular value being generated is “uniform”).\n7 Now technically, this isn’t quite accurate because the true uniform distribution is a distribution over continuous numbers, and the six values of a die are not (technically) continuous. But it’s a good enough approximation to help us build a better intuition of how the uniform distribution works.8 We will actually go through the process of visualizing this in an upcoming Code Tutorial.The uniform distribution is also often called a “flat” distribution, because when we visualize it, it looks flat because all of the values have the same chance of occurring.8\nSo now we have a model of the generating process: the results we get from rolling a die are like the results we get from a uniform distribution. But when we talked about models above, we said that models have parameters, like settings. So what are the parameters of the uniform distribution? Take a minute to think about it: if we have a model that says “all values are equally likely”, what’s the minimum information we need in order to generate numbers that look like rolls from a single die?\nThe answer is simply the range. In other words, the uniform distribution only needs to know what values to pick from, defined by the upper and lower limits. This means that the uniform distribution just has two parameters: the minimum value that can be selected, and the maximum value that can be selected. The rest of the math behind the uniform distribution is the part that selects any (continuous) value between that minimum and maximum at an equal probability.9\n9 Again, our dice analogy isn’t quite exact here. For a true continous uniform distribution, all you need to know are the minimum and maximum. For a distribution like a fair die, all you need to know are the possible numbers (1 through 6). This is essentially the same concept, I’m just pointing out that it isn’t precisely the same.",
     "crumbs": [
       "Home",
-      "Unit 1: Starting with the Basics",
-      "Code Tutorials",
-      "Data Frames: the most useful data structure in R"
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
     ]
   },
   {
-    "objectID": "lessons.html",
-    "href": "lessons.html",
-    "title": "Lessons home",
+    "objectID": "univariate_distributions_reading.html#central-limit-theorem",
+    "href": "univariate_distributions_reading.html#central-limit-theorem",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "Central Limit Theorem",
+    "text": "Central Limit Theorem\nThe rationale for why the normal distribution is so common is based on a very powerful and useful mathematical concept called the Central Limit Theorem (CLT). We will skip the math (though the math is very interesting, if you’re a math person!) and jump to the core of the concept.\nWhat the theorem says is that when many different (and independent)11 processes combine (average or sum together), the distribution of that average (or sum) tends to follow a distribution called the normal distribution.12 A simple example of this is that as we’ve seen, the distribution from a single die is uniform. But if we roll many dice at once, and take the average (or sum) of those dice, that average will follow a normal distribution.13\n11 The idea of independence is a crucial assumption (remember that term?) for the CLT. It essentially means that our generating process doesn’t change depending on the other values we’ve generated. For example, if you were taking a poll of people standing in line, but the next person in line was influenced by the person who just gave a response, those responses would not be independent.12 Also called the Gaussian distribution.13 Again, we’ll see this in action in the upcoming Code Tutorial.That’s it! It’s ultimately a simple concept – though perhaps deceptively simple – but the result is that many of the distributions we end up caring about tend to be normal or close to normal distributions, precisely because things in the real world are very often the product of many independent processes or factors. In other words, the real-world complexity of most data means that the theoretical assumptions of the CLT are often true (or true enough), and so the result is that the normal distribution tends to occur “in the wild” quite a bit.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
+    ]
+  },
+  {
+    "objectID": "univariate_distributions_reading.html#the-shape-of-the-normal",
+    "href": "univariate_distributions_reading.html#the-shape-of-the-normal",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "The shape of the normal",
+    "text": "The shape of the normal\nIn contrast to the “flat” uniform distribution, the normal distribution is sometimes called a “bell curve” because of its shape. But what does that shape mean, and how does it get the shape? By now, you should be able to formulate at least initial answers for these questions. So think about it for a bit before proceeding. What does the shape of the curve pictured to the right tell us? Why does the shape look like that? In order to make this a bit more concrete, imagine that the x-axis along the bottom of the graph to the right representing some quantity, like the difference between a random 3-year-old child’s height and the height of an average 3-year-old, where the dotted line indicates a difference of zero, values to the left mean that she is shorter than average, and values to the right mean she is taller than average.\n\n\n\n\n\n\nthis is a (standard) normal distribution\n\n\n\nWhat the shape of a distribution means is that it tells us what values are more or less likely to occur than other values. So the “bell curve” that has a peak (“mode”) in the middle that fades to low “tails” in the edges means that values around the peak of the distribution are the most common, and the values at the edges can become exceedingly rare. The precise shape of the distribution gives a precise quantification of “how common” or “how rare.”\nIn our height example from above, it means that if the heights of 3-year-olds follow a normal distribution, then it’s most likely that a random child would be close to the average (since the average is at the peak), and the farther you get from that average, the more and more unlikely it becomes.14\n14 As an exercise, think about how different it would be if children’s heights followed a uniform distribution.Where the shape comes from is the mathematics of the model, plus the values of its parameters. In other words, the overall pattern of shapes is determined by the theoretical mathematical model, but the specific details of the shape can be altered/adjusted based on its parameters.\nThe normal distribution only has two parameters:\n\nThe mean:\n\nthe “central” or “average” value\nsometimes symbolized with the Greek letter “mu”: \\(\\mu\\)\nrepresented by the vertical dotted line in the figure to the right\n\nThe standard deviation:\n\nhow “wide” the distribution is, indicating how much values tend to differ from the mean\nsometimes symbolized with the Greek letter “sigma”: \\(\\sigma\\)\nrepresented by the length of the arrow in the figure to the right\n\n\nAnd that’s it! With just two parameters you can describe the theoretical shape of a normal distribution.\nThere is also a special case of the normal distribution called the “standard” normal, which is simply a normal distribution with a mean of 0 and a standard deviation of 1. We will return to standard normals throughout the course.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
+    ]
+  },
+  {
+    "objectID": "univariate_distributions_reading.html#why-is-the-normal-important",
+    "href": "univariate_distributions_reading.html#why-is-the-normal-important",
+    "title": "Unit 2 Concepts Reading: Univariate Distributions",
+    "section": "Why is the normal important?",
+    "text": "Why is the normal important?\nSo why do we care so much about the normal distribution?\nRemember: the CLT tells us that if a (continuous) variable is the result of the combination (average or sum) of a bunch of different processes, that variable will tend to follow a normal distribution, no matter what the distribution of the component processes are.\nAnd also recall: it is very often that numbers we collect from real-world data can be a combination of many different underyling (and often unknown) processes. For example, think about someone’s score on a standardized test like the SAT. That overall score is the sum of many different factors, including the score on each item, whether the person was well-rested the night before, whether there were unexpected distractions during the testing session, how much time/effort the person spent in preparation, how much effort the person put into years of schooling prior to the test, how much “natural ability” the person may have inherited from their parents, just plain luck, etc. etc. When thinking about any process that resulted in a data value, it’s often easy to imagine many many underlying factors contributing to the final observed value.\nPut these ideas together, and you can see why many variables we observe in the real world follow a normal distribution.\nAnd if they are never quite exactly normal, they are often “normal enough” that the normal distribution is a very close approximation. Using a convenient theoretical distribution like the normal distribution can help us simplify the math we use to analyze our data. Back to the concept of a model, when we use models, we simplify real-world complexity to make it more manageable to analyze. The mathematics of the normal distribution have a lot of convenient and useful properties to make analysis easier. Therefore, as long as the normal is a “good enough” match to the distribution of our data, the conclusions we are able to draw from a model that assumes a normal distribution are also “good enough.”15\n15 Figuring out what counts as “good enough” is a common challenge and the reason for a great deal of ongoing statistical research.In short, we use the normal distribution often because it occurs often, and because it is useful for many different analyses. It is also a useful reference point for other distributions that are very similar, like the t distribution, which we will come to later.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Concepts Reading: univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html",
+    "href": "R_basics_packages.html",
+    "title": "R Basics: installing and loading packages",
     "section": "",
-    "text": "Where do I start?"
+    "text": "One of the best features of R is it’s huge library of free and open-source packages. Packages are R’s system of being able to add functions, objects, classes, and data to our session. “Base” R has a lot of functionality already, but for more specialized kinds of analysis or other functions (like graphing), there are many excellent packages to add functionality.\nThe goal of this tutorial is to explain the basics of how this system works, so that you can make the most of the huge ecosystem of great R packages.\n\n\nR has a standard way of creating packages, and there are a number of good tutorials and tools to make it relatively easy to create your own packages. However, most users get by just fine by installing and using packages from freely available repositories.\nThe most common way to get packages is from the official repository called the Comprehensive R Archive Network (CRAN). However, getting a package onto CRAN takes a little time and administrative overhead, so sometimes you may find a package that is hosted elsewhere, like GitHub or the Bioconductor repository.\nWhen you get a package from CRAN, much like when you download R to begin with, you may have to pick a “mirror” – one of many identical sites hosted over the world that provide the service of distributing R code. Depending on your settings, your installation may pick a mirror for you. Either way, when you get a package from CRAN, it’s coming from one of the mirrors, and if you are asked to pick, just pick one that is geographically in a similar region as you are.\n\n\n\nThis couldn’t be simpler (at least, most of the time). There are really just two steps. The installation process is a one-time process. It involves downloading code from CRAN (or somewhere else), and unpacking or “building” the code in a location on your machine where your installation of R can find it. It does this all automatically, so you don’t need to make any decisions here.\nOnce it’s installed, you do NOT need to re-install it, unless you want to download a newer version, or unless you change your base installation version of R (like upgrading from 4.5.0 to 4.5.1).\nLet’s do this now for the graphing package we will use in this course, ggplot2. Run the code chunk below to install this package.\n\ninstall.packages(\"ggplot2\")\n\n\n\n\nIf you imagine that your installation of R is like your personal workshop for doing statistics, installing a new package is like going to the hardware store, buying a cool new tool kit, and then coming home and “installing” it into a special drawer in your workbench. Once it’s installed, you don’t need to go back to the store, unless you want a newer version, or unless you are building a new workshop (i.e., working in a new installation of base R).\nBut you do need to get those shiny new tools out of the special drawer when you want to use them. In R, this means you need to load the package during the session you are using it. You only need to load it once, until you start a new session. In other words, “loading” a package is like taking the tool kit out of its drawer so that you can work with those tools. When the session is done, the tools go back into the drawer, so they will need to be loaded again when you start a new session.\nWe do this using the library function. So after you have installed the ggplot2 package, you can run the following:\n\nlibrary(ggplot2)\n\nIf you get an error message, then this more than likely means it was not correctly installed.\nSo just to be clear: you only need to run install.packages(\"packagename\") once, in order to download and install a given package, but then you need to load that package with library(packagename) once every session when you want to use something from that package.1\n1 Note also that you use quotes around the package name when installing, but not when you use library()\n\n\nWhen you run install.packages(), it will not only install the package you asked for, but all of the packages that are dependencies of the package you are installing (plus all of the dependencies’ dependencies, and so on). This is great, because it means R’s package system is doing all the work for you to make sure you have everything you need in order to use the package. This is pretty common, and a sign of a healthy programming community, because it shows how package authors frequently build on the work of others.\nHowever, sometimes it means that you are installing a lot of packages at once, and sometimes things can go wrong during the installation process.\nIn general, a lot of stuff gets printed to the console when a package is being installed, but at the very end, if you see a message that an installation “exited with non-zero status”, it means something didn’t quite work right.\nIn order to figure out what to do, you may need to scroll back through all the console print-outs, and see if there are any warnings or error messages.\nThe most common thing that can go wrong is that a package may depend on some other piece of software that isn’t directly managed by R’s package system. For example, if you are on a Windows machine, you will likely need to install the Rtools software at some point. This is additional software that provides some utilities that are common on macOS and Linux systems, but which are not typically part of a normal Windows installation.\nIn this case, Rtools can be found if you go to the r-project site where you downloaded R the first time, and on the page where you can choose to download “base” R, you should see a link a little lower down to download an installer for Rtools.\nIn other cases, depending on the packages you’re installing, you might need some other utilities or programs. But the pattern is the same: if you “exit the installation with a non-zero status”, you should look through the messages to see if it tells you what you’re missing.\nIf you think you’ve addressed the issue, just try re-running install.packages(), to see if you can get through it without any problems. Once you finally get through the process cleanly, you should be all set.\nIf you run into problems with installation of any packages in this course, please ask for help!\nFortunately, package installation in R is usually pretty headache free, and besides the common need for Rtools on Windows, installation problems are usually pretty rare.\n\n\n\nRecent installations of RStudio also try to assist you with the installation process. For example, if you open up a script or notebook, and RStudio notices that it uses packages that you don’t have installed, it will actually display a small pop-up notice at the top of the window to let you know, and if it knows where to find the package (say, on CRAN), it will even give you a link you can click which will run install.packages() for you.\nIn general, I have had a good experience with RStudio making these suggestions. In other words, if RStudio is making a suggestion, it’s typically a good idea to follow it, and just install what it recommends. I have never had “bloatware” kinds of issues by following RStudio’s prompts.\nOf course, as always, you should be aware of what you’re installing, just in case.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#where-do-you-get-packages",
+    "href": "R_basics_packages.html#where-do-you-get-packages",
+    "title": "R Basics: installing and loading packages",
+    "section": "",
+    "text": "R has a standard way of creating packages, and there are a number of good tutorials and tools to make it relatively easy to create your own packages. However, most users get by just fine by installing and using packages from freely available repositories.\nThe most common way to get packages is from the official repository called the Comprehensive R Archive Network (CRAN). However, getting a package onto CRAN takes a little time and administrative overhead, so sometimes you may find a package that is hosted elsewhere, like GitHub or the Bioconductor repository.\nWhen you get a package from CRAN, much like when you download R to begin with, you may have to pick a “mirror” – one of many identical sites hosted over the world that provide the service of distributing R code. Depending on your settings, your installation may pick a mirror for you. Either way, when you get a package from CRAN, it’s coming from one of the mirrors, and if you are asked to pick, just pick one that is geographically in a similar region as you are.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#how-do-you-get-packages",
+    "href": "R_basics_packages.html#how-do-you-get-packages",
+    "title": "R Basics: installing and loading packages",
+    "section": "",
+    "text": "This couldn’t be simpler (at least, most of the time). There are really just two steps. The installation process is a one-time process. It involves downloading code from CRAN (or somewhere else), and unpacking or “building” the code in a location on your machine where your installation of R can find it. It does this all automatically, so you don’t need to make any decisions here.\nOnce it’s installed, you do NOT need to re-install it, unless you want to download a newer version, or unless you change your base installation version of R (like upgrading from 4.5.0 to 4.5.1).\nLet’s do this now for the graphing package we will use in this course, ggplot2. Run the code chunk below to install this package.\n\ninstall.packages(\"ggplot2\")",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#how-do-you-use-the-package",
+    "href": "R_basics_packages.html#how-do-you-use-the-package",
+    "title": "R Basics: installing and loading packages",
+    "section": "",
+    "text": "If you imagine that your installation of R is like your personal workshop for doing statistics, installing a new package is like going to the hardware store, buying a cool new tool kit, and then coming home and “installing” it into a special drawer in your workbench. Once it’s installed, you don’t need to go back to the store, unless you want a newer version, or unless you are building a new workshop (i.e., working in a new installation of base R).\nBut you do need to get those shiny new tools out of the special drawer when you want to use them. In R, this means you need to load the package during the session you are using it. You only need to load it once, until you start a new session. In other words, “loading” a package is like taking the tool kit out of its drawer so that you can work with those tools. When the session is done, the tools go back into the drawer, so they will need to be loaded again when you start a new session.\nWe do this using the library function. So after you have installed the ggplot2 package, you can run the following:\n\nlibrary(ggplot2)\n\nIf you get an error message, then this more than likely means it was not correctly installed.\nSo just to be clear: you only need to run install.packages(\"packagename\") once, in order to download and install a given package, but then you need to load that package with library(packagename) once every session when you want to use something from that package.1\n1 Note also that you use quotes around the package name when installing, but not when you use library()",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it",
+    "href": "R_basics_packages.html#what-can-go-wrong-during-installation-how-can-you-tell-and-what-can-you-do-about-it",
+    "title": "R Basics: installing and loading packages",
+    "section": "",
+    "text": "When you run install.packages(), it will not only install the package you asked for, but all of the packages that are dependencies of the package you are installing (plus all of the dependencies’ dependencies, and so on). This is great, because it means R’s package system is doing all the work for you to make sure you have everything you need in order to use the package. This is pretty common, and a sign of a healthy programming community, because it shows how package authors frequently build on the work of others.\nHowever, sometimes it means that you are installing a lot of packages at once, and sometimes things can go wrong during the installation process.\nIn general, a lot of stuff gets printed to the console when a package is being installed, but at the very end, if you see a message that an installation “exited with non-zero status”, it means something didn’t quite work right.\nIn order to figure out what to do, you may need to scroll back through all the console print-outs, and see if there are any warnings or error messages.\nThe most common thing that can go wrong is that a package may depend on some other piece of software that isn’t directly managed by R’s package system. For example, if you are on a Windows machine, you will likely need to install the Rtools software at some point. This is additional software that provides some utilities that are common on macOS and Linux systems, but which are not typically part of a normal Windows installation.\nIn this case, Rtools can be found if you go to the r-project site where you downloaded R the first time, and on the page where you can choose to download “base” R, you should see a link a little lower down to download an installer for Rtools.\nIn other cases, depending on the packages you’re installing, you might need some other utilities or programs. But the pattern is the same: if you “exit the installation with a non-zero status”, you should look through the messages to see if it tells you what you’re missing.\nIf you think you’ve addressed the issue, just try re-running install.packages(), to see if you can get through it without any problems. Once you finally get through the process cleanly, you should be all set.\nIf you run into problems with installation of any packages in this course, please ask for help!\nFortunately, package installation in R is usually pretty headache free, and besides the common need for Rtools on Windows, installation problems are usually pretty rare.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#rstudio-installation-messages",
+    "href": "R_basics_packages.html#rstudio-installation-messages",
+    "title": "R Basics: installing and loading packages",
+    "section": "",
+    "text": "Recent installations of RStudio also try to assist you with the installation process. For example, if you open up a script or notebook, and RStudio notices that it uses packages that you don’t have installed, it will actually display a small pop-up notice at the top of the window to let you know, and if it knows where to find the package (say, on CRAN), it will even give you a link you can click which will run install.packages() for you.\nIn general, I have had a good experience with RStudio making these suggestions. In other words, if RStudio is making a suggestion, it’s typically a good idea to follow it, and just install what it recommends. I have never had “bloatware” kinds of issues by following RStudio’s prompts.\nOf course, as always, you should be aware of what you’re installing, just in case.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#put-all-library-statements-at-the-top-of-your-script",
+    "href": "R_basics_packages.html#put-all-library-statements-at-the-top-of-your-script",
+    "title": "R Basics: installing and loading packages",
+    "section": "Put all library statements at the top of your script",
+    "text": "Put all library statements at the top of your script\nSince you only need to load a package once per session, it’s a good habit to put all of your library() statements at the very beginning of the file, so you can load all of your packages in one place, and then you’re good to go.\nThis also has the benefit of making it clear to people who look at your code what packages they will need in order to run your code. That’s a lot more friendly than making someone get halfway through your script or notebook before they realize they need to install some other package.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#loading-order-and-masking",
+    "href": "R_basics_packages.html#loading-order-and-masking",
+    "title": "R Basics: installing and loading packages",
+    "section": "Loading order and “masking”",
+    "text": "Loading order and “masking”\nOne of the challenges of a system like R that has so many packages is that with so many different authors contributing packages, at some point there may be two different packages that provide a function that happens to be called the same thing.\nFortunately, R has a very reasonable system for handling so-called “namespace clashes.” First, whenever you load a package, R will warn you with statements like:\n\nThe following object(s) is/(are) masked from package ‘package:XXXX’\n\nFor example, one popular package with a lot of useful miscellaneous functions is the MASS package (which stands for Modern Applied Statistics with S. Another popular package is the dplyr package for manipulating data by statistician Hadley Wickham. Both of these packages have a function called select. So if you run library(dplyr) and then library(MASS), you will get a message saying that the object select is masked from 'package:dplyr'.\nIf an object is “masked”, then it is simply not the “default” object of that name. So if MASS and dplyr both have a select() function, but the one from dplyr is masked, then if you just say select(something), you will be using the select function from MASS.\nFortunately, there are a few ways to manage these masking conflicts.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#strategy-1-worry-about-the-order-of-library-statements",
+    "href": "R_basics_packages.html#strategy-1-worry-about-the-order-of-library-statements",
+    "title": "R Basics: installing and loading packages",
+    "section": "Strategy 1: worry about the order of library statements",
+    "text": "Strategy 1: worry about the order of library statements\nOne way to manage this is just to make sure you library things in the right order, so that the most “important” packages go last, because packages loaded later will mask the previous ones. In the example of select() above, I personally rarely use the select() function from MASS, and I very frequently use the select() function from dplyr, so I basically try to make sure I library MASS first, then dplyr, so that the MASS version will be masked.\nIf you accidentally do them out of order, there is not a good way to “unlibrary” a package during a session. You may just need to re-start your R session in order to start from scratch.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_basics_packages.html#strategy-2-use-the-package-specific-syntax-for-the-masked-function",
+    "href": "R_basics_packages.html#strategy-2-use-the-package-specific-syntax-for-the-masked-function",
+    "title": "R Basics: installing and loading packages",
+    "section": "Strategy 2: use the “package specific” syntax for the masked function",
+    "text": "Strategy 2: use the “package specific” syntax for the masked function\nThe best way to make sure that you are using a specific function from a specific package is to use R’s special syntax for this purpose. This looks like:\n\npackagename::functionname()\n\nSo in the example above, if I wanted to make sure I was using the select() function from the dplyr package, instead of the normal:\n\nselect(df, cols)\n\nI could use the special syntax:\n\ndplyr::select(df, cols)\n\nThis will ensure, no matter what is masking what, that I am using the function I am intending to use.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Using R packages"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#simulating-dice-rolls",
+    "href": "R_univariate_distributions.html#simulating-dice-rolls",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Simulating dice rolls",
+    "text": "Simulating dice rolls\nFor example, in the reading we used the concept of rolling dice to present the idea of a generating process. We discussed how theoretically, each number on a die should come up the same number of times, on average, but empirically getting exactly the same counts of each number is unlikely.\nThe great thing about simulations is that you can actually test out things like this, and see them in action. This is especially helpful when the concepts are a little unintuitive or surprising. We will explore simulating this particular result, and we will use some graphics code to visualize it.\nFirst, let’s talk about the sample function. This function has four arguments:\n\nx: the vector of values to be sampled from\nsize: how many values to sample\nreplace: whether to sample “with replacement” or not\nprob: a vector of probabilities, for weighting which values are most likely to be selected\n\nRemember that you can use the command: ?sample to see the help file and get the above information, examples, and more.\nBut for now, let’s talk through each of these arguments to understand what the sample function is doing. First, we need to decide what values to sample from. The idea is like our earlier concept of having a bag of values that represents our population (can be numbers, but can also be a set of strings, or any other type of data we want), and all of the things in the “bag” are the x vector that we need to specify when we use sample().\nFor the size argument, we are just telling it how many values we want to pull out of this bag.\nThe concept of replacement can be understood in terms of our “bag” analogy. The question is, if you pull a value from the bag, do you replace it (i.e., put it back in the bag) before you draw your next number? An example of sampling without replacement would be like drawing a hand of cards in a card game like poker. If you draw the King of Hearts, and then draw your next card, the next card cannot be a King of Hearts because there’s only one of those, and it’s not in the deck anymore, it’s in your hand! It wasn’t “replaced” back into the deck when you drew it.\nIn contrast, an example of sampling “with replacement” would be if you had a bag of the numbers 1 through 10, but whenever you drew a number, you would write the result down, but then put the number back. Since you are replacing it, it would be possible to draw the same number multiple times.\nFinally, the prob argument is used if some things were more likely to get pulled from the bag than others.\nSo how do we specify these arguments to fit our dice-rolling example?\nWell first, the vector of values we are sampling from is clear, it’s the numbers 1, 2, 3, 4, 5, and 6, because that’s what’s on the faces of our die.1\n1 Remember that in R, we can use the construction 1:6 to stand for a vector of the integers from 1 to 6.Now let’s say we want to sample from these number 600 times. Setting the size argument to 600 will give us 600 samples.\nWe will ignore the prob argument, because we want this to be a “fair” die, that has an equal chance of rolling any of the numbers. But if we wanted to simulate a “loaded” or “weighted” die, where some numbers were more likely than others, we could use this argument to specify the probability of each of the faces.\nBut what about replacement? Should this be with replacement, or without? (Think about it for a minute before going on.)\nThe answer is that it needs to be with replacement. First of all, if we didn’t replace the values, we would run out after just six rolls! The analogy would be like somehow removing each side as we rolled them. But to think about it a little less concretely, the generating process is that each time we roll, we still sample a number from the same set of six numbers, and that never changes, no matter how many times we roll.\nIn the sample function in R, the replace argument is FALSE by default (which you can tell if you look at the help file using ?sample). So this just means that when we use the function, we need to make sure to use replace = TRUE if we want to sample with replacement.\nSo let’s do this in code now. We will first use the sample function to generate 600 rolls of a die, and assign that to a variable die_rolls. We can then use the xtabs function to see how many of each number was rolled in those 600 rolls.\n\nset.seed(42)\ndie_rolls &lt;- sample(1:6, 600, replace = TRUE)\nxtabs(~ die_rolls)\n\ndie_rolls\n  1   2   3   4   5   6 \n100 117  91  92 101  99 \n\n\nRemember that our theoretical distribution says that every value is selected with the same probability. We can see that the empirical distribution here is close, but not exact. Luckily enough, we did get exactly 100 rolls of “1”, but then we got 117 rolls of “2”, which seems like a lot more than 100!\nDoes this mean there is something wrong with our dice? Not at all! This is a perfectly valid result, and it helps illustrate that even if we know the generating process, any actually observed data set is likely to depart from that theoretical ideal.\nBut before we proceed further, we need to talk a little about how randomness works in R.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#randomness-in-r",
+    "href": "R_univariate_distributions.html#randomness-in-r",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Randomness in R",
+    "text": "Randomness in R\nThe topic of mathematical randomness is actually very complex and interesting. Before computers were readily available, there were actually books of random numbers produced that statisticians could use to “generate” random values by flipping to a random page and putting their finger down without looking. With computers, in some ways it’s just as challenging because (“classical” digital) computers are good at deterministic computing (they produce a predictable result based on the input), but not inherently good at randomness.\nIt turns out that the numbers generated in R (and in virtually all standard statistical software) are technically called pseudo-random, which means “not actually random”, and in practice they function a little like those old books. The good news for us is that a lot of very smart people have worked hard to make R’s “random” numbers “random enough” to work for our purposes. In other words, they have the same statistical properties that “true” random numbers would have, so we can use them in our analyses. If this topic is intriguing to you, I recommend looking at the help file for ?Random and reading the details and references.\nOne of the side benefits of using pseudo-random numbers is that if we really want to, we can reproduce exact results, even if there is something random about the process. It would be as if you were using a robot to pick numbers out of the old number books, and you could tell it to use the same sequence of motions each time, in order to exactly reproduce the same set of “random” numbers.\nThis is what the set.seed() function does. If you use this function, you give it some integer value, and you are basically setting the “starting state” of the random number generator based on that value. I did this in the code chunk above so that when you run this code, you will get the exact same results as I do, every time, as long as you don’t change the set.seed() value.\nSo take a minute to try it out: first, try running the code chunk above a few times, and see how it gets the same result every time. Now change the number inside the set.seed() function, and you’ll see that now you get a slightly different set of results when you run the chunk, but then that will be consistent each time you run that new seed. Finally, comment-out or delete the set.seed() line, and you’ll see that you get a different set of results every time you run the chunk.\nIn practical terms, what all this means is that there are a number of “random” generators in R, but they are all pseudo-random, and if you ever want to be able to replicate a “random” result exactly, you can use set.seed() to control the starting state of the random number generator.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#plotting-in-r-getting-started-with-the-ggplot2-package",
+    "href": "R_univariate_distributions.html#plotting-in-r-getting-started-with-the-ggplot2-package",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Plotting in R: getting started with the ggplot2 package",
+    "text": "Plotting in R: getting started with the ggplot2 package\nR actually has two distinct systems for creating graphs and plots. “Base” graphics and “grid” graphics. Base graphics are the older system, and for some things they are a bit simpler, but they are not as flexible, and ultimately start to become harder and harder to work with, the more we want to do with them.\nIn contrast, the “grid” system uses a more unified system of controlling graphical output. In practice, the most popular package for plotting data in R is called ggplot2, and it’s built on top of the grid system. So while not many people learn all the nuts and bolts of the grid system per se, it is really useful to learn the methods of ggplot2.\nThat said, ggplot2 does have a bit of a learning curve. But once you understand how it works, you can approach data visualization with a common framework and you can produce an amazing array of different kinds of plots and graphs.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#basic-ggplot2-usage-to-plot-our-dice-rolls",
+    "href": "R_univariate_distributions.html#basic-ggplot2-usage-to-plot-our-dice-rolls",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Basic ggplot2 usage to plot our dice rolls",
+    "text": "Basic ggplot2 usage to plot our dice rolls\nBefore we do anything, make sure you have installed the ggplot2 package. Consult the tutorial on packages if you need to review how to do that.\nThe advice in that tutorial is to put your library statements at the top of the file, but since we are just now introducing the ggplot2 package, we can just do that now. Make sure to run the following code chunk, and if it tells you you don’t have the package installed, please see the r_basics_packages.Rmd Notebook on installing the package before proceeding. In the future, we will put library() calls like this at the very beginning of our notebooks/scripts.\n\nlibrary(ggplot2)",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#the-structure-of-a-ggplot2-graph",
+    "href": "R_univariate_distributions.html#the-structure-of-a-ggplot2-graph",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "The structure of a ggplot2 graph",
+    "text": "The structure of a ggplot2 graph\nThe unique thing about how ggplot2 works is that you build your graphs in layers. Each layer adds or changes something about how the graph is constructed or displayed.\nThe first layer starts with the ggplot() function.2 What this function does is set up the main parameters of the graph, which is usually something like the x-axis and y-axis, and the name of the data frame where the data is coming from.\n2 Note that the name of the package is ggplot2, but the main function is just called ggplot(). The history here is that Hadley Wickham, the original author of ggplot2, along with a ton of other very popular and influential packages, first developed the ggplot package as part of his PhD dissertation in statistics. But he quickly decided that he could do a much better job, and re-implemented the whole package from scratch, and instead of just making it the next version of the ggplot package, he decided it was a big enough re-write to make it an independent package which he called ggplot2. This just goes to show that even brilliant people like Wickham can make silly version-naming decisions. In any case, the end result is that everyone uses ggplot2, and we all just ignore what the “2” in the package name means.In our case, we just want to plot the counts of numbers in the die_rolls vector. We can use the as.data.frame() function to easily convert the table that xtabs() gives us into a proper data frame:\n\ndie_results &lt;- as.data.frame(xtabs(~ die_rolls))\nhead(die_results)\n\n  die_rolls Freq\n1         1  100\n2         2  117\n3         3   91\n4         4   92\n5         5  101\n6         6   99\n\n\nThis is a good opportunity to practice one of the principles from the previous unit, which was to rename our columns to be a bit more consistent. Since we are talking about the counts of how many times each “face” of our theoretical die was rolled, let’s rename the columns accordingly:\n\ncolnames(die_results) &lt;- c(\"die_face\", \"counts\")\nhead(die_results)\n\n  die_face counts\n1        1    100\n2        2    117\n3        3     91\n4        4     92\n5        5    101\n6        6     99\n\n\nNow we can start building our graph. The other special concept from ggplot2 that we need to introduce is the concept of an aesthetic, which is a bit of jargon from the data visualization literature, which basically means “mapping from data to a visual property.” In ggplot2, there is a function called aes which stands for “aesthetic”, and inside that function is where you use arguments to set different graph properties to the value of different variables (i.e., columns) in your data.\nLet’s put this all together. We will start our graph with the following “base” layer. The first argument of the ggplot function is to say what the data frame is that we’re plotting from. The second is an aes function that sets up our basic mapping. We imagine that we would like a bar graph where we have a bar for each die face, with the height of the bar indicating how many of that value we got in our sample. So inside aes() we specify that the x-axis values should come from the die_face column, and the y-axis values should come from the counts column.\nWe can save this ggplot object to a variable, and then use print() to display it.\n\ndie_counts_plot &lt;- ggplot(data = die_results, aes(x = die_face, y = counts))\nprint(die_counts_plot)\n\n\n\n\n\n\n\n\nSo far so good, but it just looks like an empty graph!3\n3 But notice that the axis labels and values seem to make sense. You can think of the base ggplot layer as setting up the initial axes and scales of the graph.This is because we haven’t yet said what shape (or in ggplot2 terminology, geom) that we want to plot. So we need to add another layer that says, “okay, now that you know the data mappings, display this data as a bar graph.” There is a geom_bar() in ggplot2, but that geom doesn’t literally plot the actual values by default. So what we want is a function called geom_col().\nHere’s what it looks like to add this layer to our existing graph object and then display it:\n\ndie_counts_plot &lt;- die_counts_plot + geom_col()\nprint(die_counts_plot)\n\n\n\n\n\n\n\n\nHooray! Now we can see the visual of the “flat” uniform distribution. It’s not perfectly flat, as we discussed, but it’s pretty flat, as far as distributions go.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#adding-an-annotation-line",
+    "href": "R_univariate_distributions.html#adding-an-annotation-line",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Adding an annotation line",
+    "text": "Adding an annotation line\nIn this case, we might want to draw a kind of reference line, to help us understand what we are looking at. For example, when we looked at the raw numbers, we noticed that there were in fact exactly 100 rolls of “1”, just like our theoretical distribution would predict. But that’s harder to see, given the values that ggplot2 has selected for our axis tick-marks.4\n4 There are also ways to modify the tick-marks, but right now, adding a horizontal line is a little better for our purposes.So let’s add another layer to our plot, just a horizontal line that marks where “100” is, because that’s our predicted value for each count, based on our theoretical distribution. In order to do that, we can just add the geom_hline() and specify the yintercept argument. Finally, we can make it a dashed line using the linetype argument.\n\ndie_counts_plot + geom_col() + geom_hline(yintercept = 100, linetype = 2)\n\n\n\n\n\n\n\n\nNow it’s easier to see that while the “5” and “6” results were extremely close to 100, only the “1” results were exactly at the predicted frequency of 100.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#plotting-again-with-different-numbers",
+    "href": "R_univariate_distributions.html#plotting-again-with-different-numbers",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Plotting again, with different numbers",
+    "text": "Plotting again, with different numbers\nIn order to illustrate how this shape changes and varies if we change the number of die rolls, let’s put all this code together again. But this time, let’s generate a LOT more rolls, to see if it gets flatter.5\n5 This time, I put both layers of the ggplot graph in at once, using the +. But I also used a line return after the +. I did this just to make the code a little more readable, and so you don’t necessarily have to scroll to see the whole line. R allows this because when it sees the + at the end of the line, it knows we’re not done yet, so it interprets the next line of code as basically just a continuation of the same line. RStudio helpful adds some indentation when you do this, but unlike languages like Python, that indentation doesn’t actually matter, it’s just to make it easier to read.\nnumber_of_rolls = 60000\nmore_die_rolls &lt;- sample(1:6, number_of_rolls, replace = TRUE)\nmore_results &lt;- as.data.frame(xtabs(~ more_die_rolls))\ncolnames(more_results) &lt;- c(\"die_face\", \"counts\")\ndie_plot2 &lt;- ggplot(data = more_results, aes(x = die_face, y = counts)) +\n  geom_bar(stat = \"identity\")\nprint(die_plot2)\n\n\n\n\n\n\n\n\nThat’s a lot more flat!\nNow take a minute to play around with the value assigned to the number_of_rolls variable and re-run the chunk of code over and over to see different results. Make the number of rolls small, like 20 or 30, run that a few times to see the shape change. Then make it larger, and see if you can decide what you think is “large enough” before the distribution really starts looking flat.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#an-easier-way-to-generate-normal-numbers",
+    "href": "R_univariate_distributions.html#an-easier-way-to-generate-normal-numbers",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "An easier way to generate normal numbers",
+    "text": "An easier way to generate normal numbers\nThe above is basically a demo of the CLT: showing that even though individual dice follow a uniform distribution, the average of many dice rolls follows a normal distribution.\nBut if you wanted to generate numbers from a normal distribution, you can do that directly, too! Here’s an example in R, generating 10,000 numbers from a continuous normal distribution with a mean of 30 and a standard deviation of 6, and plotted with a histogram:\n\nnormal_sample &lt;- rnorm(10000, mean = 30, sd = 6)\nggplot(data = NULL, aes(x = normal_sample)) + geom_histogram(binwidth = 1)\n\n\n\n\n\n\n\n\nAgain, feel free to play around with some of the values. What happens if you adjust the standard deviation (sd) parameter? The mean? The number of values generated?",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#density-plots",
+    "href": "R_univariate_distributions.html#density-plots",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Density plots",
+    "text": "Density plots\nThe great thing about histograms is that they show your actual data, warts and all. They are invaluable when you are starting off with EDA, because especially if you play around with the bin width, you might stumble across some odd gaps or a couple of extreme outliers, or other patterns you might not notice otherwise.\nHowever, sometimes you also would like to plot something that smooths over the bumps to give you more of a clear picture of the curve of the distribution. That’s what a density plot can be good for.\nHere’s an example of a density plot of some random numbers, in comparison to the previous histogram.\n\nnormal_sample2 &lt;- rnorm(10000, mean = 30, sd = 6)\nggplot(data = NULL, aes(x = normal_sample2)) + geom_density()\n\n\n\n\n\n\n\n\nAnd here’s an example with both. If you want to superimpose a density plot over a histogram, you need to tell your plotting software to scale the histogram by density instead of counts. Here’s how to do this in R:\n\nnormal_sample3 &lt;- rnorm(10000, mean = 30, sd = 6)\nggplot(data = NULL, aes(x = normal_sample3)) +\n    geom_histogram(aes(y = after_stat(density)), \n                   fill = \"gray\", binwidth = 1) +\n    geom_density()\n\n\n\n\n\n\n\n\nNote that I changed the “fill” color of the histogram to make it lighter so the density curve is more easily visible. In this plot, you can see what I mean that the density plot is like a “smoothed” histogram.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#numeric-summaries",
+    "href": "R_univariate_distributions.html#numeric-summaries",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Numeric summaries",
+    "text": "Numeric summaries\nPlotting histograms and density plots are extremely helpful, but sometimes you would like to summarize a set of numbers in a simpler way. This is what summary statistics are good for. But just remember, summary statistics are a very poor replacement for plots when it comes to exploratory data analysis.\nWe have already covered mean and median. Recall that the mean is the same as getting an average value, and the median is the middle value, such that half of the data is higher and half is lower.\nThe concept of the median can be generalized with the concept of quantiles, which are set at any percentages you want, not just the 50% of the median. It’s common for people to examine the “quartiles”, which are the 25%, 50%, and 75% quantiles. That is, the 25% quantile is the value where 25% of the numbers are smaller than it, the 50% quantile is the same as the median, and the 75% quantile is the number where 75% of the numbers are smaller than it. The 0% quantile is another way of saying the minimum, and the 100% quantile is the same as the maximum.\nThe code below shows how the R function quantile() can be used on a set of numbers to compute quartiles by default, or any other quantiles as specified:\n\nmore_random_numbers &lt;- rnorm(1000)\nquartiles_of_randoms &lt;- quantile(more_random_numbers)\narbitrary_quantiles &lt;- c(0.13, 0.44, 0.89)\nweird_quantiles_of_randoms &lt;- quantile(more_random_numbers,\n                                       probs = arbitrary_quantiles)\n\nprint(c(\"The minimum, quartiles, and maximum values are:\", quartiles_of_randoms))\n\n                                                  \n\"The minimum, quartiles, and maximum values are:\" \n                                               0% \n                              \"-3.74011711271895\" \n                                              25% \n                             \"-0.662906663475643\" \n                                              50% \n                            \"-0.0301726410468927\" \n                                              75% \n                              \"0.693901967621219\" \n                                             100% \n                               \"2.98886013235066\" \n\nprint(c(\"Some arbitrary quantiles are:\", weird_quantiles_of_randoms))\n\n                                                            13% \n\"Some arbitrary quantiles are:\"             \"-1.11207803941771\" \n                            44%                             89% \n           \"-0.158973029069408\"              \"1.24719176952534\"",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#numeric-summaries-and-normal-distributions",
+    "href": "R_univariate_distributions.html#numeric-summaries-and-normal-distributions",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Numeric summaries and normal distributions",
+    "text": "Numeric summaries and normal distributions\nOne of the properties of normal distributions is that they are perfectly symmetric, which means that their mean, median, and mode are all at the same value. In other words, the average value (the mean) is also the “middle” value (the median), and both of those are also the most likely/common value of the distribution (the mode).\nOne of the ways to see this graphically is to plot vertical lines superimposed over a density plot.\nLet’s generate a large number of normal variates (another way of saying “numbers pulled from a normal distribution”), plot the density curve, and plot a vertical line at the (empirical) mean:\n\nrandom_normals &lt;- rnorm(10000, mean = 5, sd = 2)\nrandom_normals_mean &lt;- mean(random_normals)\n\nggplot(data = NULL, aes(x = random_normals)) + geom_density() +\n    geom_vline(aes(xintercept = random_normals_mean), color = \"red\")\n\n\n\n\n\n\n\n\nYou can play around with these values, but as long as there are a lot of numbers being generated, the calculated mean will be quite close to both the “theoretical” mean (the mean we used in the first line to generate the values in the first place) as well as the mode of the density plot.\nYou can see the same thing for the median:\n\nrandom_normals &lt;- rnorm(10000, mean = 5, sd = 2)\nrandom_normals_median &lt;- median(random_normals)\n\nggplot(data = NULL, aes(x = random_normals)) + geom_density() +\n    geom_vline(aes(xintercept = random_normals_median), linetype = 2, color = \"blue\")\n\n\n\n\n\n\n\n\nOr even quantiles:\n\nrandom_normals &lt;- rnorm(10000, mean = 5, sd = 2)\nrandom_normals_quantiles &lt;- quantile(random_normals,\n                                     c(0.025, 0.05, 0.25, 0.75, 0.95, 0.975))\n\nggplot(data = NULL, aes(x = random_normals)) + geom_density() +\n    geom_vline(aes(xintercept = random_normals_quantiles), linetype = 2, color = c(\"blue\", \"green\", \"red\", \"red\", \"green\", \"blue\")) + theme_minimal()\n\n\n\n\n\n\n\n\nA couple of plotting tips:\n\nusing theme_minimal() is an easy way to have a “cleaner” look with a lighter background\nI passed a vector of colors to the geom_vline() function because I knew I was creating multiple lines and I wanted them colored differently. Just be aware that for this trick, the number of colors in the vector has to be the same as the number of lines you’re drawing, which is why each color is listed twice (in reverse order)\n\nPlay around with the code above to get used to plotting vertical lines superimposed over density plots and/or histograms.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#histograms-with-iris-data",
+    "href": "R_univariate_distributions.html#histograms-with-iris-data",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Histograms with iris data",
+    "text": "Histograms with iris data\nPlot a histogram of Sepal.Length, and play around with the bin width. Notice that the bin width is on the scale of the variable being plotted, so you have to pay attention to that when considering good bin width choices. As you explore some different bin widths, do you notice any different patterns? Does the distribution look normal? What do you see?\n\nhistogram_bin_width = 0.2\nggplot(iris, aes(x = Sepal.Length)) + \n  geom_histogram(binwidth = histogram_bin_width)\n\n\n\n\n\n\n\n\nNow do the same for Sepal.Width\n\nhistogram_bin_width = 0.1\nggplot(iris, aes(x = Sepal.Width)) + \n  geom_histogram(binwidth = histogram_bin_width)\n\n\n\n\n\n\n\n\nNow do the same for Petal.Length\n\nhistogram_bin_width = 0.2\nggplot(iris, aes(x = Petal.Length)) + \n  geom_histogram(binwidth = histogram_bin_width)\n\n\n\n\n\n\n\n\nWhich of these looks the most like a normal distribution? To my eye, the Sepal.Width might look the most normal, except for that tall “spike” at the mode.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
+  },
+  {
+    "objectID": "R_univariate_distributions.html#generating-and-plotting-theoretical-densities",
+    "href": "R_univariate_distributions.html#generating-and-plotting-theoretical-densities",
+    "title": "Generating, describing, and plotting univariate distributions in R",
+    "section": "Generating and plotting theoretical densities",
+    "text": "Generating and plotting theoretical densities\nThe first thing you might notice is how “messy” or different these distributions look. As you look at distributions, you might start to wonder “well, how close to a normal distribution is this?”\nInterestingly, there is not a single foolproof method for assessing “how close” an empirical distribution is to a theoretical one. There are some tests, but those can be very sensitive, meaning that when you have a lot of data, even very small departures from a “perfect” normal distribution can be detected.\nIn the end, visual judgments may be the most robust way to decide how “normal” something looks. So in order to facilitate this, it would be nice if we could superimpose a perfect theoretical normal distribution on top of our data, to get a clear visual comparison.\nSo let’s learn how to do just that!\nThe first step is to learn how to generate theoretical densities. The concept of a density is that it’s the relative probability of observing a value, given a distribution. When we did the density plots above, that’s what we were plotting. But those plots were empirical densities, based on our sample data. What we want here are theoretical densities that match the normal distribution.\nSo what we want is to be able to say, “okay, for every value on the x-axis, what is the probability density for that value?” In order to do this, we can follow the steps below. The idea here is that we want to use a distribution with parameters that match the parameters we see in our data and generate density values from that distribution, then plot that over our histograms to be able to compare the shapes.\n\nFirst, recall the parameters that are needed to specify your distribution. For the normal distribution, that is the mean and the standard deviation.\nCompute those parameters from the data in the variable you’re examining.\nNext, generate the density values corresponding to the vaalues in the variable, using the appropriate density function\nThen plot!\n\nThe only really new function here is for step 4: the density function. The good news is that R has lots of different density functions, for different theoretical distributions. Here we want the density function for the normal distribution, which is just dnorm. All you do is give dnorm your x values and the parameters (mean and sd) of your distribution, and it gives you back densities that correspond to your x values.\nHere are the steps in code, for getting densities based on the Sepal.Width variable in the iris data.\n\n# get the mean and sd of the variable we are examining\nmu &lt;- mean(iris$Sepal.Width)\nsigma &lt;- sd(iris$Sepal.Width)\n\n# compute the densities for the observed values\ny_densities &lt;- dnorm(iris$Sepal.Width, mean = mu, sd = sigma)\n\nNow, in order to plot the theoretical curve on top of the data, we need to do what we did above, plotting a histogram on the density scale, and then adding a layer for the theoretical densities we just computed.\n\nggplot(iris, aes(Sepal.Width)) + \n  geom_histogram(aes(y = after_stat(density)), binwidth = 0.1) +\n  geom_line(aes(y = y_densities))\n\n\n\n\n\n\n\n\nNow we can see what shape we should see, if our data indeed followed a normal distribution. In this case, you can see that the curve seems pretty close, just except for that big “spike” in the middle. But overall this is not bad.\nCompare this to if we took the same steps with the Petal.Length variable:\n\n# get the mean and sd of the variable we are examining\nmu &lt;- mean(iris$Petal.Length)\nsigma &lt;- sd(iris$Petal.Length)\n\n# compute the densities for the observed values\ny_densities &lt;- dnorm(iris$Petal.Length, mean = mu, sd = sigma)\n\nggplot(iris, aes(Petal.Length)) + \n  geom_histogram(aes(y = after_stat(density)), binwidth = 0.1) +\n  geom_line(aes(y = y_densities))\n\n\n\n\n\n\n\n\nThat is definitely non-normal! We didn’t really need to plot the theoretical densities here, of course, since there is very clearly two separate modes in this variable, which suggest that it’s more like two distinct (possibly normal) distributions, not a single simple distribution.",
+    "crumbs": [
+      "Home",
+      "Unit 2: Univariate Distributions",
+      "Code Tutorials",
+      "Simulating, visualizing, and exploring univariate distributions"
+    ]
   }
 ]

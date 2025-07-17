@@ -26,5 +26,17 @@
   },
   "installing_R_RStudio.qmd": {
     "installing_R_RStudio.html": "d1a77214"
+  },
+  "univariate_distributions_reading.qmd": {
+    "univariate_distributions_reading.html": "1aa35ef2"
+  },
+  "R_basics_packages.qmd": {
+    "R_basics_packages.html": "8f7aff14"
+  },
+  "R_transformations.qmd": {
+    "R_transformations.html": "5d3018b3"
+  },
+  "R_univariate_distributions.qmd": {
+    "R_univariate_distributions.html": "5b357c97"
   }
 }

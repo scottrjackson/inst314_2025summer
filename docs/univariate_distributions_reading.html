@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Unit 2 Concepts Reading: Univariate Distributions – INST 314 (Summer 2025)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4b6583dcda6280174f32155222df5637.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b6ff45b646ffb8f1caf16cae185cd76d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<meta name="quarto:status" content="draft">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">INST 314 (Summer 2025)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Unit 2: Univariate Distributions</a></li><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Concepts Reading: univariate distributions</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installing_R_RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing R and RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 1: Starting with the Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_basics_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: some basic data concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_fundamentals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vectors: a basic building block of data in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Frames: the most useful data structure in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 2: Univariate Distributions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./univariate_distributions_reading.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Concepts Reading: univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_univariate_distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating, visualizing, and exploring univariate distributions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-on-this-page" id="toc-whats-on-this-page" class="nav-link active" data-scroll-target="#whats-on-this-page">What’s on this page?</a></li>
+  <li><a href="#taking-eda-further" id="toc-taking-eda-further" class="nav-link" data-scroll-target="#taking-eda-further">Taking EDA further</a></li>
+  <li><a href="#models-and-parameters" id="toc-models-and-parameters" class="nav-link" data-scroll-target="#models-and-parameters">Models and parameters</a></li>
+  <li><a href="#univariate-distributions" id="toc-univariate-distributions" class="nav-link" data-scroll-target="#univariate-distributions">Univariate distributions</a>
+  <ul class="collapse">
+  <li><a href="#rolling-dice-a-generating-process" id="toc-rolling-dice-a-generating-process" class="nav-link" data-scroll-target="#rolling-dice-a-generating-process">Rolling dice: a generating process</a></li>
+  <li><a href="#process-population-and-sample" id="toc-process-population-and-sample" class="nav-link" data-scroll-target="#process-population-and-sample">Process, population, and sample</a></li>
+  <li><a href="#theoretical-vs.-empirical-distributions" id="toc-theoretical-vs.-empirical-distributions" class="nav-link" data-scroll-target="#theoretical-vs.-empirical-distributions">Theoretical vs.&nbsp;empirical distributions</a></li>
+  <li><a href="#the-uniform-distribution" id="toc-the-uniform-distribution" class="nav-link" data-scroll-target="#the-uniform-distribution">The Uniform distribution</a></li>
+  </ul></li>
+  <li><a href="#knowledge-checks" id="toc-knowledge-checks" class="nav-link" data-scroll-target="#knowledge-checks">Knowledge Checks</a></li>
+  <li><a href="#beyond-the-uniform-the-normal-distribution" id="toc-beyond-the-uniform-the-normal-distribution" class="nav-link" data-scroll-target="#beyond-the-uniform-the-normal-distribution">Beyond the Uniform: the Normal distribution</a>
+  <ul class="collapse">
+  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
+  <li><a href="#the-shape-of-the-normal" id="toc-the-shape-of-the-normal" class="nav-link" data-scroll-target="#the-shape-of-the-normal">The shape of the normal</a></li>
+  <li><a href="#why-is-the-normal-important" id="toc-why-is-the-normal-important" class="nav-link" data-scroll-target="#why-is-the-normal-important">Why is the normal important?</a></li>
+  </ul></li>
+  <li><a href="#knowledge-checks-1" id="toc-knowledge-checks-1" class="nav-link" data-scroll-target="#knowledge-checks-1">Knowledge Checks</a></li>
+  <li><a href="#modes-skew-and-tails" id="toc-modes-skew-and-tails" class="nav-link" data-scroll-target="#modes-skew-and-tails">Modes, skew, and tails</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Unit 2: Univariate Distributions</a></li><li class="breadcrumb-item"><a href="./univariate_distributions_reading.html">Concepts Reading: univariate distributions</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Unit 2 Concepts Reading: Univariate Distributions</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="whats-on-this-page" class="level1 page-columns page-full">
+<h1>What’s on this page?</h1>
+<p>The overall goal of this reading is to continue the journey of exploratory data analysis by looking more deeply at <em>univariate</em> distributions and analysis, including important theoretical concepts like the Central Limit Theorem.</p>
+<p>I will call attention to key terminology with margin notes. I will also ramble about side thoughts in margin notes as well. Sometimes the margin notes will be numbered,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> like footnotes that connect to a specific part of the main text. Sometimes they’re unnumbered, just hanging out whenever you feel like reading them.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This is a numbered side-note.</p></div><div class="">
+<p>This is a margin note.</p>
+</div></div>
+<p>Interspersed in the text below are some Knowledge Checks for quizzing yourself. I encourage you to attempt to answer these as you encounter them, to help force yourself to process and understand the material more thorougly. After working through this entire page, make sure you answer these questions in the Unit 2 Knowledge Check Quiz on ELMS. I recommend writing your answers down in notes as you work through this page, and then just referring to your notes to review and provide answers when you take the quiz on ELMS. This is built-in way for you to review the material as you go.</p>
+<p>If you have questions, reach out on the course Discord, and/or come to an Open Discussion Zoom session.</p>
+<p>Happy reading!</p>
+</section>
+<section id="taking-eda-further" class="level1 page-columns page-full">
+<h1>Taking EDA further</h1>
+<p>To recap a bit, we ended up <a href="./data_basics_reading.html">last unit</a> beginning the process of <em>exploratory data analyis</em> (EDA) by examining some basic aspects of <em>variables</em> in a <em>data frame</em>. For categorical variables (including <em>ordinal</em> and <em>nominal</em> variables), we wanted to get a tabulation of counts of the different values, and for numerical values (<em>continuous</em> or <em>interval</em> variables in particular), we wanted to get some numerical summaries like the range (min/max) and and central (mean/median) vales.</p>
+<p>But recall that the overall goals of EDA are to check and challenge assumptions and expectations. That is, we want to make sure that there isn’t anything wrong with the data by confirming some basic assumptions, but we also want to look for surprising results that we may not have expected, because that may shape our analysis to come.</p>
+<p>In order to sharpen what we mean by “assumptions”, “expectations,” and “surprise”, we need to dive more deeply into <em>univariate</em> analysis<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> and flesh out the statistical concepts behind univariate distributions.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;<strong>Univariate</strong>: referring to a single variable at a time.</p></div></div></section>
+<section id="models-and-parameters" class="level1 page-columns page-full">
+<h1>Models and parameters</h1>
+<p>First, let’s step back a bit. One of the biggest challenges of <em>any</em> science is to discuss phenomena, data, and patterns at the right level of complexity or specificity. Think about medical science. Technically, every human body is unique in at least some ways. Even identical twins – the closest nature gets to making “clones” – are slightly different. So if we gather data about a single body, how can we know that what we learn will apply to the next body we examine? Or even more basic, if chemists are able to isolate a molecule of water and verify that it is made up of two hydrogen atoms bonded with an oxygen atom, how do we know that other water molecules have the same make-up?</p>
+<p>One way of answering this epistemological challenge is through the concept of <em>models</em>. A model is just a simplified way of looking at the world. We constantly construct mental models (consciously and unconsciously) to help ourselved navigate the world, because at the end of the day, the world is just too complex to understand at the finest levels of detail, and we need models to help us approach things in a more manageable way.</p>
+<p>In statistics, the term <em>model</em> is used in a few different ways, but it always has this core meaning: a simplified expression of some underlying process that we are trying to describe or analyze. When we talk about <em>assumptions</em> in statistics, what we usually mean is that we are <em>assuming</em> a particular model, and that model is designed to capture certain properties or patterns. In other words, because a model is a simplification, applying a model to a process means that you are (implicitly or explicitly) making a bunch of assumptions about what the data from that process looks like.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>If this all feels a little too out there and abstract, read ahead for some more concrete examples, but then come back to try to wrap your head around what I’m saying here.</p>
+</div><div id="fn3"><p><sup>3</sup>&nbsp;There are also <em>nonparametric</em> statistics, but we will only touch on those at the end of the course. They represent methods for analyzing data when we have so much uncertainty that we think that assuming a model with <em>any</em> parameters may be not cautious enough. However, you can still think about these methods as having some kind of underlying <em>model</em> in the broad sense. They just tend to make fewer assumptions than <em>parametric</em> models. Not making assumptions sounds good, but the trade-off is that it tends to make your analysis weaker. But again, mentally bookmark this for a later discussion.</p></div></div><p>The other abstract concept we need to wrap our heads around is the concept of a <em>parameter</em>. Most statistical models have something like “settings,” where if we tweak the settings of the model, it can describe different patterns. The technical term for one of these “settings” is a <em>parameter</em>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+</section>
+<section id="univariate-distributions" class="level1 page-columns page-full">
+<h1>Univariate distributions</h1>
+<p>This is all very abstract so far. In order to make this a little less abstract, let’s talk about a real-world process, and how we can construct a model for it.</p>
+<p>Let’s talk about rolling dice.</p>
+<section id="rolling-dice-a-generating-process" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="rolling-dice-a-generating-process">Rolling dice: a generating process</h2>
+<p>One useful way to think about your data is to think about the <em>generating process</em> of that data. Where did the data come from? What determines the values?</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Note that a generating process is not the same as the <em>data collection</em> process, though the latter might affect the former. The data collection process is a description of how the data was obtained or recorded. For example, did you call people to ask their opinion on who they will vote for? How did you pick whom to call? Did you make decisions about throwing out some data (for example, if someone gave nonsensical answers)?</p>
+<p>In contrast, the data <em>generating</em> process is more of a theoretical concept of all of the underlying factors that gave rise to the value that was observed. This could include aspects of data collection, especially if the data collection method introduced any bias, but it is often about unobservable things. For example, what makes a person decide who to vote for? What makes a person decide what to <em>say</em> when someone asks them who they plan to vote for? These are the kinds of things that might be part of the underlying (and unobservable) generating process behind people’s responses to that kind of poll.</p>
+</div></div><p>One of the simplest generating processes to think about is flipping a coin or rolling a die, because it’s something we can do physically. So imagine the following process:</p>
+<ol type="1">
+<li>roll a single six-sided (cube) die</li>
+<li>write down the number on a slip of paper</li>
+<li>put that slip of paper in a bag</li>
+<li>repeat steps 1 through 3 many, many times</li>
+</ol>
+<p>The result is that you have a bag full of numbers, generated by a process.</p>
+</section>
+<section id="process-population-and-sample" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="process-population-and-sample">Process, population, and sample</h2>
+<p>Now we can think about how this analogy fits with the kinds of data we are actually interested in. The three important concepts here are :</p>
+<ol type="1">
+<li>the <em>generating process</em>,</li>
+<li>the <em>population</em> of data that exists (or could exist) in the world, and</li>
+<li>the <em>sample</em> of data that we actually observe.</li>
+</ol>
+<p>In our simple dice scenario, rolling the die is the <em>generating process</em>, all of the numbers in the bag are the <em>population</em>, and any numbers we pull out of the bag to examine are the <em>sample</em>.</p>
+<p>Whenever we collect data, we are taking a sample. Imagine that the world is a huge bag of numbers and any time we make observations or try to analyze some data, we can only pull a few of those numbers from the bag. For example, if we are interested in the average height of 3-year-old males (perhaps because we want to know if our 3-year-old son is on track, growth-wise), the population (like the entire bag) might be all of the 3-year-old males in the world<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, and clearly getting all of that data is not feasible, or even necessary. But we have to collect <strong>some</strong> data in order to have some idea, so we collect a <em>sample</em>. It might be a large sample or a small sample, but it’s still a sample.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Now think to yourself, “would I really want to compare my kid to all the kids in the world, if I just want to know that he’s on track?” To make this a bit more concrete, imagine you’re from Peru (a country with some of the shortest people on average), would you want to compare your child to the population of children from the Netherlands (a country with some of the tallest people on average)? Thinking carefully about where your sample of data comes from, and what your theoretical population might be are important considerations!</p></div></div><p>How you get your sample is of course really important. Consider how political polls are done. Pollsters collect data by talking to just a sample of people, and then using that data to make guesses about how the entire voting population might vote in an actual election. But not all samples are the same! Asking the first ten people you see in a fancy restaurant in Chevy Chase is different than asking the first ten people you see sleeping in tents in downtown DC. These are all valid data (assuming all of those people are eligible to vote), but they are very different samples, and they may not give you a good picture of the overall pattern in the population that you are trying to draw conclusions about.</p>
+<p>Back to the dice analogy, virtually any actual data collection is like pulling a set of numbers from the bag. If you are somehow in a position to be able to get <em>every</em> number in the bag, you might be able to get the entire population.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> But at the end of the day, what we are really interested in is constructing a <em>model</em> of the generating process itself. How did the pattern of numbers get to be that way?</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;One more analogy to think about sample vs.&nbsp;population. Let’s say you decide you would like to know how all of your friends intend to vote. You could feasibly ask every single one of your friends, and maybe even trust their responses. This would be a case where your <em>sample</em> is the same as the entire <em>population</em> you care about. But if you then wanted to predict who would win in the actual general election, now you’re trying to predict for a different population, so you’re back to only having a (likely very biased) sample. The point here is that in most cases, if we are <em>able</em> to collect data from an entire population, we rarely care all that much about making claims about that specific group.</p></div></div></section>
+<section id="theoretical-vs.-empirical-distributions" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="theoretical-vs.-empirical-distributions">Theoretical vs.&nbsp;empirical distributions</h2>
+<p>So let’s think about rolling a die. There are six sides, so as long as the die is fair, we have an equal chance of getting a 1, 2, 3, 4, 5, or 6, every time we roll the die. So if we pull 600 numbers from our bag of numbers, we might expect to see 100 occurrences of each number, right? But what if we didn’t?</p>
+<p>Think about if we roll the die just 6 times. What do you think the chances are that we would see exactly 1 occurence of each number?</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>You can try this yourself!</p>
+</div></div><p>The fact is, there are many, many possible ways for lots of die rolls to go, even if the die is fair. If you need to convince yourself, you can try it, and start rolling sequences of 6 rolls at a time, and look at how many different sequences you get. Getting exactly one of each number is actually not all that likely!</p>
+<p>In other words, our sample is rarely a perfect reflection of the underlying process, even when that process is simple. This is where we come to the concept of <em>empirical</em> vs.&nbsp;<em>theoretical</em> distributions.</p>
+<p>First, a <em>distribution</em> is just the term we use to talk about what values are more or less likely or common. So when we look at the numbers we pull from the bag and see how many we have of each, that’s examining the <em>distribution</em> of values. A <em>theoretical</em> distribution is the distribution we expect from a particular mathematical model. So if our model is “each side of the die is equally likely,” then our theoretical distribution if we looked at a sample of 600 numbers would be 100 of each number. In contrast, the numbers we actually observe are the <em>empirical</em> distribution.</p>
+<p>In other words, the <em>theoretical</em> distribution describes the generating process<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, and the <em>empirical</em> distribution describes our data sample.</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;And since the <em>population</em> we care about is generally hypothetical anyway, we use the theoretical distribution to reason about the population.</p></div></div><p>Both of these are important when we are doing EDA. We want to examine the empirical distribution, because we want to see what the pattern is for the data we actually have. But then we want to think about how those data compare to theoretical distributions, because we want to check our assumptions of the underlying generating processes of the data.</p>
+</section>
+<section id="the-uniform-distribution" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-uniform-distribution">The Uniform distribution</h2>
+<p>Fortunately for us, statisticians have developed a wide range of different mathematical models to capture different theoretical distributions. So our task is often a matter of choosing the distribution that best fits our data.</p>
+<p>One of the simplest distributions is called the <em>uniform</em> distribution. Conceptually, this is a good choice for our dice example<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, because the idea is that any value in a uniform distribution has an equal chance of being generated (i.e., the chance of any particular value being generated is “uniform”).</p>
+<div class="no-row-height column-margin column-container"><div id="fn7"><p><sup>7</sup>&nbsp;Now technically, this isn’t quite accurate because the true uniform distribution is a distribution over <em>continuous</em> numbers, and the six values of a die are not (technically) continuous. But it’s a good enough approximation to help us build a better intuition of how the uniform distribution works.</p></div><div id="fn8"><p><sup>8</sup>&nbsp;We will actually go through the process of visualizing this in an upcoming Code Tutorial.</p></div></div><p>The uniform distribution is also often called a “flat” distribution, because when we visualize it, it looks flat because all of the values have the same chance of occurring.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<p>So now we have a model of the generating process: the results we get from rolling a die are like the results we get from a uniform distribution. But when we talked about models above, we said that models have parameters, like settings. So what are the parameters of the uniform distribution? Take a minute to think about it: if we have a model that says “all values are equally likely”, what’s the minimum information we need in order to generate numbers that look like rolls from a single die?</p>
+<p>The answer is simply the <em>range</em>. In other words, the uniform distribution only needs to know what values to pick from, defined by the upper and lower limits. This means that the uniform distribution just has two parameters: the <em>minimum</em> value that can be selected, and the <em>maximum</em> value that can be selected. The rest of the math behind the uniform distribution is the part that selects any (continuous) value between that minimum and maximum at an equal probability.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn9"><p><sup>9</sup>&nbsp;Again, our dice analogy isn’t quite exact here. For a true <em>continous</em> uniform distribution, all you need to know are the minimum and maximum. For a distribution like a fair die, all you need to know are the possible numbers (1 through 6). This is essentially the same concept, I’m just pointing out that it isn’t precisely the same.</p></div></div></section>
+</section>
+<section id="knowledge-checks" class="level1">
+<h1>Knowledge Checks</h1>
+<p>Let’s pause to review by answering some Knowledge Checks.</p>
+<ol type="1">
+<li>What does <em>univariate</em> mean?</li>
+<li>Describe the relationship between a model and its parameters. What happens if you change parameter values?</li>
+<li>What are the parameters of a uniform distribution?</li>
+<li>For each of the following, identify whether it is an example of a) a <em>generating process</em>, b) a <em>population</em>, or c) a <em>sample</em> of data:
+<ol type="a">
+<li>the genetic and environmental factors that contribute to determining a person’s adult height</li>
+<li>a set of height measurements taken from a particular group of people</li>
+<li>the set of all height measurements for a particular group of people</li>
+<li>all of the movie ratings currently recorded on IMDB</li>
+<li>hypothetical set of all movie ratings from past, present, or future</li>
+<li>the steps that lead up to a person picking a specific rating</li>
+</ol></li>
+</ol>
+</section>
+<section id="beyond-the-uniform-the-normal-distribution" class="level1 page-columns page-full">
+<h1>Beyond the Uniform: the Normal distribution</h1>
+<p>This is fine if our generating processes are all as simple as a die roll, but what about the real world? Most interesting processes are the result of many different factors, combining in many different ways, resulting in more complex distributions. In other words, many <em>observed</em> variables (that is, data we actually collect) may in fact be the result of the combination of many <em>underlying</em> or <em>latent</em><a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> variables.</p>
+<div class="no-row-height column-margin column-container"><div id="fn10"><p><sup>10</sup>&nbsp;unobserved, possibly unobservable</p></div></div><p>Fortunately, we have a mathematical rationale that explains why many cases of observed data follow something called the <em>normal distribution</em>.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Note that when we talk about distributions, the word “normal” doesn’t have the meaning of “common, typical.” It’s a technical term to describe a specific family of theoretical distributions. It’s a little confusing because the normal distribution is also very common! Just keep in mind that when we’re talking about distributions, the word “normal” is a technical term.</p>
+</div></div><section id="central-limit-theorem" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="central-limit-theorem">Central Limit Theorem</h2>
+<p>The rationale for why the normal distribution is so common is based on a very powerful and useful mathematical concept called the Central Limit Theorem (CLT). We will skip the math (though the math is very interesting, if you’re a math person!) and jump to the core of the concept.</p>
+<p>What the theorem says is that when many different (and independent)<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> processes combine (average or sum together), the distribution of that average (or sum) tends to follow a distribution called the <em>normal</em> distribution.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> A simple example of this is that as we’ve seen, the distribution from a single die is uniform. But if we roll <em>many</em> dice at once, and take the <em>average</em> (or sum) of those dice, that average will follow a normal distribution.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn11"><p><sup>11</sup>&nbsp;The idea of independence is a crucial <em>assumption</em> (remember that term?) for the CLT. It essentially means that our generating process doesn’t change depending on the other values we’ve generated. For example, if you were taking a poll of people standing in line, but the next person in line was influenced by the person who just gave a response, those responses would <em>not</em> be independent.</p></div><div id="fn12"><p><sup>12</sup>&nbsp;Also called the <em>Gaussian</em> distribution.</p></div><div id="fn13"><p><sup>13</sup>&nbsp;Again, we’ll see this in action in the upcoming Code Tutorial.</p></div></div><p>That’s it! It’s ultimately a simple concept – though perhaps deceptively simple – but the result is that many of the distributions we end up caring about tend to be normal or close to normal distributions, precisely because things in the real world are very often the product of many independent processes or factors. In other words, the real-world complexity of most data means that the theoretical assumptions of the CLT are often true (or true enough), and so the result is that the normal distribution tends to occur “in the wild” quite a bit.</p>
+</section>
+<section id="the-shape-of-the-normal" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-shape-of-the-normal">The shape of the normal</h2>
+<p>In contrast to the “flat” uniform distribution, the normal distribution is sometimes called a “bell curve” because of its shape. But what does that shape mean, and how does it get the shape? By now, you should be able to formulate at least initial answers for these questions. So think about it for a bit before proceeding. What does the shape of the curve pictured to the right tell us? Why does the shape look like that? In order to make this a bit more concrete, imagine that the x-axis along the bottom of the graph to the right representing some quantity, like the difference between a random 3-year-old child’s height and the height of an average 3-year-old, where the dotted line indicates a difference of zero, values to the left mean that she is shorter than average, and values to the right mean she is taller than average.</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="univariate_distributions_reading_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>this is a (standard) normal distribution</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>What the shape of a distribution <em>means</em> is that it tells us what values are more or less likely to occur than other values. So the “bell curve” that has a peak (“mode”) in the middle that fades to low “tails” in the edges means that values around the peak of the distribution are the most common, and the values at the edges can become exceedingly rare. The precise shape of the distribution gives a precise quantification of “how common” or “how rare.”</p>
+<p>In our height example from above, it means that if the heights of 3-year-olds follow a normal distribution, then it’s most likely that a random child would be close to the average (since the average is at the peak), and the farther you get from that average, the more and more unlikely it becomes.<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn14"><p><sup>14</sup>&nbsp;As an exercise, think about how different it would be if children’s heights followed a <em>uniform</em> distribution.</p></div></div><p>Where the shape <em>comes from</em> is the mathematics of the model, plus the values of its parameters. In other words, the overall pattern of shapes is determined by the theoretical mathematical model, but the specific details of the shape can be altered/adjusted based on its parameters.</p>
+<p>The normal distribution only has two parameters:</p>
+<ol type="1">
+<li>The <em>mean</em>:
+<ul>
+<li>the “central” or “average” value</li>
+<li>sometimes symbolized with the Greek letter “mu”: <span class="math inline">\(\mu\)</span></li>
+<li>represented by the vertical dotted line in the figure to the right</li>
+</ul></li>
+<li>The <em>standard deviation</em>:
+<ul>
+<li>how “wide” the distribution is, indicating how much values tend to differ from the mean</li>
+<li>sometimes symbolized with the Greek letter “sigma”: <span class="math inline">\(\sigma\)</span></li>
+<li>represented by the length of the arrow in the figure to the right</li>
+</ul></li>
+</ol>
+<p>And that’s it! With just two parameters you can describe the theoretical shape of a normal distribution.</p>
+<p>There is also a special case of the normal distribution called the “standard” normal, which is simply a normal distribution with a mean of 0 and a standard deviation of 1. We will return to standard normals throughout the course.</p>
+</section>
+<section id="why-is-the-normal-important" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="why-is-the-normal-important">Why is the normal important?</h2>
+<p>So why do we care so much about the normal distribution?</p>
+<p>Remember: the CLT tells us that if a (continuous) variable is the result of the combination (average or sum) of a bunch of different processes, that variable will tend to follow a normal distribution, <em>no matter what the distribution of the component processes are</em>.</p>
+<p>And also recall: it is very often that numbers we collect from real-world data can be a combination of many different underyling (and often unknown) processes. For example, think about someone’s score on a standardized test like the SAT. That overall score is the sum of many different factors, including the score on each item, whether the person was well-rested the night before, whether there were unexpected distractions during the testing session, how much time/effort the person spent in preparation, how much effort the person put into years of schooling prior to the test, how much “natural ability” the person may have inherited from their parents, just plain luck, etc. etc. When thinking about any process that resulted in a data value, it’s often easy to imagine many many underlying factors contributing to the final observed value.</p>
+<p>Put these ideas together, and you can see why many variables we observe in the real world follow a normal distribution.</p>
+<p>And if they are never quite <em>exactly</em> normal, they are often “normal enough” that the normal distribution is a very close approximation. Using a convenient theoretical distribution like the normal distribution can help us simplify the math we use to analyze our data. Back to the concept of a <em>model</em>, when we use models, we simplify real-world complexity to make it more manageable to analyze. The mathematics of the normal distribution have a lot of convenient and useful properties to make analysis easier. Therefore, as long as the normal is a “good enough” match to the distribution of our data, the conclusions we are able to draw from a model that assumes a normal distribution are also “good enough.”<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn15"><p><sup>15</sup>&nbsp;Figuring out what counts as “good enough” is a common challenge and the reason for a great deal of ongoing statistical research.</p></div></div><p>In short, we use the normal distribution often because it occurs often, and because it is useful for many different analyses. It is also a useful reference point for other distributions that are very similar, like the <em>t</em> distribution, which we will come to later.</p>
+</section>
+</section>
+<section id="knowledge-checks-1" class="level1">
+<h1>Knowledge Checks</h1>
+<p>Time for a few more review questions:</p>
+<ol start="5" type="1">
+<li>What are the parameters of a normal distribution? (i.e., what are they called, and what do they represent?)</li>
+<li>What are the parameter <strong>values</strong> for a <em>standard</em> normal distribution?</li>
+<li>What’s the difference between an <em>empirical</em> distribution and a <em>theoretical</em> distribution?</li>
+<li>Come up with another example of a related <em>sample</em>, <em>population</em>, and <em>generating process</em>, similar to the sets from Knowledge Check #4 in the previous section.</li>
+<li>Based on the logic of the Central Limit Theorem, which of the follow sets of data might we expect would tend towards a normal distribution?
+<ol type="a">
+<li>Flipping a coin 10 times and counting the number of heads, then repeating this procedure many times.</li>
+<li>The number of Spotify streams for the highest- and lowest-streamed songs for each artist in a random selection of artists.</li>
+<li>Having people throw a dart at a target, getting the average distance from the target with each throw, and gathering these averages from a random set of people.</li>
+<li>The individual voting choices for a particular election from a random selection of voters.</li>
+<li>The weight measurements over time from a person participating in a weight loss program.</li>
+<li>The average Yelp ratings from a randomly-selected group of restaurants.</li>
+</ol></li>
+<li>Think of two more example data sets: one that you <strong>would</strong> expect to be normally distributed (based on the Central Limit Theorem), and one that you <strong>wouldn’t</strong>.</li>
+</ol>
+</section>
+<section id="modes-skew-and-tails" class="level1 page-columns page-full">
+<h1>Modes, skew, and tails</h1>
+<p>When we discuss distributions, usually the best tool is a visualization<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>, but sometimes we also use words to describe different aspects of a distributional shape.</p>
+<div class="no-row-height column-margin column-container"><div id="fn16"><p><sup>16</sup>&nbsp;Which we will do soon!</p></div><div id="fn17"><p><sup>17</sup>&nbsp;The median value in a normal distribution also happens to be at the same value.</p></div></div><p>The <em>mode</em> of a distribution is just a word for the “high point” of the distribution, which indicates the (theoretically) most likely value. The uniform distribution doesn’t really have a mode (or alternatively, the “mode” is the entire range of the distribution), because it’s theoretically flat. The normal distribution’s mode is exactly at the same point as the mean.<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a></p>
+<p>Many distributions have a portion of the shape that fades into very low probability, like the outer ends of the normal distribution. These are referred to as the “tails” of a distribution. The tails of many distributions (including the normal) never quite reach zero, but just get closer and closer.</p>
+<p>Some distributions (including the normal) are symmetrical, meaning that the upper/lower ends (left/right sides in typical visualizations) are mirror images of each other, in theory. If a distribution looks “tilted” one way or another, we talk about it being “skewed.” The direction of the skew (“left-skewed” or “right-skewed”) just describes the side where the longest “tail” is. So if you have a distribution that looks sort of like a normal, but it looks like it’s leaning a bit to the right, with a long left tail, you might say that it’s “left-skewed”, or “skewed to the left.”</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>There are technical ways to compute and describe skew and other properties like kurtosis – how “fat” or “skinny” the “bell” part of the curve is, compared to a normal. But we won’t go into those because for most purposes, visual plotting of distributions is far more informative than statistical summaries of skew, kurtosis, etc.</p>
+</div></div><div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="univariate_distributions_reading_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>this is a left-skewed distribution</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="next-steps" class="level1">
+<h1>Next steps</h1>
+<p>With these concepts out of the way, you should go on to the Code Tutorial on univariate distributions, to see how these things work in action with a sample data set.</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = true;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

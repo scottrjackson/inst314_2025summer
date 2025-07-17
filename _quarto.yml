@@ -32,11 +32,15 @@ website:
                 text: "Data Frames: the most useful data structure in R"
       - section: "Unit 2: Univariate Distributions"
         contents:
-          - href: univariate_reading.qmd
+          - href: univariate_distributions_reading.qmd
             text: "Concepts Reading: univariate distributions"
-#          - section: "Code Tutorials"
-#            contents:
-#              - href: 
+          - section: "Code Tutorials"
+            contents:
+              - href: R_basics_packages.qmd
+                text: "Using R packages"
+              - href: R_univariate_distributions.qmd
+                text: "Simulating, visualizing, and exploring univariate distributions"
+
 
 format:
   html:
@@ -45,3 +49,4 @@ format:
       light: flatly
     css: styles.css
     toc: true
+
