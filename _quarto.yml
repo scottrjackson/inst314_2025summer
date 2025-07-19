@@ -40,6 +40,8 @@ website:
                 text: "Using R packages"
               - href: R_univariate_distributions.qmd
                 text: "Simulating, visualizing, and exploring univariate distributions"
+              - href: R_transformations.qmd
+                text: "Applying transformations"
 
 
 format:

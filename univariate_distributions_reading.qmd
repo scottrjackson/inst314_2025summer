@@ -1,6 +1,6 @@
 ---
 title: "Unit 2 Concepts Reading: Univariate Distributions"
-draft: true
+draft: false
 format:
   html:
     grid:
@@ -182,8 +182,6 @@ That's it! It's ultimately a simple concept -- though perhaps deceptively simple
 
 ## The shape of the normal
 
-In contrast to the "flat" uniform distribution, the normal distribution is sometimes called a "bell curve" because of its shape. But what does that shape mean, and how does it get the shape? By now, you should be able to formulate at least initial answers for these questions. So think about it for a bit before proceeding. What does the shape of the curve pictured to the right tell us? Why does the shape look like that? In order to make this a bit more concrete, imagine that the x-axis along the bottom of the graph to the right representing some quantity, like the difference between a random 3-year-old child's height and the height of an average 3-year-old, where the dotted line indicates a difference of zero, values to the left mean that she is shorter than average, and values to the right mean she is taller than average.
-
 ```{r, echo = FALSE}
 #| fig.cap: "this is a (standard) normal distribution"
 #| column: margin
@@ -204,6 +202,7 @@ ggplot(plot_data, aes(x, y_dens)) + geom_line() + theme_classic() +
 	annotate("text", x = 1.35, y = dnorm(1), label = "sigma", parse = TRUE, size = 12)
 ```
 
+In contrast to the "flat" uniform distribution, the normal distribution is sometimes called a "bell curve" because of its shape. But what does that shape mean, and how does it get the shape? By now, you should be able to formulate at least initial answers for these questions. So think about it for a bit before proceeding. What does the shape of the curve pictured to the right tell us? Why does the shape look like that? In order to make this a bit more concrete, imagine that the x-axis along the bottom of the graph to the right representing some quantity, like the difference between a random 3-year-old child's height and the height of an average 3-year-old, where the dotted line indicates a difference of zero, values to the left mean that she is shorter than average, and values to the right mean she is taller than average.
 
 What the shape of a distribution *means* is that it tells us what values are more or less likely to occur than other values. So the "bell curve" that has a peak ("mode") in the middle that fades to low "tails" in the edges means that values around the peak of the distribution are the most common, and the values at the edges can become exceedingly rare. The precise shape of the distribution gives a precise quantification of "how common" or "how rare."
 

@@ -1,6 +1,5 @@
 ---
 title: "R Basics: installing and loading packages"
-draft: true
 format:
   html:
     grid:
