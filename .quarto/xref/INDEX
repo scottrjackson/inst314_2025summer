@@ -38,5 +38,35 @@
   },
   "R_univariate_distributions.qmd": {
     "R_univariate_distributions.html": "5b357c97"
+  },
+  "regression_fitting_reading.qmd": {
+    "regression_fitting_reading.html": "bb869609"
+  },
+  "R_scatterplots.Rmd": {
+    "R_scatterplots.html": "3340762c"
+  },
+  "R_advanced_data_formatting_PearsonLee.qmd": {
+    "R_advanced_data_formatting_PearsonLee.html": "c492579d"
+  },
+  "R_boxplots_violinplots.Rmd": {
+    "R_boxplots_violinplots.html": "554e8f55"
+  },
+  "regression_foundations_reading.qmd": {
+    "regression_foundations_reading.html": "62b765dc"
+  },
+  "R_regression_to_the_mean.qmd": {
+    "R_regression_to_the_mean.html": "fbc0e8e7"
+  },
+  "R_lm_fitting.Rmd": {
+    "R_lm_fitting.html": "84b68ffb"
+  },
+  "R_scatterplots.qmd": {
+    "R_scatterplots.html": "4924f13b"
+  },
+  "R_boxplots_violinplots.qmd": {
+    "R_boxplots_violinplots.html": "6b50b137"
+  },
+  "R_lm_fitting.qmd": {
+    "R_lm_fitting.html": "8a188ef7"
   }
 }

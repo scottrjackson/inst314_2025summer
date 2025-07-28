@@ -1,0 +1,10 @@
+---
+title: "An advanced data formatting tutorial: `PearsonLee`"
+draft: true
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---

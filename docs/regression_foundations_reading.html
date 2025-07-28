@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Unit 3 Concepts Reading: Linear Regression – INST 314 (Summer 2025)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5f8498b817ae5b2cb3a7a87727a6ad5f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-2c7af7b2a4cbf6e016b7c3feffc32b4a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">INST 314 (Summer 2025)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Unit 3: Fitting Regression Models</a></li><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Concepts Reading: linear regression</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installing_R_RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing R and RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 1: Starting with the Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_basics_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: some basic data concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_fundamentals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vectors: a basic building block of data in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Frames: the most useful data structure in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 2: Univariate Distributions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./univariate_distributions_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_univariate_distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating, visualizing, and exploring univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applying transformations</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 3: Fitting Regression Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regression_foundations_reading.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Concepts Reading: linear regression</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-in-this-document" id="toc-whats-in-this-document" class="nav-link active" data-scroll-target="#whats-in-this-document">What’s in this document?</a></li>
+  <li><a href="#relationships-between-variables" id="toc-relationships-between-variables" class="nav-link" data-scroll-target="#relationships-between-variables">Relationships between variables</a></li>
+  <li><a href="#visualizing-continuous-relationships-scatterplots" id="toc-visualizing-continuous-relationships-scatterplots" class="nav-link" data-scroll-target="#visualizing-continuous-relationships-scatterplots">Visualizing continuous relationships: scatterplots</a>
+  <ul class="collapse">
+  <li><a href="#pearson-lees-height-data" id="toc-pearson-lees-height-data" class="nav-link" data-scroll-target="#pearson-lees-height-data">Pearson &amp; Lee’s Height Data</a></li>
+  <li><a href="#visualizing-height-data-take-1" id="toc-visualizing-height-data-take-1" class="nav-link" data-scroll-target="#visualizing-height-data-take-1">Visualizing height data (take 1)</a></li>
+  <li><a href="#managing-overplotting-examining-heights-take-2" id="toc-managing-overplotting-examining-heights-take-2" class="nav-link" data-scroll-target="#managing-overplotting-examining-heights-take-2">Managing overplotting: examining heights, take 2</a></li>
+  <li><a href="#managing-overplotting-examining-heights-take-3" id="toc-managing-overplotting-examining-heights-take-3" class="nav-link" data-scroll-target="#managing-overplotting-examining-heights-take-3">Managing overplotting: examining heights, take 3</a></li>
+  <li><a href="#managing-overplotting-take-4" id="toc-managing-overplotting-take-4" class="nav-link" data-scroll-target="#managing-overplotting-take-4">Managing overplotting, take 4</a></li>
+  </ul></li>
+  <li><a href="#knowledge-checks" id="toc-knowledge-checks" class="nav-link" data-scroll-target="#knowledge-checks">Knowledge Checks</a></li>
+  <li><a href="#statistics-helps-us-quantify-relationships" id="toc-statistics-helps-us-quantify-relationships" class="nav-link" data-scroll-target="#statistics-helps-us-quantify-relationships">Statistics helps us quantify relationships</a>
+  <ul class="collapse">
+  <li><a href="#the-linear-model" id="toc-the-linear-model" class="nav-link" data-scroll-target="#the-linear-model">The linear model</a></li>
+  <li><a href="#why-a-line" id="toc-why-a-line" class="nav-link" data-scroll-target="#why-a-line">Why a line?</a></li>
+  <li><a href="#regression-as-prediction" id="toc-regression-as-prediction" class="nav-link" data-scroll-target="#regression-as-prediction">Regression as prediction</a></li>
+  <li><a href="#predictions-are-best-guesses" id="toc-predictions-are-best-guesses" class="nav-link" data-scroll-target="#predictions-are-best-guesses">Predictions are “best guesses”</a></li>
+  <li><a href="#finding-the-best-fit-minimizing-prediction-errors" id="toc-finding-the-best-fit-minimizing-prediction-errors" class="nav-link" data-scroll-target="#finding-the-best-fit-minimizing-prediction-errors">Finding the best fit: minimizing prediction errors</a></li>
+  <li><a href="#model-estimation-ordinary-least-squares" id="toc-model-estimation-ordinary-least-squares" class="nav-link" data-scroll-target="#model-estimation-ordinary-least-squares">Model estimation: Ordinary Least Squares</a></li>
+  <li><a href="#interpreting-a-linear-model" id="toc-interpreting-a-linear-model" class="nav-link" data-scroll-target="#interpreting-a-linear-model">Interpreting a linear model</a></li>
+  <li><a href="#transformations-can-help-or-hurt-interpretation" id="toc-transformations-can-help-or-hurt-interpretation" class="nav-link" data-scroll-target="#transformations-can-help-or-hurt-interpretation">Transformations can help (or hurt) interpretation</a></li>
+  <li><a href="#visualizing-changes-to-the-intercept" id="toc-visualizing-changes-to-the-intercept" class="nav-link" data-scroll-target="#visualizing-changes-to-the-intercept">Visualizing changes to the intercept</a></li>
+  <li><a href="#recap-discussion-of-intercept" id="toc-recap-discussion-of-intercept" class="nav-link" data-scroll-target="#recap-discussion-of-intercept">Recap discussion of intercept</a></li>
+  </ul></li>
+  <li><a href="#knowledge-checks-1" id="toc-knowledge-checks-1" class="nav-link" data-scroll-target="#knowledge-checks-1">Knowledge Checks</a></li>
+  <li><a href="#calculating-predictions" id="toc-calculating-predictions" class="nav-link" data-scroll-target="#calculating-predictions">Calculating predictions</a></li>
+  <li><a href="#regression-to-the-mean" id="toc-regression-to-the-mean" class="nav-link" data-scroll-target="#regression-to-the-mean">Regression to the Mean</a>
+  <ul class="collapse">
+  <li><a href="#the-significance-of-regression-to-the-mean-in-daily-life" id="toc-the-significance-of-regression-to-the-mean-in-daily-life" class="nav-link" data-scroll-target="#the-significance-of-regression-to-the-mean-in-daily-life">The significance of regression to the mean in daily life</a></li>
+  </ul></li>
+  <li><a href="#sidetrack-anscombes-quartet-and-the-power-of-visualization" id="toc-sidetrack-anscombes-quartet-and-the-power-of-visualization" class="nav-link" data-scroll-target="#sidetrack-anscombes-quartet-and-the-power-of-visualization">Sidetrack: Anscombe’s Quartet and the power of visualization</a></li>
+  <li><a href="#categorical-predictors" id="toc-categorical-predictors" class="nav-link" data-scroll-target="#categorical-predictors">Categorical predictors</a>
+  <ul class="collapse">
+  <li><a href="#dummy-coding" id="toc-dummy-coding" class="nav-link" data-scroll-target="#dummy-coding">Dummy coding</a></li>
+  <li><a href="#visualizing-categorical-differences" id="toc-visualizing-categorical-differences" class="nav-link" data-scroll-target="#visualizing-categorical-differences">Visualizing categorical differences</a></li>
+  <li><a href="#the-linear-model-with-categorical-predictors" id="toc-the-linear-model-with-categorical-predictors" class="nav-link" data-scroll-target="#the-linear-model-with-categorical-predictors">The linear model with categorical predictors</a></li>
+  <li><a href="#summary-of-categorical-predictors" id="toc-summary-of-categorical-predictors" class="nav-link" data-scroll-target="#summary-of-categorical-predictors">Summary of categorical predictors</a></li>
+  </ul></li>
+  <li><a href="#overall-recap-and-summary" id="toc-overall-recap-and-summary" class="nav-link" data-scroll-target="#overall-recap-and-summary">Overall recap and summary</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Unit 3: Fitting Regression Models</a></li><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Concepts Reading: linear regression</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Unit 3 Concepts Reading: Linear Regression</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="whats-in-this-document" class="level1 page-columns page-full">
+<h1>What’s in this document?</h1>
+<p>The primary goal of this reading is to introduce the <em>linear model</em> – also called <em>linear regression</em> analysis. We’ll build up to regression by thinking about and visualizing relationships between variables, and we’ll try to wrap our heads around regression through the concept of <em>prediction</em>. We’ll discuss how to interpret the results of a linear regression, and how to apply it with categorical predictors.</p>
+<p>In short, linear regression is one of our most flexible tools for performing statistical analysis with data, and understanding regression can provide a helpful foundation for expanding your analytic toolbox into more powerful and sophisticated techniques.</p>
+<p>I will call attention to key terminology with margin notes. I will also ramble about side thoughts in margin notes as well. Sometimes the margin notes will be numbered,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> like footnotes that connect to a specific part of the main text. Sometimes they’re unnumbered, just hanging out whenever you feel like reading them.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This is a numbered side-note.</p></div><div class="">
+<p>This is a margin note.</p>
+</div></div>
+<p>Interspersed in the text below are some Knowledge Checks for quizzing yourself. I encourage you to attempt to answer these as you encounter them, to help force yourself to process and understand the material more thorougly. After working through this entire page, make sure you answer these questions in the Unit 3 Knowledge Check Quiz on ELMS. I recommend writing your answers down in notes as you work through this page, and then just referring to your notes to review and provide answers when you take the quiz on ELMS. This is built-in way for you to review the material as you go.</p>
+<p>If you have questions, reach out on the course Discord, and/or come to an Open Discussion Zoom session.</p>
+<p>Happy reading!</p>
+</section>
+<section id="relationships-between-variables" class="level1 page-columns page-full">
+<h1>Relationships between variables</h1>
+<p>In the <a href="./univariate_distributions_reading.html">previous unit</a>, we focused on <em>univariate</em> analysis, namely in trying to understand the <em>distribution</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of single variables. This is an important and critical step in our progression of data analysis. However, looking at single variables is usually not the end goal, in the sense of why we want to look at the data in the first place. What we usually care more about when we do data analysis is how variables are <em>related</em> to one another.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Reminder: the <em>distribution</em> of a variable is basically a description of what values are more common or likely. An <em>empirical</em> distribution is the distribution that is actually observed in a set of data, and a <em>theoretical</em> distribution is a mathematical model of how different kinds of variables <em>should</em> be distributed.</p></div></div><p>For example, measuring the ups and downs of a financial market might be of some interest, but what if we had other data, like information about companies or other external factors, and that data was closely related to the performance of the market? This might help us understand <em>why</em> a market goes up and down when it does.</p>
+<p>Or maybe we would like to understand something about what kinds of factors make some songs more popular than others on Spotify, or maybe we are biologists interested in how body weight and brain weight are related, or maybe we want to know how increasing salaries improves workplace performance, etc. etc. etc. Most of the really interesting questions that can be answered by data are essentially questions about <em>relationships</em> between variables.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Just as <em>univariate</em> means “pertaining to a single variable,” we use the term <em>multivariate</em> to mean “pertaining to multiple variables.”</p>
+</div></div><p>I am using the word “relationship” here to be intentionally vague. There are many possible ways that variables could be related, and many ways to describe those relationships. We will now start to sharpen this concept so that we can understand what kinds of relationships <em>regression</em> can help us explore, but keep in mind that there are aspects of relationships that will require more complex models than the simple linear model we are learning in this course.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>If you’re not sure what I mean by <em>linear model</em> here, just hold that thought…</p>
+</div></div></section>
+<section id="visualizing-continuous-relationships-scatterplots" class="level1 page-columns page-full">
+<h1>Visualizing continuous relationships: scatterplots</h1>
+<p>In the previous unit we started using plots such as histograms and density plots to explore univariate distributions. Visualization is a powerful and important tool, especially in exploratory analysis. So how do we visualize relationships? This is one of the more complex but rewarding uses for data visualization.</p>
+<p>Let’s start with something simple: consider when you have two continuous (or interval) variables. If these variables are completely separate, like a list of student GPAs and a separate list of starting salaries after college, then we can’t establish any kind of relationship. So we need variables that are <em>aligned</em>, so that the first value in one variable is associated with the first value in the other, the second value with the second value, and so on, like a list of student GPAs and starting salaries, where we can tell which GPA and which salary belonged to which student. This is one reason we use <em>data frames</em>,<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> because the variables (columns) are aligned through the observations (rows).</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Refer back to the <a href="./data_basics_reading.html">Unit 1 reading</a> if you need a refresher on data frames.</p></div><div id="fn4"><p><sup>4</sup>&nbsp;Also sometimes spelled as two words, “scatter plot”.</p></div></div><p>Once we have data with this kind of alignment, the simplest way to visualize the relationship between two variables – like two columns in a data frame – is with a common type of graph called a <em>scatterplot</em>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> This type of graph uses a standard <em>x-axis</em> and <em>y-axis</em>, which are the horizontal and vertical positions, respectively. The plot is created by plotting a point or dot (or sometimes other shape) for each row, where the value from one variable determines the x-axis position, and the value from another variable determines this y-axis position. See the schematic graphs below, showing how three data points (the dots) might be plotted in a scatterplot.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>three points in a schematic scatterplot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>the same three points, without the extra diagrams</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+<p>Let’s make this a little more concrete by looking at an example of real data.</p>
+<section id="pearson-lees-height-data" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="pearson-lees-height-data">Pearson &amp; Lee’s Height Data</h2>
+<p>One important data set in the history of regression analysis was collected and famously analyzed by Pearson &amp; Lee (1903), consisting of various physical measurements collected from family members such as height, arm length, etc. We’ll get into more details shortly, but first let’s just <em>look</em> at the data. I am taking just a sample of the full data set,<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> consisting of the heights of 4,312 pairs of fathers and their (adult) sons, expressed in inches.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;The data comes from the <code>HistData</code> package in R (which has further references and information), and the Code Tutorials in this unit will go through the code and analysis discussed here in more detail.</p></div></div><p>This means that every row of the data contains a pair of values, a father’s height in one column and the height of his son in another column. The conventions of data frames are what help us keep track of which father’s height goes with which son’s height, simply by how the data is arranged in rows. Here are a few rows of data, where each row is a corresponding father-son pair.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> father_height son_height
+          62.5       59.5
+          62.5       59.5
+          63.5       59.5
+          63.5       59.5
+          64.5       59.5
+          64.5       59.5</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizing-height-data-take-1" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="visualizing-height-data-take-1">Visualizing height data (take 1)</h2>
+<p>Visualizing this data in a scatterplot is conceptually simple: for each row (which represents a father-son pair), we use the two height variables as the x-y coordinates for where to plot a dot. We just need to decide which is the x-axis variable and which is the y-axis. It often doesn’t matter, so for now let’s just choose the father’s height to be the <span class="math inline">\(x\)</span>-value and the son’s height to be the <span class="math inline">\(y\)</span>-value. We’ll come back to why that choice might make more sense than the reverse, but when you are initially visualizing your data, it’s not necessarily very important which variable goes where – you just need to keep track of it.</p>
+<p>Figure 3 shows what happens if we create this plot in R.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>plotting the raw father-son height data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>So what does this plot show us? First, we can see that there are many different values in the data. Second, we can see a general pattern where not all of the space is filled. Specifically, we can see that there are no values in the upper left, representing short fathers and tall sons, or in the lower right, representing tall fathers and short sons. For example, none of the fathers that are about 5’2” (62 inches) or shorter have sons that are 5’10” (70 inches) or taller, and none of the fathers that are 6’ (72 inches) or taller have sons about 5’5” (65 inches) or shorter.</p>
+<p>But there’s another thing that should stick out about this graph, namely that it shows a strong grid-like pattern. Why? Well, if we’ve visualized the data accurately (and we can double-check our code to make sure we have), then what we see is that the data is not truly <em>continuous</em>, even though height <em>should</em> be continuous, at least in theory. In other words, while certainly some people in this data set may have been small fractions of an inch different in height, all of the heights in the data appear to be in one-inch increments, on the half-inches. For example, there are people with recorded heights of 64.5 inches and 65.5 inches, but no values in between those (like 64.6, 64.7, 64.8, etc.). We might conclude that whoever collected or recorded the measurements simply rounded off to these half-inch values.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Quick self-quiz: if this data is not truly <em>continuous</em>, what is it?</p>
+</div></div><p>Now, let’s recall how this plot was created, and it should raise a red flag in our minds. Remember that for each row we placed a single dot on the plot, and we have a total of 4,312 father-son pairs (i.e., rows), so there should be 4,312 dots in the graph. A quick eyeball estimate should tell you that there are a lot fewer dots than that visible in the graph. Now consider why: imagine that we have one father-son pair that are the same height, both 68.5 inches tall. That dot would be plotted at the coordinate [68.5, 68.5]. But out of that many fathers, how likely is it that there would be another father-son pair of the same height? Pretty likely! And in that case, we would simply plot another dot in the same place.</p>
+<p>Now imagine this happening many times. This is what is known as <em>overplotting</em>,<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> because we have essentially plotted data <em>over</em> other data, so in fact there are many points that we can’t see. This is a bad thing because it means that the patterns we are interested in may be obscured.</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;<em>Overplotting</em> occurs when a data visualization obscures much of the data, and is usually due a large amount of data being plotted in a limited space or range of values.</p></div></div></section>
+<section id="managing-overplotting-examining-heights-take-2" class="level2">
+<h2 class="anchored" data-anchor-id="managing-overplotting-examining-heights-take-2">Managing overplotting: examining heights, take 2</h2>
+<p>Overplotting is a common problem, especially in large data sets, but there is not a “one-size-fits-all” solution, largely because there are many different causes and patterns of overplotting. However, there are a few common strategies that can help, especially if we are just trying to carry out an exploratory analysis.</p>
+<p>One of the first things you can do in R is to “jitter” the exact location of each point in the scatterplot. In other words, since the problem is that all the points at (for example) [68.5, 68.5] are covering each other up, if you just add or subtract small, random amounts to each value, the dots will mainly “dodge” out of each other’s way, making them visible. We can see this in the figure below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>plotting the father-son height data with added “jitter” to help avoid overplotting</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now what do we see? Well, now there are these big “clumps” of dots in the middle of the graph, and we can see the dots spread out more on the edges. This is helpful, because now we can see that yes, in fact there was a lot of overplotting in the original graph, and there was a lot more overplotting in the central values than more extreme values.</p>
+<p>However, there may still be a good deal of overplotting, since those clumps look almost completely “filled in”, and it may be that some dots are still “hiding” under other dots.</p>
+</section>
+<section id="managing-overplotting-examining-heights-take-3" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="managing-overplotting-examining-heights-take-3">Managing overplotting: examining heights, take 3</h2>
+<p>Another common strategy, especially with modern graphing systems like R, is to adjust the transparency<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> of the dots, so that if two or more partially-transparent dots are plotted on top of each other, the result is a darker dot, not a completely hidden dot. Our brains naturally interpret these darker areas as being more “dense,” so it is a useful way to convey data density when you can get the level of transparency right. The figure below shows another “jittered” plot, but also makes each dot have 80% transparency.</p>
+<div class="no-row-height column-margin column-container"><div id="fn7"><p><sup>7</sup>&nbsp;In the terminology of graphics, the level of opacity is often called <em>alpha</em>, where an alpha of 1 is fully opaque (not transparent at all), and an alpha of 0 is completely transparent (which would be invisible).</p></div></div><div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>the same as the ``jitter’’ plot, but making the points 80% transparent (20% opaque)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>As you will see in the Code Tutorial on scatterplots, it can be quite easy to adjust the jitter or transparency of points in order to quickly manage the obscuring effects of overplotting. However, even though the plot above gives us a better idea of what’s going on, it’s not necessarily ideal, because the jitter means that it is not depicting the data with 100% accuracy, and it makes the data look more continuous than it actually is.</p>
+</section>
+<section id="managing-overplotting-take-4" class="level2">
+<h2 class="anchored" data-anchor-id="managing-overplotting-take-4">Managing overplotting, take 4</h2>
+<p>One final strategy we’ll examine is to use the <em>size</em> of the dots to indicate how much data is plotted at a given spot on the graph. For example, consider that father-son pair where they are both 68.5 inches tall. In the first graph, many points were plotted on top of each other, so it essentially hid from us how many pairs of fathers and sons were at that height. Since this is a common occurrence in this data set due to the fact that the measurements are in 1-inch increments with over four thousand pairs, we can explicitly count how many [68.5. 68.5] pairs there are. For example, it turns out that in this data, there are 116 father-son pairs at the [68.5, 68.5] coordinates alone, meaning that in that very first scatterplot, we were actually plotting 116 dots right on top of each other, amking it look like a single point! If we calculate all of these “overlapping” counts, for each of the points in the “grid” pattern that we saw in the first plot, then we can use R to adjust the <em>size</em> of the dots to reflect how many pairs are at each coordinate.</p>
+<p>The resulting plot is given below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>plotting the same father-son height data, but this time aggregated and using the size of the dots to indicate how many data points are plotted at each position</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>It’s arguable which of these plots is the “right” solution to overplotting; the point here is to describe the process. What we are trying to do is to visualize <em>all</em> of the data, in the most faithful way we can. Our first step is to try a simple scatterplot, but then we realized that overplotting was hiding much of the data. Jittering, adjusting transparency (or <em>alpha</em>), and using aggregation and another dimension such as <em>size</em> are different methods for overcoming overplotting and revealing the actual pattern in the data. Whichever one is your favorite for this case, you should be able to see that the pattern in the later graphs is much more clear than it was in that first scatterplot.</p>
+<p>The bigger point here is that we are putting effort into this process because we are still in the <em>exploratory</em> mode of analysis. We are trying to <em>see</em> the data, to get a sense of how these variables might be related, but if we are not careful about how we are visualizing, we might get misleading ideas about what we’re looking at. Overplotting is just one of many issues that can happen in this process, but it’s common enough that it’s worth digging into.</p>
+</section>
+</section>
+<section id="knowledge-checks" class="level1">
+<h1>Knowledge Checks</h1>
+<p>Time to quiz yourself on a few concepts:</p>
+<ol type="1">
+<li>Describe how the positions of points are determined in a scatterplot.</li>
+<li>When we create scatterplots, it’s conventional for the <span class="math inline">\(x\)</span>-axis and <span class="math inline">\(y\)</span>-axis to be used for different types of variables. For each of the following, indicate the axis it’s typically plotted on. (Note: some of these terms are essentially equivalent.)
+<ul>
+<li>predictor</li>
+<li>outcome</li>
+<li>dependent variable</li>
+<li>independent variable</li>
+<li>response</li>
+</ul></li>
+<li>Describe what <em>overplotting</em> is and why it’s a problem.</li>
+<li>How many strategies for dealing with overplotting are described above? Can you think of any others?</li>
+</ol>
+</section>
+<section id="statistics-helps-us-quantify-relationships" class="level1 page-columns page-full">
+<h1>Statistics helps us quantify relationships</h1>
+<p>Now that we’ve visualized something that looks like a pattern in our data, let’s talk more about what that pattern is, and how we can analyze it using regression. This is moving us along the path between <em>exploratory</em> analysis (“hmm, looks like there’s a pattern here”) and <em>inferential</em> (or sometimes, <em>confirmatory</em>) analysis (“okay, what can we really say about this pattern, and how confident can we be?”)</p>
+<p>The pattern itself is fairly clear: the height of a father and his son(s) are clearly <em>related</em>, such that tall fathers tend to have tall sons, and short fathers tend to have short sons. This is shown in the graph by the overall shape created by the pattern of dots, where they tend to go from the lower left corner (short fathers and short sons) to the upper right (tall fathers and tall sons).</p>
+<p>Now, you might be thinking, “so what? That seems obvious!” Well, maybe, maybe not. First recall that this data is from around the turn of the 20th century, at a time when scientific knowledge about heredity, genetics, and evolution was still in beginning stages. So this pattern was not necessarily as obvious as it is today.</p>
+<p>But more to the point of this course, what statistical analysis gives us is a set of tools for powerful <em>quantification</em> of patterns. That is, sometimes an overall effect or pattern may be “common knowledge” or “obvious”, but knowing exactly <em>how much</em> a pattern holds is usually not obvious. In the example of this height data, we might say, “okay, we might assume that height is at least somewhat inherited, but <em>how much</em> is inherited?” Analyzing data using statistical methods is a way to get more precise answers.</p>
+<section id="the-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-linear-model">The linear model</h2>
+<p>The mathemetics of statistics gives us the foundation for getting more precise answers to our questions. In the <a href="./univariate_distributions_reading.html">previous unit</a>, we introduced the concept of a statistical <em>model</em>: a simplified view of the world. And we discussed how models have <em>parameters</em> or “settings” that change the overall shape (or <em>distribution</em>) of the data expected from the model. Our examples were models of continuous number distributions such as the uniform and normal distributions, and their parameters.</p>
+<p>Now we are ready to introduce one of the most commonly used and powerful tools in statistics, the <em>linear model</em> (or sometimes <em>linear regression model</em>). This model has the virtues of being both simple and extremely flexible.</p>
+<p>The essence of the linear model goes back to simple geometry and the equation that defines a <em>line</em>:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = \alpha + \beta{}x\)</span></p>
+</blockquote>
+<p>… where <span class="math inline">\(y\)</span> is the value on the y-axis corresponding to <span class="math inline">\(x\)</span>, the value on the x-axis. The other terms <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> (“alpha” and “beta”) are the <em>intercept</em> and the <em>slope</em> of the line, respectively. In other words, if you know:</p>
+<ul>
+<li><span class="math inline">\(\alpha\)</span>: where the line hits the y-axis (i.e., the <span class="math inline">\(y\)</span> value corresponding to where <span class="math inline">\(x\)</span> equals zero), and</li>
+<li><span class="math inline">\(\beta\)</span>: the slope of the line (i.e., how steep it is)</li>
+</ul>
+<p>… then you can fully describe a specific line, because for every <span class="math inline">\(x\)</span> value that you plug in, you can compute the corresponding <span class="math inline">\(y\)</span> value to describe a point on the same line. And since these two values <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are the values that define the “shape” of the line (where it’s positioned vertically and how steep it is), we can call these the main <em>parameters</em> of the linear model.</p>
+</section>
+<section id="why-a-line" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="why-a-line">Why a line?</h2>
+<p>So what good is this? Why would we want to model data with a straight line? Remember, the goal of a model is to give us a <em>simplified</em> version of the world, that is still accurate enough to be helpful. The linear model is a way of representing a relationship where the value of one variable tells us what the value of the other variable should be.</p>
+<p>For example, if we know that the relationship between two variables is a line that has a steep, positive slope, that means that as one variable increases, the other variable also increases. Now imagine some data you might care about, like how the time spent studying might be related to your starting salary after college. Next imagine you knew the parameters of that line, where you knew exactly how much weekly study time would affect your future salary. That would be valuable information!</p>
+<p>First, knowing whether the slope is positive (more studying = higher salary) or negative (more studying = lower salary) would be pretty important, even if we might generally assume that the slope ought to be positive. But knowing the <em>exact</em> slope would also be incredibly helpful. For example, if you knew that above baseline expectations, every additional hour of average study time per week corresponded to an extra $5,000 per year of salary, you might have a very different level of motivation than if you found that every additional weekly hour of studying only corrresponded to an extra $100 per year.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Just to be clear: I’m making these numbers up. And if you are starting to think things like “how could you get a single number like that, surely it’s not the same for everyone?” or “if you got a number like that, how certain could you be about it?” or “what kind of data could you get to calculate numbers like this?” then you are thinking like a good data analyst!</p>
+</div></div><p>Being able to describe relationships between variables with the linear model is very powerful.</p>
+</section>
+<section id="regression-as-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="regression-as-prediction">Regression as prediction</h2>
+<p>Another way to talk about how we use the linear model is as a method for making <em>predictions</em>. Going back to the Pearson &amp; Lee (1903) height data, you could imagine that once we’ve done the analysis and we have a model, we could make predictions. If we have the <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> parameters, and if we know the height of a father (<span class="math inline">\(x\)</span>), we could predict the height of his son (<span class="math inline">\(y\)</span>), even before the son is born.</p>
+<p>By convention, we use the <span class="math inline">\(x\)</span> variable as the <em>predictor</em> variable. The idea of a predictors is that it is a known quantity that we would like to use to make predictions about the <span class="math inline">\(y\)</span> variable. In turn, we typically call the <span class="math inline">\(y\)</span> variable the <em>predicted</em> or <em>response</em> value. Other terms for these variables are the <em>independent</em> variable (which is the same as the <em>predictor</em>) and the <em>dependent</em> variable (the same as the <em>response</em>).</p>
+<p>In this course, we will stick with the terms <em>predictor</em> (for <span class="math inline">\(x\)</span>) and <em>response</em> or <em>outcome</em> (for <span class="math inline">\(y\)</span>). The terms <em>dependent</em> (for <span class="math inline">\(y\)</span>) and <em>independent</em> (for <span class="math inline">\(x\)</span>) can be useful if we were focusing purely on experimental data, but otherwise they can be confusing. So in an effort to try to keep our terms simple, we will stick to the idea of using one (or more) variables to predict another variable, where we are trying to predict responses or outcomes. For example, we can use the height of a father to predict the “outcome” of how tall his son is likely to grow.</p>
+<p>The main danger of these terms is that sometimes the concept of prediction doesn’t quite describe what we are doing. But more often than not, it’s a useful frame of mind when we are approaching the problem of understanding <em>relationships</em> betwen variables.</p>
+</section>
+<section id="predictions-are-best-guesses" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="predictions-are-best-guesses">Predictions are “best guesses”</h2>
+<p>If we can (at least for the moment) accept the idea that it’s helpful to represent data relationships with a linear model, the question now becomes, “how do we figure out the values for the equation for the line?” We can re-phrase this question as, “how do we figure out the parameters for the model?”, because as we noted already, if we know the parameters, we know the equation and we can make predictions.</p>
+<p>Now it’s time for a reality check. Consider the data from the heights of fathers and sons, with the last graph we made, repeated here in the margin:</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>repeated figure</figcaption>
+</figure>
+</div>
+</div></div></div>
+<p>Does that pattern look like a straight, narrow line? Not really! However, it does look pretty “linear”, in the sense that the pattern goes from the bottom left to the top right, in a pretty straight direction. The issue is that it’s not a simple straight line, but kind of a fuzzy, fat blob, albeit one that is sort of “stretched” in a positive linear direction.</p>
+<p>The reason for this is – not to sound too philosophical – is that we live in a messy, noisy, complicated, imperfect world. And especially when we try to talk about prediction, you should understand that making actual predictions is extremely difficult!</p>
+<p>Looking at the data, for fathers that were measured at 68.5 inches tall, the sons’ heights were anywhere from 63.5 inches to 77.5 inches. So does this mean that we can’t make any kind of accurate prediction based on this data? Not at all, because of how those numbers are distributed, such that many of the values are close to the center of the “blob”. For example, if we knew that the father was 68.5 inches tall, and we guessed that the son would be somewhere between 1 inch shorter or taller than that, we’d be right well over half the time. That’s not too shabby!</p>
+<p>The message here is that when we talk about “predictions”, that’s a short way of saying “best guesses based on our data and our model.” Sometimes those best guesses are quite good, and sometimes they’re not. That’s why we need statistical analysis, to be able to <em>quantify</em> not only what the “best guess” is, but also how confident we can be in that guess.</p>
+</section>
+<section id="finding-the-best-fit-minimizing-prediction-errors" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="finding-the-best-fit-minimizing-prediction-errors">Finding the best fit: minimizing prediction errors</h2>
+<p>We will address the issues of confidence and uncertainty in Units 4 and 5. Right now, we are concerned with figuring out our best guess. How do we get to that best guess? What does “best guess” mean in terms of our linear model? Recall that our goal here is to get the parameter values for the model; once we have the parameters, we have defined the model. So rephrasing our problem a bit, what we need is a way to get the best guess for the <em>parameters</em>. That is, once we have our “best guesses” for what that parameter values are for our model, we can use that model to make “best guesses” for any hypothetical data point be are trying to predict.</p>
+<p>The solution here is that the best model is the “best fit” for the data. But what does <em>that</em> mean? The best fitting model is the model that produces the most accurate predictions. This means we need to quantify <em>how good our predictions are</em>, and for that, we need the concept of an <em>error</em>.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><em>Error</em> is another term that looks like a common word (meaning “mistake”) that has a related but actually quite technical meaning in statistics. When we talk about the <em>errors</em> of a model, we’re not talking generally about “mistakes were made.” We’re talking specifically about the quantifiable differences between model predictions and real, observed data.</p>
+</div></div><p>For example, if we had a father with a height of 68.5 inches, and we guess that the son would be the same height, we’d be right a lot of the time. But what about the sons who were taller or short than that? If we guessed 68.5 but the son was actually 63.5 inches tall, our guess would be off by 5 inches. In other words, we’d have a <em>prediction error</em> of 5 inches.</p>
+<p>Armed with this concept, we can now revisit our goal of defining what makes the best model: <em>it’s the model that minimizes prediction errors</em>.</p>
+</section>
+<section id="model-estimation-ordinary-least-squares" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="model-estimation-ordinary-least-squares">Model estimation: Ordinary Least Squares</h2>
+<p>Even though we now have a more precise concept for what we are trying to do, I am glossing over the exact mathematical tools and process to do it. The term for the process of how to get our best guess parameters is called <em>estimation</em>. There are actually many different mathematical (and computational) techniques for parameter estimation, with different pros and cons. But the common concept is that we use a statistical method to <em>estimate</em> parameters, and those estimates are our “best guess” for the model that best describes our data. For us, this means minimizing the prediction errors that our model makes.</p>
+<p>The good news is that R (or whatever other software you may use) does the math for you, and in practical terms, parameter estimation is just a matter of running a function and knowing how to read the output. However, it’s important to understand how the estimation process works, at least conceptually, because it helps us to understand how to use our models in practice.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Explanations and examples of how to fit an OLS model in R and get the parameter estimates are in the <a href="./R_lm_fitting.html">Code Tutorial on using the <code>lm()</code> function</a>.</p>
+</div></div><p>We have said that we would like our model to minimize prediction errors. Let’s get a bit more technical and precise about what we mean by that. What we actually want to do is to minimize the <em>squared</em> errors. You literally just take the difference between the prediction and the actual value (that difference is called the <em>error</em>), and then you square it. Then you add up all of those squared errors for all of the data you have, and that quantity is (appropriately) called the <em>sum of squares</em>. The best-fitting linear model is the line that makes this sum of squares the smallest, because the smaller the sum of squares, the smaller the errors. More intuitively, the best-fitting line through the data is the line that goes through the “middle” (mean) of the data. One mathematical technique for computing this is called <em>Ordinary Least Squares</em> (OLS), because it is computing the line that minimizes the sum of squared errors.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>It turns out that under typical assumptions, there are other algorithms that get the same results as OLS, including the Maximum Likelihood (ML) algorithm. In this course, we are mainly focused on the concepts, and not going deeply into the math. But it’s good for you to know that generally, there are some different computational and mathematical tools out there for arriving at essentially the same answers.</p>
+</div></div><p>A quick note on the terminology here: the process of estimating the parameters of a model based on observed data is called <em>fitting</em> a model. This term gets used in the following way with several common phrases:</p>
+<ul>
+<li><strong>fitting a model</strong> means performing a regression and getting the parameter values</li>
+<li>examining a <strong>model fit</strong> means checking how well a model fits a set of data</li>
+<li>a <strong>fit model</strong> just means a model that has been fit</li>
+<li>etc., etc.</li>
+</ul>
+<p>Don’t get too bogged down in these terms, though; I’m just giving you a heads-up on how these words get used by statisticians. The idea is that the process of fine-tuning our linear model to the exact parameter values that best predict our data, we have made the model “fit” the data as closely as we can.</p>
+</section>
+<section id="interpreting-a-linear-model" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="interpreting-a-linear-model">Interpreting a linear model</h2>
+<p>Once we fit a model and have our parameter values, then what? Of course, the answer depends somewhat on why we are doing the analysis in the first place, but for now, let’s focus trying to <em>interpret</em> what the model parameters mean.</p>
+<p>If we fit a linear model to the raw height data from Pearson &amp; Lee for predicting the height of a son based on the height of the father, we get an intercept (<span class="math inline">\(\alpha\)</span> or “alpha”) of around 33, and a slope (<span class="math inline">\(\beta\)</span> or “beta”) of around 0.5. What do those values mean?</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>We will go over how to get these values in R in <a href="./R_lm_fitting.html">the Code Tutorial on the <code>lm()</code> function</a>. For now, just trust me that these are the correct values.</p>
+</div></div><p>First, let’s discuss the slope. <em>Slope</em> refers to how steep the line of our model is, but it also has a very literal mathematical interpretation:</p>
+<blockquote class="blockquote">
+<p><strong>Slope</strong>: for every change of 1 unit in the <span class="math inline">\(x\)</span> variable, expect a change of <span class="math inline">\(\beta\)</span> units in the <span class="math inline">\(y\)</span> variable.</p>
+</blockquote>
+<p>In terms of our height data, and the slope of 0.5 in our model, this translates to “for every difference of 1 inch in the father’s height (our <span class="math inline">\(x\)</span> or <em>predictor</em> variable), expect a difference of 0.5 inches (the <em>slope</em> or <span class="math inline">\(\beta\)</span>) in the son’s height (our <span class="math inline">\(y\)</span> or <em>response</em> variable).” For example, if we were comparing predictions from two different fathers, and Father A was 4 inches taller than Father B, we would expect Father A’s son to be 2 inches taller than Father B’s son. This is because for a difference in 4 units between Father A and Father B, we’d expect a difference in <span class="math inline">\(4 \times 0.5 = 2\)</span> units between Son A and Son B, since the slope is 0.5.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>I highly recommend working through this paragraph a few times, slowly, to make sure you’re following how all of this follows from just knowing that the slope parameter is 0.5.</p>
+</div></div><p>Framing things only in terms of slope gets us differences, but not exact predictions. For example, if we have a father who is 72 inches tall, how tall would we expect his son to be? For that, we need to talk about the intercept.</p>
+<p>Recall that the intercept for a line is just the place where the line hits the <span class="math inline">\(y\)</span>-axis. In other words:</p>
+<blockquote class="blockquote">
+<p><strong>Intercept</strong>: the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> is zero</p>
+</blockquote>
+<p>But let’s think about what that actually means. In this case, since our <span class="math inline">\(x\)</span> variable is the father’s height, and R tells us that the intercept is around 33, it means something like “if the father has a height of zero inches, we predict that the son will have a height of 33 inches.” A father who is zero inches tall?!? That doesn’t seem to make much sense, does it?</p>
+<p>Here is where we can return to the concept of <em>transformations</em> to help us better understand and interpret these numbers.</p>
+</section>
+<section id="transformations-can-help-or-hurt-interpretation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="transformations-can-help-or-hurt-interpretation">Transformations can help (or hurt) interpretation</h2>
+<p>Recall that <em>transformation</em> is just a general term for modifying the values in a variable. We started talking about how to perform transformations in <a href="./R_transformations.html">this Code Tutorial</a>, where we focused especially on how non-linear functions like the logarithmic function can change the shape of a variable’s distribution. But here, we can talk about how simple addition and subtraction (which are examples of <em>linear</em> functions) can help us interpret and use a linear model.</p>
+<p>First, let’s step back and consider our data from a slightly different angle. Here we have heights of people. Clearly, we don’t care about the heights of people who are 0 inches tall, because they literally don’t exist. But what about something like “the average father/son”? In other words, instead of asking “what’s the expected height of a son whose father is zero inches tall?”, we could ask “what’s the expected height of the son of an average-height father?” This is a much more reasonable question.</p>
+<p>In order to do this, all we need to do is <em>transform</em> the father variable, so that a value of 0 represents “the average father height” instead of “zero inches tall.” In order to do this, we just need to compute the average height (the <em>mean</em>), and subtract that mean from each of the values in the <code>father_height</code> variable. Think about why this works. Imagine the average father height is 67.5 (it’s actually 67.2 in this data, but close enough). Then if you take a father who is exactly 67.5 inches tall and you subtract the mean of 67.5, you get 0, because this person is exactly the average height. If you subtract the mean of 67.5 from a father who is 72.5 inches tall, you get 5, which in this case means “5 inches taller than average.” And similarly, if you have a father who is 62.5 inches tall and you subtract the mean, you get -5, which means “5 inches shorter than average.”</p>
+<p>Subtracting the mean of a variable from all of the values in that variable (which essentially means that the new variable has a mean of zero) is actually a very common and useful process, and it’s called <em>centering</em> because it adjusts the values such that the variable’s mean is <em>centered</em> on zero. For a centered variable, negative numbers mean “less than average” and positive numbers mean “more than average.”</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>A <em>centered</em> variable has a mean value of zero. In order to <em>center</em> a variable, all you need to do is to subtract its mean value from every individual value in the variable.</p>
+</div></div><p>If we center the <code>father_height</code> variable and fit a new model with this new variable, <em>the slope does not change</em>. This is an important point we’ll return to. But the intercept changes, and now the intercept estimate is about 68 in this new model. How do we interpret this new intercept? Recall the definition from before:</p>
+<blockquote class="blockquote">
+<p><strong>Intercept</strong>: the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> is zero</p>
+</blockquote>
+<p>So this means that 68 is the expected value of the son’s height (our <span class="math inline">\(y\)</span> or <em>response</em> variable) when <em>our new centered variable</em> is zero. And since a value of zero for the centered variable means “the average height of a father”, we can interpret the value of 68 to mean “the expected height of the son for an average father.” This is much more reasonable than talking about making predictions for a father who is 0 inches tall, and now we know that an average father in this data is expected to have a son around 5’8”.</p>
+<p>Now, what happens if we also center the <code>son_height</code> variable? We can easily do this and re-fit our model with the two centered variables, but now the intercept is essentially zero (or as close to zero as R can compute). This is because when we compute the best fitting line using OLS, that line <em>always</em> passed through the “middle” of the data, meaning the point where the mean <span class="math inline">\(x\)</span> and the mean <span class="math inline">\(y\)</span> intersect.</p>
+<p>Read that last sentence again, and think about it. <em>Every</em> simple linear regression (estimated using OLS) ends up estimating a line that passes through the coordinate [mean of <span class="math inline">\(x\)</span>, mean of <span class="math inline">\(y\)</span>]. So if we center both variables, that means the mean of both variables is zero, so the line passes through [0, 0].</p>
+<p>In practical terms, it means that if you center both of your variables, you can ignore the intercept because it will always be zero.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> But it also means you might be missing out on some helpful interpretation, like when we center just the father’s height, we can easily see that the average son’s height is 68.</p>
+<div class="no-row-height column-margin column-container"><div id="fn8"><p><sup>8</sup>&nbsp;Of course, if it <em>isn’t</em> zero, that might be a good indication you did something wrong, either with the centering or with the regression! But also note that software like R may not get <em>exactly</em> zero, but a number that is extremely small, and that’s just due to the inherent limit on how many digits can be computed on a given system.</p></div></div><blockquote class="blockquote">
+<p>So as a rule of thumb, centering <em>predictors</em> is often a good idea, but other transformations on the response variable might be more informative or helpful.</p>
+</blockquote>
+<p>Let’s take one more example, and then let’s visualize things to help it sink in.</p>
+<p>What if we were interested in whether the sons tend to be taller or shorter than their fathers? We could center the <code>father_height</code> variable (by subtracting the man father height from every father’s height), and then also subtract the mean father height from the <code>son_height</code> values. By doing that, we have changed the <code>son_height</code> variable to mean “height relative to the average father,” because positive values would mean “taller than the average father” and negative values would mean “shorter than the average father”. If we do this and re-fit the model once again, the slope is still the same but we get an intercept of right under 1. Before reading ahead, think for a minute about how you would interpret this. What does an intercept of 1 mean if our <span class="math inline">\(x\)</span> means “the height of fathers compared to the average father” and the <span class="math inline">\(y\)</span> means “the height of sons compared to the average father”?</p>
+<p>One way to interpret this intercept is essentially “for an average father, how much taller is his son?”, so now we know that in this data, the average son is a little less than 1 inch taller than his father. This is actually very informative! Of course, you’d get the same answer if you just took the differences between the mean son height and the mean father height, but sometimes it can be convenient to have that quantity in your regression results as the intercept.</p>
+<p>The broader point here is that when we <em>transform</em> our variables, it can change the interpretation of our model parameters, and if we pick our transformations carefully, we can get results that give us more sensible or more helpful interpretations.</p>
+</section>
+<section id="visualizing-changes-to-the-intercept" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-changes-to-the-intercept">Visualizing changes to the intercept</h2>
+<p>Let’s wrap up this deep dive into the intercept parameter by visualizing the different models we discussed above. First, let’s look back at the original model, where we fit the un-transformed height variables. The regression line is in blue.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>regression with untransformed variables</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, to illustrate what the intercept refers to in this model, we need to expand the graph to include the point where <span class="math inline">\(x = 0\)</span>. The next graph shows this, where a red vertical dashed line marks the position of <span class="math inline">\(x = 0\)</span>. You can see that the regression line crosses at the value of the intercept, roughly at <span class="math inline">\(y = 33\)</span>. Note that we had to expand the axes (“zoom out”) in order to show this intersection, which is why the data is crammed into the upper right corner. This also illustrates how silly it is to care about the intercept value in this model, since the extrapolation is so far from the observed data.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>regression with untransformed variables, zoomed out to show the intercept</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Next, let’s look at what happens when we center the <code>father_height</code> variable. We still plot the <span class="math inline">\(x = 0\)</span> point, because that’s where the intercept value is calculated, but since we centered <span class="math inline">\(x\)</span>, that means the intercept (where the regression line crosses the <span class="math inline">\(x = 0\)</span> line) is right in the middle of the data, around <span class="math inline">\(y = 68\)</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>regression when the father height variable has been centered</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If we center both variables, then the intercept is (essentially) zero. In this graph, I plotted red dashed lines both where <span class="math inline">\(x = 0\)</span> and where <span class="math inline">\(y = 0\)</span>, so you can see that when the variables are centered, the regression line passes right through the [0, 0] coordinate. This is because the OLS regression line always passes through the [mean of x, mean of y] point. It’s the centering that sets the mean of both variables equal to zero.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>regression where both variables have been centered</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, we can look at the version where we center <code>father_height</code>, but we subtract the average father height from the <code>son_height</code> values. Now you can see that the intercept value is close to 1, which we can interpret to mean that the average son is 1 inch taller than his father.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>regression where the father height is centered, and the son height is relative to the average father</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="recap-discussion-of-intercept" class="level2">
+<h2 class="anchored" data-anchor-id="recap-discussion-of-intercept">Recap discussion of intercept</h2>
+<p>If all of this is a little dizzying to think about, that’s okay; it’s easy to get turned around when thinking about how to interpret the intercept. That’s why I highly encourage that you memorize the following definition I keep repeating, because not only is it a succinct mathematical definition, it can help you orient yourself when you feel turned around trying to interpret things.</p>
+<blockquote class="blockquote">
+<p><strong>Intercept</strong>: the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> is zero</p>
+</blockquote>
+<p>If you can memorize this, then it’s just a matter of plugging in the variables you are working with, and then carefully thinking about what a value of zero means in your predictor variable (<span class="math inline">\(x\)</span>). Transformations like centering change the intercept, so they change how you can interpret the intercept as well.</p>
+<p>The other comfort is that most of the time what we really care about is the <em>slope</em>, so often it’s not all that important to worry about exactly what the intercept value is anyway. But we do need to know <em>what</em> the intercept value is, especially if we want to make predictions, which we can talk about next.</p>
+</section>
+</section>
+<section id="knowledge-checks-1" class="level1">
+<h1>Knowledge Checks</h1>
+<p>Time for some more self-quizzing:</p>
+<ol start="5" type="1">
+<li>What are the two parameters of a linear model discussed above?</li>
+<li>What does “OLS” stand for, and what is it?</li>
+<li>Describe how you <em>center</em> a variable.</li>
+</ol>
+</section>
+<section id="calculating-predictions" class="level1 page-columns page-full">
+<h1>Calculating predictions</h1>
+<p>Once we have this model, making predictions is just a simple matter of addition and multiplication. In this discussion, let’s use the case where we have centered both variables. This means that both variables can be interpreted as “difference from average.” I’ll repeat the visualization here, with the red dashed lines removed:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>regression with both variable centered</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In order to make a prediction, all we need to know is the value of <span class="math inline">\(x\)</span>, the father’s height with respect to the average, because we know the slope is about 0.5 and the intercept is 0. So let’s say we pick a father who is 3 inches taller than average, we can just plug the values we know into the linear equation:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = \alpha + \beta \times x\)</span></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = 0 + 0.5 \times 3\)</span></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = 1.5\)</span></p>
+</blockquote>
+<p>And the result is that we expect the son to be 1.5 inches taller than average. Similarly, if we make a prediction for a father who is 2 inches <em>shorter</em> than average, we get:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = 0 + 0.5 \times -2\)</span></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = -1\)</span></p>
+</blockquote>
+<p>And the son is predicted to be 1 inch shorter than average. Simple!</p>
+<p>Now let’s go back to the untransformed variables, and show how that math still works out, even though the intercept in that model is around 33. Let’s take the case of a father who is 72 inches tall. And recall that in that first model, the slope was still 0.5, but the intercept was around 33. So here, the calculation is:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = 33 + 0.5 \times 72\)</span></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = 69\)</span></p>
+</blockquote>
+<p>So a father who is 6’ is predicted to have a son that is about 5’9”.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Now strictly speaking this last calculation is a little off from the actual data, because I’ve been rounding off the slope and intercept values a bit. That’s fine when we’re looking at smaller values, but since we need to multiply the slope by 72 here, that rounding error adds up. So the calculations here are just for illustrating the process.</p>
+</div></div><p>Note that we are not saying that these are <em>perfect</em> predictions. Simply looking at the data tells us that there’s a fair amount of variation, and fathers at a specific height have sons with a range of heights.</p>
+<p>However, the math of linear regression means that even though these predictions aren’t perfect, they are the <em>best</em> predictions we can get with the data we have with this type of model, and recall that we defined “best prediction” meaning “minimizing errors.” So if you use this simple formula to guess all of the sons’ heights in this data set, and calculated the (squared) error for every prediction, the parameter values you get from regression will give you the smallest total errors, out of all other possible parameter values. This is what we mean when we say that fitting a model is a process that gives us the best estimation of parameter values.</p>
+</section>
+<section id="regression-to-the-mean" class="level1 page-columns page-full">
+<h1>Regression to the Mean</h1>
+<p>Now it’s time to step back and think a little more about what this overall pattern actually means. First, the slope is positive, so fathers who are taller than average also have sons who are taller than average. This makes sense.</p>
+<p>But what about the exact value of the slope? Since it’s less than 1, it means that the sons are always predicted to be <em>more average</em> than the fathers.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> So if fathers are taller than average, their sons are predicted to be taller than average, but still not as tall as their fathers, and conversely, if fathers are shorter than average, their sons are predicted to also be shorter than average, but not as short as their fathers.</p>
+<div class="no-row-height column-margin column-container"><div id="fn9"><p><sup>9</sup>&nbsp;You may want to take a minute to work this out for yourself. Start with imagining what it would mean if the slope was exactly 1. It would mean that for every inch taller the father was, the son would also be an inch taller. And remember that the slope is in both directions, so for every inch shorter the father was, the son would also be an inch shorter. If the slope was greater than 1, then it would mean that if the father was shorter than average, his son would be <em>even shorter than that</em>, and if the father was taller than average, his son would be <em>even taller than that</em>. So if the slope is less than 1 (which it is), then it means that however the father is taller or shorter than average, the son is predicted to be less tall or less short – just less extreme either way.</p></div></div><p>This pattern was called “regression to mediocrity” by Francis Galton, whose work in 1886 was the direct predecessor of Pearson &amp; Lee’s 1903 study. Galton chose these words because that’s the way he saw it, that somehow the offspring of exceptional people “regressed” away from exceptionality, towards “mediocrity.”</p>
+<p>Interestingly, this is literally where the term <em>regression</em> comes from! We don’t use it with the same negative connotations, and we replaced “mediocrity” with the more mathematical “mean”, but this phenomenon is still called “regression to the mean.”</p>
+<p>What’s fascinating about this is that it’s not some special case having to do with how traits are inherited, it’s a general phenomenon that is just a mathematical byproduct of how random variation works. Remember the concept of a <em>model</em>? It’s a simplified way of looking at the world. Well, it turns out that if we take the simple view of the linear model, and we also assume that there is some amount of random <em>error</em>, then the regression to the mean phenomenon occurs automatically and inevitably. We don’t have to include anything in our model about heritability, or degradation over time, or any of the things implied by the observation that children tend to be closer to the average than their parents.</p>
+<p>One of the simple ways to illustrate this is to flip it around, and use childrens’ heights to predict their parents’. If we do that with our data, using the <code>son_height</code> variable to predict <code>father_height</code>, we get the same pattern, with a similar (though not exactly identical) slope of around 0.5. Now, I suppose you could make up a story where exceptional children somehow induce their parents to be more average, but in the case of physical height, that’s a bit of a stretch.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> But the main point is that you don’t need a “story” or explanation for this pattern, because it’s literally <em>inevitable</em>, just based on the math of variation. We will go through how to explore this yourself using R in a <a href="./R_regression_to_the_mean.html">dedicated Code Tutorial</a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn10"><p><sup>10</sup>&nbsp;No pun intended…</p></div></div><section id="the-significance-of-regression-to-the-mean-in-daily-life" class="level2">
+<h2 class="anchored" data-anchor-id="the-significance-of-regression-to-the-mean-in-daily-life">The significance of regression to the mean in daily life</h2>
+<p>The concept of <em>regression to the mean</em> is not just an obscure bit of statistical trivia. This is a real phenomenon that we can observe all the time, but unfortunately, we often misinterpret it. For example, another way this shows up is in repeated test scores. Take a hypothetical class of 100 students. On the first exam, the professor records the scores, and notes the best- and worst-scoring students. On the second exam, the professor notes that the best students have (on average) scored worse this time than the first time, and the worst students have (on average) improved.</p>
+<p>The professor might be tempted to think that the high-scoring group got “lazy” or “complacent” and didn’t work as hard for the second exam, and that the low-scoring group were “motivated” to work harder and earned their improved scores. This <em>might</em> be true, but it would be better for the professor to remember that this pattern is all but a statistical inevitability, assuming there is any room at all for random variation. And given how many different factors can influence test performance on any given day, there is almost always room for random variation.</p>
+<p>In your own life, you will also see examples of regression to the mean all the time, if you pay attention. Just remember that this is just a fact of life, because life has random variation, and when you have data with random variation and you have a situation where you are comparing the relationship between two variables, this phenomenon will occur.</p>
+</section>
+</section>
+<section id="sidetrack-anscombes-quartet-and-the-power-of-visualization" class="level1">
+<h1>Sidetrack: Anscombe’s Quartet and the power of visualization</h1>
+<p>Before we go on to discuss the application of regression with categorical predictors, there’s one other classic result that we need to discuss. In this course, I try to emphasize plotting and graphing your data just as much as performing statistical analysis. One of the reasons for this is that statistical analysis makes many assumptions, and if you don’t examine your data visually, you can sometimes miss where those assumptions may not be warranted.</p>
+<p>To put it another way, jumping straight to fitting a model and computing statistics before you try to visualize your data is an example of trying to put <em>inferential</em> analysis before <em>exploratory</em> analysis, which is often dangerous. “<em>Explore</em> before you <em>infer</em>” is the data analysis way to say “look before you leap”!</p>
+<p>One of the classic demonstrations of the importance of visualizing your data comes from a paper in 1973 by F.J. Anscombe. In this paper, Anscombe assembled four made-up data sets, which have come to be known as “Anscombe’s Quartet”. What he did was to very cleverly construct the data so that summary statistics and even linear regression results were all nearly identical across the four data setss. Each data set has the same number of values, the same mean values of the variables, and the same regression parameter values of intercept and slope. In other words, if you relied only on statistics and numerical analysis, you might easily conclude that the patterns in these data sets were identical.</p>
+<p>However, as the figure below shows, this couldn’t be farther from the truth. This figure shows a separate scatterplot and regression line for each of the four data sets. Note that the regression line is identical for each, but note how different the pattern of data is for each.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Anscombe’s Quartet, with regression lines in blue</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In the first data set, it looks similar to what we normally expect when we do regression: there’s a linear trend, but some random variation around the regression line. In the second data set, we see much less random variation, but instead of a straight line, we see an arcing pattern, which would be better fit by a quadratic model. In the third data set, we see much less random variation, but the regression line is being influenced by a single extreme “outlier” (a phenomenon we’ll look closely at later). And then finally in the fourth data set, there appears to be almost no variation at all in the <span class="math inline">\(x\)</span> variable, except for one extreme data point. Nevertheless, despite these four very different patterns of data, the regression results are nearly indistinguishable.</p>
+<p>Again, the message here is simply “make sure you visualize your data!” We spend a lot of time creating and looking at different scatterplots and visualizations in this unit, and this is something you should always include in your analyses, even after you become more expert fitting and interpreting statistical models.</p>
+<ol start="8" type="1">
+<li>Describe how you calculate a “best guess” prediction for a response to a specific predictor value using a linear model.</li>
+<li>Imagine you perform a regression where your predictor variable is “average hours per week of study time” and your response variable is “salary five years after graduation”. Your model estimates an intercept of $40,000. How do you interpret that number? Do you think that’s a helpful quantity? What could you do to change the interpretation of the intercept?</li>
+<li>Imagine you have data from a study where participants reported the perceived “attractiveness” of people they have dated over time, and the participants themselves were also rated for “attractiveness”. Assuming you observe a typical “regression to the mean” pattern, how might that show up in your data? (Hint: there are multiple possibilities.)</li>
+<li>What is the take-home message of Anscombe’s Quartet?</li>
+</ol>
+</section>
+<section id="categorical-predictors" class="level1 page-columns page-full">
+<h1>Categorical predictors</h1>
+<p>Now that we have developed the concepts and tools above, we can apply them to another important case, when we have continuous (or interval) <span class="math inline">\(y\)</span> data that we are trying to predict, but our <em>predictor</em> is categorical.</p>
+<p>For our example, we will consider another classic data set from a sleep study, analyzed by “Student” in 1908.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> In this data, there were ten people who participated in a study, and the amount of extra sleep they had following two different treatments was recorded. The idea is to compare the amount of extra sleep between the two treatments, to see if one is better than the other.</p>
+<div class="no-row-height column-margin column-container"><div id="fn11"><p><sup>11</sup>&nbsp;The name “Student” was actually an anonymous pseudonym for the statistician who did this work, William Gossett. It’s an interesting story, because Gossett developed the <span class="math inline">\(t\)</span>-distribution (which we will discuss later in the course) while working at the Guinness brewing company. The reason for the pseudonym was that Guinness didn’t want to tip off their competitors about the kind of research they were using to improve their brews. Statistics is a very real-world science!</p></div></div><p>Let’s see if we can frame this in terms of regression. We would like to predict the amount of extra sleep people get, but our predictor is just one treatment vs.&nbsp;another. Can we apply the methods of regression here?</p>
+<p>In short: yes! But we need to do a little work to get there.</p>
+<section id="dummy-coding" class="level2">
+<h2 class="anchored" data-anchor-id="dummy-coding">Dummy coding</h2>
+<p>A key concept here is often called “dummy coding” or sometimes “contrast coding.” The idea is that in order to apply the math of OLS regression, we need the predictor to be a number. But we really only have two values: Treatment A and Treatment B. So what we do is convert this <em>difference</em> to a number, by creating a variable that is 0 for Treatment A and 1 for Treatment B. If we do this, then our new variable can be interpreted as meaning “difference between Treatments A and B”.</p>
+<p>Let’s make this conversion and plot the data as a scatterplot, just to see what that looks like.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Student’s sleep data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-categorical-differences" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-categorical-differences">Visualizing categorical differences</h2>
+<p>This is not a bad first step, but there are better ways of visualizing this kind of data than with a scatterplot, especially when there is a lot of data. Our old friend John Tukey created a popular visualization called the “box-and-whiskers” plot, which is usually shortened to “boxplot.” Boxplots are excellent visualizations because they provide some distribution information, namely the <em>quartiles</em> that we looked at back in <a href="./R_univariate_distributions.html#numeric-summaries">Unit 2</a>.</p>
+<p>Here’s an example of a boxplot of the same data as above.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="regression_foundations_reading_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Student’s sleep data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In a typical boxplot, the lower edge of the “box” is the 25% quantile, the line in the middle is the median (50% quantile), and the upper edge of the box is the 75% quantile. The “whiskers” are the lines that extend above and below the boxes, and in smaller data sets like this, they usually extend to the minimum and maximum values of the data. If there are extreme values beyond a certain range (which is usually 2.5 times the range of the “box”), then dots will be plotted in order to highlight these extreme values.</p>
+<p>The important thing is that these are easy plots to make when you want to compare two or more groups of data. If you look between this boxplot and the corresponding scatterplot above, you should be able to see how they ultimately represent the same data, just with different shapes.</p>
+</section>
+<section id="the-linear-model-with-categorical-predictors" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-linear-model-with-categorical-predictors">The linear model with categorical predictors</h2>
+<p>Applying the linear model to this data is then straightforward, once we have converted the categorical variable to a variable of 0’s and 1’s. R actually does this for us by default, if we have a variable that is non-numeric. But it can also be useful to do the conversion yourself, to make sure you understand which category corresponds to 0 and which corresponds to 1.</p>
+<p>The reason to use 0 and 1 is that it means we can interpret the <em>slope</em> parameter estimate as the estimate of the <em>difference</em> between the two groups. Recall our definition of slope:</p>
+<blockquote class="blockquote">
+<p><strong>Slope</strong>: for every change of 1 unit in the <span class="math inline">\(x\)</span> variable, expect a change of <span class="math inline">\(\beta\)</span> units in the <span class="math inline">\(y\)</span> variable.</p>
+</blockquote>
+<p>If we code our categorical variable as 0’s and 1’s, then a change of “1 unit” is just the same as saying the difference between the two categories. If, for example, we coded our categories as 0 and 2, then the slope would only represent <em>half</em> of the difference between the two categories. Similarly, if we coded the categories -0.5 and 0.5, then the slope would be the same as if we coded them 0 and 1, because again, the slope is always interpreted as the slope relative to a <em>change in 1 unit</em> of the <span class="math inline">\(x\)</span> predictor variable.</p>
+<p>So how do we interpret the intercept, then? Again, recall our definition:</p>
+<blockquote class="blockquote">
+<p><strong>Intercept</strong>: the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> is zero</p>
+</blockquote>
+<p>This still applies, it’s just that now <span class="math inline">\(x = 0\)</span> is not some point on a continuum, but rather it just stands for a particular category. In our current example, we set Treatment A to be 0 and Treatment B to be 1.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Exercise for the reader: how would the interpretations change if we <em>centered</em> the Treatment values to be -0.5 and 0.5 instead of 0 and 1?</p>
+</div></div><p>We fit the model in R the same way we fit a regression model, and we get the parameter estimates in the same way as we do with continuous (or interval) data like the height data from Pearson &amp; Lee. When we fit a regression model to this sleep data from Student/Gossett, we get an intercept of 0.75 and a slope of 1.58. Following the logic above, this means that the average extra sleep for Treatment A was 0.75 hours (because the intercept is the predicted value where the <em>group</em> variable is zero), and the Treatment B group averaged 1.58 <em>more</em> hours than Treatment A.</p>
+</section>
+<section id="summary-of-categorical-predictors" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-categorical-predictors">Summary of categorical predictors</h2>
+<p>This should be a bit of a relief: once we wrap our heads around dummy coding, analyzing data with categorical predictors turns out to be very similar to analyzing data with continuous (or interval) data, using the same methods as regular linear regression. Of course, it gets more complex when you have a categorical predictor with many different values, but the overall principles are actually the same. And this is true of many other advanced kinds of data analysis, in that they build upon the basic principles and concepts of the linear model.</p>
+</section>
+</section>
+<section id="overall-recap-and-summary" class="level1">
+<h1>Overall recap and summary</h1>
+<p>This was a big reading! Congratulations for making it through. Let’s briefly recap some of the main points we’ve covered:</p>
+<ul>
+<li>Analyzing <em>relationships</em> is a key concern for statistical analysis.</li>
+<li>Scatterplots are an invaluable tool for visualizing relationships, especially between two continuous variables.</li>
+<li>We can think of linear regression as a way to use one (or more) variables to predict another variable.</li>
+<li>The linear regression model is based on the simple geometric equation for a line, and in order to have a model that you can use to make predictions, you need to <em>estimate</em> the slope and intercept parameters of the model.</li>
+<li>There are different methods for estimating model parameters, but Ordinary Least Squares (OLS) is the fundamental mathematical technique for estimating simple linear model parameters.</li>
+<li>The OLS algorithm can be understood intuitively as minimizing the (squared) prediction errors of the model.</li>
+<li>The process of computing what parameter values result in the best model for a given set of data is called <em>fitting</em> a model.</li>
+<li>Interpreting the slope and intercept values of a fitted model takes some careful thought, but in short:
+<ul>
+<li><strong>Slope</strong> is the change in <span class="math inline">\(y\)</span> expected for every 1 unit change in <span class="math inline">\(x\)</span>, and</li>
+<li><strong>Intercept</strong> is the expected value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x = 0\)</span></li>
+</ul></li>
+<li><em>Regression to the mean</em> is an inevitable byproduct of the mathematics of variation, and historically it’s how the term <em>regression</em> came to be applied to linear models, but the phenomenon can still lead to misunderstandings if we’re not careful.</li>
+<li>Using linear regression works the same way when we have categorical <em>predictors</em>, as long as we use “dummy coding”. This means that we convert categorical variables to variables that are made up of numbers that differ by 1 unit, such as a series of 0s and 1s.</li>
+</ul>
+<p>Make sure that you understand each of these different concepts, and review the readings, work through the following Code Tutorials, and ask questions if any of the concepts are still eluding you. Some of these are hard to wrap your head around, and continuing to look at examples and to play around with code can help things to sink in.</p>
+</section>
+<section id="next-steps" class="level1">
+<h1>Next steps</h1>
+<p>Fortunately, the Code Tutorials are relatively concise in comparison to this reading. I have split them up a little more by topic, one for Scatterplots, one for <a href="./R_lm_fitting.html">Regression Fitting</a>, one for exploring <a href="./R_regression_to_the_mean.html">Regression to the Mean</a>, and one for Boxplots (and other plots).</p>
+<p>Good luck!</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

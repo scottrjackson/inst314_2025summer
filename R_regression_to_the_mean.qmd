@@ -1,0 +1,11 @@
+---
+title: "Exploring Regression to the Mean in R"
+draft: false
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+

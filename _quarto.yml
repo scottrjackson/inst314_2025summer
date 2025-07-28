@@ -42,6 +42,18 @@ website:
                 text: "Simulating, visualizing, and exploring univariate distributions"
               - href: R_transformations.qmd
                 text: "Applying transformations"
+      - section: "Unit 3: Fitting Regression Models"
+        contents:
+          - href: regression_foundations_reading.qmd
+            text: "Concepts Reading: linear regression"
+          # - section: "Code Tutorials"
+          #   contents:
+          #     - href: R_scatterplots.qmd
+          #       text: "Visualizing relationships with scatterplots"
+          #     - href: R_lm_fitting.qmd
+          #       text: "Fitting linear models with the `lm()` function"
+          #     - href: R_boxplots_violinplots.qmd
+          #       text: "Visualizing differences with boxplots and violinplots"
 
 
 format:
@@ -51,4 +63,3 @@ format:
       light: flatly
     css: styles.css
     toc: true
-

@@ -1,0 +1,120 @@
+---
+title: "Extracting model fit statistics in R: AIC and R^2"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+# What's in this notebook?
+
+This notebook explains how to simulate "fake but realistic" data from a linear model in R. This includes how to extract the residual standard error from the model, which is necessary for simulating the right level of variability in the data. 
+
+The notebook also demonstrates how to create parallel plots of real and simulated data, so you can visually assess how "realistic" the fake data is, which in turns can help you understand how well your model is fitting.
+
+
+# Loading data and packages
+
+We don't need any additional packages in this notebook, but if you want more options and detailed functions related to information-theoretic statistics like AIC (including the "corrected" AIC for small samples), you should check out the `AICcmodavg` package:
+
+https://cran.r-project.org/web/packages/AICcmodavg/index.html
+
+## Load the Pearson & Lee (1903) data
+
+Use the code here to read in a subset of the data from Pearson & Lee (1903), which is a classic data set of the heights of fathers and their sons collected in a survey. This data is derived from the `PearsonLee` data set found in the `HistData` package, and more details can be found in the documentation for that package.
+
+I'm naming the variable "pl" to stand for Pearson & Lee.
+
+```{r}
+pl <- read.csv("FatherSonHeights.csv")
+head(pl)
+```
+
+This data should have 4,312 rows and three variables, though the `observation` variable is just an arbitrary number matching the row number.
+
+The `father_height` and `son_height` variables are expressed as inches. All of the measurements were rounded to the nearest inch but then recorded on the "half-inch". In other words, there are values 62.5, 63.5, 64.5, and so on, but no values 62.0, or any value between the XX.5 values.
+
+
+# Why use model fit statistics?
+
+There are lots of ways to examine and explore a model. Looking at parameter estimates, residuals, predictions, and simulated data can be good ways to examine the details, but sometimes you might want an "overall" indicator of how well the model is fitting.
+
+Here I describe how to get two of the most common, $R^2$ (aka "R-squared") and AIC (the Akaike Information Criterion).
+
+# Fitting the model
+
+Of course, before we can get any model fit statistics, we need a model!  So we will just fit the same simple model we have before, using the `father_height` variable to predict the `son_height` variable:
+
+```{r}
+height_model <- lm(son_height ~ 1 + father_height, data = pl)
+```
+
+
+# Getting and using AIC
+
+Getting the AIC of a model is "stupid simple", because there's an `AIC` function (again, just remember that capitalization matters in R.)
+
+```{r}
+height_model_aic <- AIC(height_model)
+height_model_aic
+```
+
+Using AIC is a little more nuanced. In short:
+
+- The lower the number is, the better of a model it is.
+- The value of the number itself is pretty meaningless, and depends a lot on the scale of the variables in the model and how many observations you have (more observations usually means bigger number).
+- So you can only compare models that have the *EXACT SAME y value*.
+
+For example, if you had a model that was fitted to some data, and then you excluded some observations and re-fit the model, the AIC would change. The same with transformation, if you transform the *y* variable (the response variable) of the model in any way, the AIC will change.
+
+So while you *can* and *should* use AIC to compare models with different *predictors*, you need to make sure that the *response* variable values are identical in order to compare the AIC values.
+
+To see this in action, let's fit a model that instead uses a random number to predict `son_height` instead of `father_height`. Because this model and our previous model have the exact same *y* variable (the values we are trying to predict), we can compare their AIC values.
+
+```{r}
+pl$random <- rnorm(nrow(pl))
+random_model <- lm(son_height ~ 1 + random, data = pl)
+
+AIC(height_model)
+AIC(random_model)
+```
+
+The AIC from the original model is lower, so it's a better model.
+
+The final caveat is to not consider "how much lower". That is, it seems like maybe the difference between the AICs is only like 1300 out of around 20,000, so maybe it's not that much different? This kind of comparison doesn't make any sense with the mathematical logic of AIC, so just avoid the temptation to think about the numbers like that. Lower just means better. AIC is very good as a *comparison* metric.
+
+If you want something that's more of an *absolute* indicator of how well a model is doing, you need something like $R^2$.
+
+# Getting and using $R^2$
+
+Getting the $R^2$ ("R-squared") value from a model is easy in R. Just like we did with the residual standard error (see the R Guide on Simulating Data from a Model), we can extract the $R^2$ value from the model summary object.
+
+Let's get the $R^2$ values from both the height model and the "random" model we fit above.  Instead of saving the model summary as an object first (which is what I did in the R Guide on Simulating Data), I'll just grab it directly. I'm doing this to show you another way of doing things, even though it might look a little odd at first.
+
+```{r}
+height_model_rsquared <- summary(height_model)$r.squared
+random_model_rsquared <- summary(random_model)$r.squared
+
+height_model_rsquared
+random_model_rsquared
+```
+
+Note the scientific notation in the random model. The exponent after the "e" tells you how many places to move the decimal point, and the "-" or "+" tells you which direction, where the "-" means "make the number smaller by moving the decimal to the left." So the $R^2$ of our height model could be rounded off to 0.264, and the $R^2$ of the random model would be something like 0.0000053 (in this case -- since it's random you might get slightly different results when you run this code), but since we usually use 2 or 3 digits to express $R^2$, we'd say that it's "< 0.001". And it's actually most common for us to report these values without the beginning 0, so we would say something like:
+
+- The model using father height to predict son height has an $R^2$ = .264
+- The model using a random number to predict son height has an $R^2$ < .001
+
+Interpreting $R^2$ is a little more literal than the more "abstract" AIC values. So here, we can say something like our height model is "explaining" roughly a fourth (a little over .25) of the variation in son heights. That's pretty good, and nothing to sneeze at, but clearly there's a lot more variation still to "explain". Whereas in the random model, it's explaining essentially nothing, since the $R^2$ is close to zero. This makes sense, because if a random variable was a good predictor, it would be purely "luck"!
+
+
+# Summary
+
+While it's *always* important to look closely at how your model is performing, by looking at detailed information such as residuals, it's also sometimes useful to have a single number that represents an "overall" assessment of how good the model is, that you can use to make rough comparisons with other models.
+
+AIC is a very useful and robust statistic that can compare models, as long as they are modeling the exact same *y* values, but it doesn't have any direct interpretation that is useful. In short, don't worry about the values, just check which one is lower.
+
+On the other hand, the $R^2$ statistic has a very intuitive interpretation, and it can give you an overall sense of how "effective" your model is at explaining the variance in the *y* variable.  
+
+One of the downsides of $R^2$ is that once you get beyond simple linear models, it becomes harder or even impossible to calculate, while AIC applies to a very wide range of model types. But they both have their uses.
+
+Fortunately, they are both very easy to extract or compute in R.
+

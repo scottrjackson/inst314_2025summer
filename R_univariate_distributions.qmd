@@ -8,9 +8,6 @@ reference-location: margin
 citation-location: margin
 ---
 
-# What's in this tutorial?
-
-
 # What should you do before starting this tutorial?
 
 - Make sure you have gone through the [Concepts reading on univariate distributions](univariate_distributions_reading.qmd) and have worked through the Knowledge Checks, because the topics we explore here are based on that initial understanding of concepts.

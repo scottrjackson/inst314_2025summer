@@ -1,0 +1,187 @@
+---
+title: "Fitting linear regression models in R"
+draft: true
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+# What's in this notebook?
+
+The main goal of this notebook is to present and explain the code for fitting a simple regression model in R and getting the parameter estimates from a fitted model.
+
+# Loading data and packages
+
+The main function we'll be using is the `lm` function from base R, so we don't need to load any additional packages. We'll use the subset of data from Pearson & Lee (1903) as described in the Unit 3 reading, so we'll read that in here, the same as we did for the notebook on Scatterplots.
+
+```{r}
+pl <- read.csv("FatherSonHeights.csv")
+head(pl)
+```
+
+# The workhorse `lm` function
+
+One of the core functions of R is the `lm` function, which stands for "linear model". There are several more advanced options and parameters, but we will focus on just two main arguments, the *formula* and the *data*.
+
+The `data` argument is straightforward, and is just the data frame with the variables that we will use in the regression.
+
+The `formula` argument warrants a little more discussion.
+
+## Formulas in R
+
+R actually has a specific type of data object called "formulas", and once you understand what they look like, you'll notice them across many different functions. The key indicator that you are working with a formula in R is the use of the tilde character: ~
+
+This is the character that is on the key just to the left of the "1" key on most English keyboards, but you need to use Shift with it, otherwise you get a "backtick" (e.g., the character used at the beginning and end of R code chunks in R Markdown).
+
+The tilde symbol in a formula can be read as "is distributed as a function of".  So for example, a typical regression formula might look like:
+
+y ~ 1 + x
+
+This could be read as something like "the variable y is distributed as a function of a constant (1) and a variable x".  So when you have a formula, thinking about what's on the left side or right side of the tilde is usually the key.
+
+## Building a regression formula
+
+In terms of regression, this formula syntax basically corresponds directly to the linear equation:
+
+y = alpha + beta * x
+
+So on the left side of the tilde is the *response* variable, which we usually call the "y" variable. This is the quantity we are trying to predict.
+
+On the right side of the tilde is the *intercept*, which is essentially a constant. Therefore in the R formula, we use the number 1 to signify that constant. The intercept in a linear model is a constant, because the intercept is the intercept, and it doesn't matter where on the line we are making a prediction.
+
+The "x" on the right side is the *predictor* variable. In terms of our linear equation, it's the data that get multiplied by the slope.
+
+## Example: Pearson & Lee's height data
+
+Let's make these abstract concepts a little more concrete with our example data. In this data, let's use the `father_height` variable as a predictor to predict the `son_height` variable.  This means our formula should look like this:
+
+son_height ~ 1 + father_height
+
+This essentially means "we are predicting `son_height` as a function of a constant and the `father_height` variable."
+
+What we don't know is the actual parameters of this model: the exact value of the intercept constant, or the exact value of the slope that the `father_height` is multiplied by in order to get the predicted `son_height` value. But that's exactly what the `lm` function will do for us: estimate those parameters!
+
+So here's the code that puts this into action:
+
+```{r}
+pl_regression <- lm(son_height ~ 1 + father_height, data = pl)
+class(pl_regression)
+```
+
+Note that we still want to "save" the results of the regression by assigning it to a variable in R, and the `class` function confirms that this is a special object type called an "lm" object.
+
+# Inspecting lm objects and getting parameter values
+
+There is actually a lot of information in an "lm" object, and we'll continue to explore it in this course. It's useful to think about the lm object as representing our fitted model, and we can use that model to do all sorts of things, but we can also inspect the model in various ways.
+
+As we have discussed in the readings, the most fundamental aspect of the model is the *parameter values*. In our simple linear model, that's the *intercept* (aka "alpha") and the *slope* (aka "beta"). In R, the parameter values are called *coefficients*.
+
+One way to inspect the internal structure of objects in R is with the `str` function (standing for "structure"), but since lm objects are so complex, it's a little simpler to use the `names` function instead:
+
+```{r}
+names(pl_regression)
+```
+
+And as you can see, there's a structure inside the object called "coefficients".
+
+In this kind of structure, you can use the same "dollar-sign" notation that we learned to access columns in a data frame. In other words, we can access the "coefficients" with the following:
+
+```{r}
+pl_regression$coefficients
+class(pl_regression$coefficients)
+```
+
+And the `class` function tells us that the coefficients are just a vector of numbers, though this vector also has names. So this means if we want to just get the value for the intercept parameter, we can do either of the following:
+
+```{r}
+pl_regression$coefficients[1]
+pl_regression$coefficients["(Intercept)"]
+```
+
+And similarly, we can get the slope parameter (which has the name of the predictor it's associated with) with either of the following:
+
+```{r}
+pl_regression$coefficients[2]
+pl_regression$coefficients["father_height"]
+```
+
+Putting this together, we can easily extract the intercept and slope parameters and assign them to variables with the following:
+
+```{r}
+regression_intercept <- pl_regression$coefficients[1]
+regression_slope <- pl_regression$coefficients[2]
+```
+
+# Example: fitting a model with a centered predictor
+
+As we discussed in the reading, for this particular example, the intercept is not especially meaningful, since it means "the expected height of the son if the father is 0 inches tall." So let's walk through the code you could use to:
+
+1. Center the `father_height` predictor variable
+2. Re-fit the model with the new (centered) predictor
+3. Get the updated coefficients
+
+First, we are creating different "versions" of the same variables, like the centered version of the `father_height` variable. Personally, since transformations like log, centering, scaling, standardizing, etc. are common, I like to have a personal notation for reminding me that a variable has been centered. For example, I like to add a ".c" at the end of a variable to stand for "this has been centered". But note that this is just a personal naming convention; you can pick your own variable name conventions. I just highly recommend having a consistent system; your future self will thank you when they try to read your code later.
+
+So using this naming convention, the code below creates a new centered variable from the `father_height` variable, then fits a model with that variable, and then prints the model parameters.
+
+```{r}
+pl$father_height.c <- pl$father_height - mean(pl$father_height)
+pl_regression_father.c <- lm(son_height ~ father_height.c, data = pl)
+pl_regression_father.c$coefficients
+```
+
+Recall from the reading that this intercept value can be interpreted to mean "the expected height of a son of an average-height father is 68.16 inches."
+
+Next, we can also center the `son_height` variable, refit the model again, and print the updated parameter values:
+
+```{r}
+pl$son_height.c <- pl$son_height - mean(pl$son_height)
+pl_regression_fatherson.c <- lm(son_height.c ~ father_height.c, data = pl)
+pl_regression_fatherson.c$coefficients
+```
+
+Here's a good opportunity to point out that when R runs into a lot of digits, it will often print things out in scientific notation. So here, the intercept value is a number times 10 to the negative 14, which is a very very very small number. To illustrate, you could re-write -1.83e-14 as: -0.0000000000000183
+
+Computers actually have a hard time computing things to be exactly zero in some cases, so if you ever see a number this small in R, it's basically equivalent to zero.
+
+Annoyingly, R will print things out in a consistent way, so we also get scientific notation for the slope parameter when we print it along with this practically-zero intercept, but the value is basically 0.519, which is the same as in the other models we're fitting here.  Just keep an eye out for that scientific notation when you're reading results!
+
+Finally, here's the example from the reading where we create another version of the `son_height` variable by subtracting the mean *father's* height, in order to get a variable that basically means "how tall compared to an average father."
+
+I gave this one a ".adj" suffix to stand for "adjusted", because I couldn't think of anything I liked better. And again we fit a new model with these variables and print the parameter values.
+
+```{r}
+pl$son_height.adj <- pl$son_height - mean(pl$father_height)
+pl_regression_fatherson.adj <- lm(son_height.adj ~ father_height.c, data = pl)
+pl_regression_fatherson.adj$coefficients
+```
+
+# Categorical predictors
+
+Now let's look briefly at how to handle categorical predictors. Luckily, R does some of the work for us. We will be using the same sleep-study data discussed in the reading. This data set is pre-loaded in R as `sleep`, so it's very convenient to work with.
+
+```{r}
+head(sleep)
+class(sleep$group)
+summary(sleep)
+```
+
+When we look at the data, there is a `group` variable that's our categorical "treatment" variable. But while it looks like it's the number 1 and the number 2, it's actually encoded in R as a "factor" data type. You can also see this if you use the `summary` function on the data frame, because instead of telling us the mean, median, min/max and quartiles of the variable (which it would do if R was treating it as a number), it tells us the tabulation of how many times each value shows up. This is the hint that this variable is a categorical factor.
+
+When a variable is a factor (or a string), then when you use `lm` to fit a model, R will do the dummy-coding for you, invisibly converting the factor to a variable of 0s and 1s when fitting the model.
+
+So let's fit a model to this data, with the categorical `group` predicting the `extra` column, which is the amount of extra hours of sleep each person got for the given treatments.
+
+```{r}
+sleep_regression <- lm(extra ~ 1 + group, data = sleep)
+sleep_regression$coefficients
+```
+
+Now notice that for the slope parameter, the name is "group2", not just "group." This is R telling us that the category "2" is the value that is assigned to the number 1 behind the scenes, and the other group category "1" is assigned to the number 0. So as described in the Unit 3 reading, this means that the intercept value of 0.75 represents the expected value of extra sleep for the "group 1" category, and "group 2" is estimated to get 1.58 *more* hours of sleep than group 1.
+
+# More to come
+
+This is just the very beginning of fitting models with `lm` and extracting parameter values. Future notebooks will dig deeper into the "lm" objects and how to interpret the results of the regression.
