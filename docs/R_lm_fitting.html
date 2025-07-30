@@ -105,11 +105,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -302,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Fitting linear regression models in R</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Unit 3: Fitting Regression Models</a></li><li class="breadcrumb-item"><a href="./R_scatterplots.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_lm_fitting.html">Fitting linear models with the <code>lm()</code> function</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -446,6 +475,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Concepts Reading: linear regression</span></a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_scatterplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing relationships with scatterplots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_lm_fitting.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Fitting linear models with the <code>lm()</code> function</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_boxplots_violinplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing differences with boxplots and violinplots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_advanced_data_formatting_PearsonLee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Example of some advanced data formatting (optional)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
       </ul>
   </li>
     </ul>
@@ -458,7 +522,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#whats-in-this-notebook" id="toc-whats-in-this-notebook" class="nav-link active" data-scroll-target="#whats-in-this-notebook">What’s in this notebook?</a></li>
+  <li><a href="#whats-in-this-tutorial" id="toc-whats-in-this-tutorial" class="nav-link active" data-scroll-target="#whats-in-this-tutorial">What’s in this tutorial?</a></li>
   <li><a href="#loading-data-and-packages" id="toc-loading-data-and-packages" class="nav-link" data-scroll-target="#loading-data-and-packages">Loading data and packages</a></li>
   <li><a href="#the-workhorse-lm-function" id="toc-the-workhorse-lm-function" class="nav-link" data-scroll-target="#the-workhorse-lm-function">The workhorse <code>lm</code> function</a>
   <ul class="collapse">
@@ -467,17 +531,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#example-pearson-lees-height-data" id="toc-example-pearson-lees-height-data" class="nav-link" data-scroll-target="#example-pearson-lees-height-data">Example: Pearson &amp; Lee’s height data</a></li>
   </ul></li>
   <li><a href="#inspecting-lm-objects-and-getting-parameter-values" id="toc-inspecting-lm-objects-and-getting-parameter-values" class="nav-link" data-scroll-target="#inspecting-lm-objects-and-getting-parameter-values">Inspecting lm objects and getting parameter values</a></li>
-  <li><a href="#example-fitting-a-model-with-a-centered-predictor" id="toc-example-fitting-a-model-with-a-centered-predictor" class="nav-link" data-scroll-target="#example-fitting-a-model-with-a-centered-predictor">Example: fitting a model with a centered predictor</a></li>
-  <li><a href="#categorical-predictors" id="toc-categorical-predictors" class="nav-link" data-scroll-target="#categorical-predictors">Categorical predictors</a></li>
+  <li><a href="#example-fitting-a-model-with-a-centered-predictor" id="toc-example-fitting-a-model-with-a-centered-predictor" class="nav-link" data-scroll-target="#example-fitting-a-model-with-a-centered-predictor">Example: fitting a model with a centered predictor</a>
+  <ul class="collapse">
+  <li><a href="#transformations-and-parameters" id="toc-transformations-and-parameters" class="nav-link" data-scroll-target="#transformations-and-parameters">Transformations and parameters</a></li>
+  </ul></li>
+  <li><a href="#categorical-predictors" id="toc-categorical-predictors" class="nav-link" data-scroll-target="#categorical-predictors">Categorical predictors</a>
+  <ul class="collapse">
+  <li><a href="#dummy-coding-for-free" id="toc-dummy-coding-for-free" class="nav-link" data-scroll-target="#dummy-coding-for-free">Dummy coding for free</a></li>
+  </ul></li>
   <li><a href="#more-to-come" id="toc-more-to-come" class="nav-link" data-scroll-target="#more-to-come">More to come</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Unit 3: Fitting Regression Models</a></li><li class="breadcrumb-item"><a href="./R_scatterplots.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_lm_fitting.html">Fitting linear models with the <code>lm()</code> function</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Fitting linear regression models in R</h1>
 </div>
@@ -496,13 +566,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="whats-in-this-notebook" class="level1">
-<h1>What’s in this notebook?</h1>
-<p>The main goal of this notebook is to present and explain the code for fitting a simple regression model in R and getting the parameter estimates from a fitted model.</p>
+<section id="whats-in-this-tutorial" class="level1">
+<h1>What’s in this tutorial?</h1>
+<p>The main goal of this tutorial is to present and explain the code for fitting a simple regression model in R and getting the parameter estimates from a fitted model.</p>
 </section>
 <section id="loading-data-and-packages" class="level1">
 <h1>Loading data and packages</h1>
-<p>The main function we’ll be using is the <code>lm</code> function from base R, so we don’t need to load any additional packages. We’ll use the subset of data from Pearson &amp; Lee (1903) as described in the Unit 3 reading, so we’ll read that in here, the same as we did for the notebook on Scatterplots.</p>
+<p>The main function we’ll be using is the <code>lm</code> function from base R, so we don’t need to load any additional packages. We’ll use the subset of data from Pearson &amp; Lee (1903) as described in the <a href="./regression_foundations_reading.html">Unit 3 reading</a>, so we’ll load that data in the code below, the same as we did for the tutorial on <a href="./R_scatterplots.html">scatterplots</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"FatherSonHeights.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -519,150 +589,170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-workhorse-lm-function" class="level1">
 <h1>The workhorse <code>lm</code> function</h1>
-<p>One of the core functions of R is the <code>lm</code> function, which stands for “linear model”. There are several more advanced options and parameters, but we will focus on just two main arguments, the <em>formula</em> and the <em>data</em>.</p>
+<p>One of the core functions of R is the <code>lm</code> function, which stands for “linear model”. This function is used to estimate linear regression parameters using <a href="./regression_foundations_reading.html#model-estimation-ordinary-least-squares">ordinary least squares</a>. There are several more advanced options and parameters in order to work with more complex uses, but we will focus on just two main arguments, the <code>formula</code> and the <code>data</code>.</p>
 <p>The <code>data</code> argument is straightforward, and is just the data frame with the variables that we will use in the regression.</p>
 <p>The <code>formula</code> argument warrants a little more discussion.</p>
 <section id="formulas-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="formulas-in-r">Formulas in R</h2>
-<p>R actually has a specific type of data object called “formulas”, and once you understand what they look like, you’ll notice them across many different functions. The key indicator that you are working with a formula in R is the use of the tilde character: ~</p>
+<p>R actually has a specific type of data object called “formulas”, and once you understand what they look like, you’ll notice them across many different functions. The main thing that tells you that you are working with a formula in R is the use of the tilde character: <code>~</code></p>
 <p>This is the character that is on the key just to the left of the “1” key on most English keyboards, but you need to use Shift with it, otherwise you get a “backtick” (e.g., the character used at the beginning and end of R code chunks in R Markdown).</p>
-<p>The tilde symbol in a formula can be read as “is distributed as a function of”. So for example, a typical regression formula might look like:</p>
-<p>y ~ 1 + x</p>
-<p>This could be read as something like “the variable y is distributed as a function of a constant (1) and a variable x”. So when you have a formula, thinking about what’s on the left side or right side of the tilde is usually the key.</p>
+<p>The tilde symbol in a formula can usually be read as “is distributed as a function of”. So for example, a typical regression formula might look like:</p>
+<p><code>y ~ 1 + x</code></p>
+<p>This could be read as something like “the variable <span class="math inline">\(y\)</span> is distributed as a function of a constant (1) and a variable <span class="math inline">\(x\)</span>”. So when you have a formula, thinking about what’s on the left side or right side of the tilde is the key.</p>
 </section>
 <section id="building-a-regression-formula" class="level2">
 <h2 class="anchored" data-anchor-id="building-a-regression-formula">Building a regression formula</h2>
 <p>In terms of regression, this formula syntax basically corresponds directly to the linear equation:</p>
-<p>y = alpha + beta * x</p>
-<p>So on the left side of the tilde is the <em>response</em> variable, which we usually call the “y” variable. This is the quantity we are trying to predict.</p>
-<p>On the right side of the tilde is the <em>intercept</em>, which is essentially a constant. Therefore in the R formula, we use the number 1 to signify that constant. The intercept in a linear model is a constant, because the intercept is the intercept, and it doesn’t matter where on the line we are making a prediction.</p>
+<p><span class="math inline">\(y = \alpha + \beta \times x\)</span></p>
+<p>On the left side of the tilde is the <em>response</em> variable, which we usually call the “y” variable. This is the quantity we are trying to predict.</p>
+<p>On the right side of the tilde is the rest of the linear equation. First we have an <em>intercept</em>, which is essentially a constant. In the R formula, we use the number 1 to signify that constant. The intercept in a linear model is a constant because the intercept is just a single fixed value, no matter where on the line we are.</p>
 <p>The “x” on the right side is the <em>predictor</em> variable. In terms of our linear equation, it’s the data that get multiplied by the slope.</p>
+<p>This is one of the nice things about R’s use of formulas in the <code>lm()</code> function – the straightforward mapping between our <em>statistical</em> model and the syntax of how we specify it in the function.</p>
 </section>
 <section id="example-pearson-lees-height-data" class="level2">
 <h2 class="anchored" data-anchor-id="example-pearson-lees-height-data">Example: Pearson &amp; Lee’s height data</h2>
 <p>Let’s make these abstract concepts a little more concrete with our example data. In this data, let’s use the <code>father_height</code> variable as a predictor to predict the <code>son_height</code> variable. This means our formula should look like this:</p>
-<p>son_height ~ 1 + father_height</p>
-<p>This essentially means “we are predicting <code>son_height</code> as a function of a constant and the <code>father_height</code> variable.”</p>
-<p>What we don’t know is the actual parameters of this model: the exact value of the intercept constant, or the exact value of the slope that the <code>father_height</code> is multiplied by in order to get the predicted <code>son_height</code> value. But that’s exactly what the <code>lm</code> function will do for us: estimate those parameters!</p>
+<p><code>son_height ~ 1 + father_height</code></p>
+<p>This essentially translates to: “we are predicting <code>son_height</code> as a function of a constant (intercept) and the <code>father_height</code> variable.”</p>
+<p>What we don’t know yet is the actual parameters of this model: the exact value of the intercept constant, or the exact value of the slope that the <code>father_height</code> is multiplied by in order to get the predicted <code>son_height</code> value. But that’s exactly what the <code>lm</code> function will do for us: estimate those parameters!</p>
 <p>So here’s the code that puts this into action:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pl_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> father_height, <span class="at">data =</span> pl)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pl_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pl_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> father_height, <span class="at">data =</span> pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So in the <code>lm()</code> function, we start by giving the formula, using the names of the columns that represent our variables. Then in the next argument we just need to tell R what data frame to look at to find these columns.</p>
+<p>Note that because we want to “save” the results of the regression, we assign the results to a variable like normal. The results are a special type of object with the class <code>lm</code>, which we can verify using the <code>class()</code> function like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pl_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "lm"</code></pre>
 </div>
 </div>
-<p>Note that we still want to “save” the results of the regression by assigning it to a variable in R, and the <code>class</code> function confirms that this is a special object type called an “lm” object.</p>
+<p>Once we fit the model, basically all the information we need is in this new object, so let’s turn to how to get values from it.</p>
 </section>
 </section>
 <section id="inspecting-lm-objects-and-getting-parameter-values" class="level1">
 <h1>Inspecting lm objects and getting parameter values</h1>
-<p>There is actually a lot of information in an “lm” object, and we’ll continue to explore it in this course. It’s useful to think about the lm object as representing our fitted model, and we can use that model to do all sorts of things, but we can also inspect the model in various ways.</p>
-<p>As we have discussed in the readings, the most fundamental aspect of the model is the <em>parameter values</em>. In our simple linear model, that’s the <em>intercept</em> (aka “alpha”) and the <em>slope</em> (aka “beta”). In R, the parameter values are called <em>coefficients</em>.</p>
-<p>One way to inspect the internal structure of objects in R is with the <code>str</code> function (standing for “structure”), but since lm objects are so complex, it’s a little simpler to use the <code>names</code> function instead:</p>
+<p>There’s actually a <em>lot</em> of information in an “lm” object, so we won’t go into exhaustive detail right now, but we’ll return to it throughout the course. It’s useful to think about the <code>lm</code> object as representing our fitted model, and we can use that model to do all sorts of things, and we can inspect the model in various ways.</p>
+<p>As we discussed in the <a href="./regression_foundations_reading.html#the-linear-model">reading</a>, the most fundamental aspect of the model is the <em>parameter values</em>. In our simple linear model, that’s the <em>intercept</em> (aka “alpha” or <span class="math inline">\(\alpha\)</span>) and the <em>slope</em> (aka “beta” or <span class="math inline">\(\beta\)</span>). In R, these parameter values are also called <em>coefficients</em>.</p>
+<p>One way to inspect the internal structure of objects in R is with the <code>str()</code> function (standing for “structure”), but since lm objects are so complex, it’s a little simpler to use the <code>names()</code> function instead:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pl_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pl_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "coefficients"  "residuals"     "effects"       "rank"         
  [5] "fitted.values" "assign"        "qr"            "df.residual"  
  [9] "xlevels"       "call"          "terms"         "model"        </code></pre>
 </div>
 </div>
-<p>And as you can see, there’s a structure inside the object called “coefficients”.</p>
-<p>In this kind of structure, you can use the same “dollar-sign” notation that we learned to access columns in a data frame. In other words, we can access the “coefficients” with the following:</p>
+<p>And as you can see, there’s a structure inside the object called <code>coefficients</code>.</p>
+<p>In this structure, you can use the same “dollar sign” notation that we learned to access columns in a data frame. In other words, we can access the coefficients with the following:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) father_height 
    33.2680781     0.5192646 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pl_regression<span class="sc">$</span>coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is where R’s common use of ways to get individual pieces of a larger structure comes in handy. So all of the things we know about how to get values out of <a href="./R_basics_vectors.html">vectors</a> or <a href="./R_basics_dataframes.html">data frames</a> also apply here.</p>
+<p>To walk you through the process, let’s back up and start with the concept that we know our regression results are in the <code>pl_regression</code> object, but we’re not sure how to get info out of it. The first step is to use <code>names()</code> (or if you want to look at more detail, <code>str()</code>), and look at what the sub-parts of this object are.</p>
+<p>Seeing that there’s something called <code>coefficients</code>, we can access that using the code above: <code>pl_regression$coefficients</code></p>
+<p>Now what? Well, now we might want to check on what kind of thing this sub-structure is, again using our friend, the <code>class()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pl_regression<span class="sc">$</span>coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "numeric"</code></pre>
 </div>
 </div>
-<p>And the <code>class</code> function tells us that the coefficients are just a vector of numbers, though this vector also has names. So this means if we want to just get the value for the intercept parameter, we can do either of the following:</p>
+<p>The <code>class</code> function tells us that the coefficients are just a vector of numbers, though this vector also has names. This is good, because we already know how to work with vectors. For example, since <code>pl_regression$coefficients</code> is a vector, if we want to just get the value for the intercept parameter, we can do either of the following:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept) 
    33.26808 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="st">"(Intercept)"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="st">"(Intercept)"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept) 
    33.26808 </code></pre>
 </div>
 </div>
-<p>And similarly, we can get the slope parameter (which has the name of the predictor it’s associated with) with either of the following:</p>
+<p>And similarly, we can get the slope parameter (which always has the name of the predictor it’s associated with) with either of the following:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>father_height 
     0.5192646 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="st">"father_height"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="st">"father_height"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>father_height 
     0.5192646 </code></pre>
 </div>
 </div>
-<p>Putting this together, we can easily extract the intercept and slope parameters and assign them to variables with the following:</p>
+<p>Putting this together, we can easily extract the intercept and slope parameters and assign them to variables with the following (or you could use the names instead, if you like that way better):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>regression_intercept <span class="ot">&lt;-</span> pl_regression<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>regression_slope <span class="ot">&lt;-</span> pl_regression<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>regression_intercept <span class="ot">&lt;-</span> pl_regression<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>regression_slope <span class="ot">&lt;-</span> pl_regression<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="example-fitting-a-model-with-a-centered-predictor" class="level1">
+<section id="example-fitting-a-model-with-a-centered-predictor" class="level1 page-columns page-full">
 <h1>Example: fitting a model with a centered predictor</h1>
-<p>As we discussed in the reading, for this particular example, the intercept is not especially meaningful, since it means “the expected height of the son if the father is 0 inches tall.” So let’s walk through the code you could use to:</p>
+<p>As we discussed in the <a href="./regression_foundations_reading.html">reading</a>, for this particular example, the intercept is not especially meaningful, since it means “the expected height of the son if the father is 0 inches tall.” So let’s walk through the code you could use to:</p>
 <ol type="1">
 <li>Center the <code>father_height</code> predictor variable</li>
 <li>Re-fit the model with the new (centered) predictor</li>
 <li>Get the updated coefficients</li>
 </ol>
-<p>First, we are creating different “versions” of the same variables, like the centered version of the <code>father_height</code> variable. Personally, since transformations like log, centering, scaling, standardizing, etc. are common, I like to have a personal notation for reminding me that a variable has been centered. For example, I like to add a “.c” at the end of a variable to stand for “this has been centered”. But note that this is just a personal naming convention; you can pick your own variable name conventions. I just highly recommend having a consistent system; your future self will thank you when they try to read your code later.</p>
-<p>So using this naming convention, the code below creates a new centered variable from the <code>father_height</code> variable, then fits a model with that variable, and then prints the model parameters.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>father_height.c <span class="ot">&lt;-</span> pl<span class="sc">$</span>father_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>father_height)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pl_regression_father.c <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>pl_regression_father.c<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>First, we are creating a different “version” of a variable, namely the centered version of the <code>father_height</code> variable. Since transformations like log, centering, scaling, standardizing, etc. are common, I like to have a personal notation for reminding myself that a variable has been centered. For example, I like to add a “.c” at the end of a variable to stand for “this has been centered”. But note that this is just a personal naming convention; you can pick your own variable naming conventions. I just highly recommend having <em>some</em> kind of consistent system – your future self will thank you when they try to read your code later!</p>
+<p>So using this naming convention, the code below creates a new centered variable from the <code>father_height</code> variable, by simply subtracting the mean of <code>father_height</code> from the <code>father_height</code> column<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, and saving that as a new column in the data frame. Then we can fit a new model using that new variable in the formula. Finally, we can print the coefficients from that new model to see how the intercept has changed, but the slope hasn’t.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Recall from the <a href="./R_basics_vectors.html">tutorial on vectors</a> that in R, if you subtract a single number (like a mean) from a vector of numbers (like a column in your data), R subtracts that single value from <em>each</em> value in the vector. No programming loops required!</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>father_height.c <span class="ot">&lt;-</span> pl<span class="sc">$</span>father_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>father_height)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pl_regression_father.c <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>pl_regression_father.c<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    (Intercept) father_height.c 
      68.1614100       0.5192646 </code></pre>
 </div>
 </div>
-<p>Recall from the reading that this intercept value can be interpreted to mean “the expected height of a son of an average-height father is 68.16 inches.”</p>
-<p>Next, we can also center the <code>son_height</code> variable, refit the model again, and print the updated parameter values:</p>
+<p>Recall from the <a href="./regression_foundations_reading.html">reading</a> that this intercept value can be interpreted to mean “the expected height of a son of an average-height father is 68.16 inches.” The slope doesn’t change, because the relationship is still the same.</p>
+<p>We can also center the <code>son_height</code> variable, refit the model again, and print the updated parameter values:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_height.c <span class="ot">&lt;-</span> pl<span class="sc">$</span>son_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>son_height)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.c <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height.c <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.c<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_height.c <span class="ot">&lt;-</span> pl<span class="sc">$</span>son_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>son_height)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.c <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height.c <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.c<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    (Intercept) father_height.c 
   -1.832789e-14    5.192646e-01 </code></pre>
 </div>
 </div>
-<p>Here’s a good opportunity to point out that when R runs into a lot of digits, it will often print things out in scientific notation. So here, the intercept value is a number times 10 to the negative 14, which is a very very very small number. To illustrate, you could re-write -1.83e-14 as: -0.0000000000000183</p>
-<p>Computers actually have a hard time computing things to be exactly zero in some cases, so if you ever see a number this small in R, it’s basically equivalent to zero.</p>
-<p>Annoyingly, R will print things out in a consistent way, so we also get scientific notation for the slope parameter when we print it along with this practically-zero intercept, but the value is basically 0.519, which is the same as in the other models we’re fitting here. Just keep an eye out for that scientific notation when you’re reading results!</p>
-<p>Finally, here’s the example from the reading where we create another version of the <code>son_height</code> variable by subtracting the mean <em>father’s</em> height, in order to get a variable that basically means “how tall compared to an average father.”</p>
-<p>I gave this one a “.adj” suffix to stand for “adjusted”, because I couldn’t think of anything I liked better. And again we fit a new model with these variables and print the parameter values.</p>
+<p>By centering both the response variable and the predictor variable, the intercept should be zero. Recall that this is because the best-fitting regression line will <em>always</em> pass through the [mean of <span class="math inline">\(x\)</span>, mean of <span class="math inline">\(y\)</span>] coordinate. So by centering both variables (making the mean of both variables 0), both the <span class="math inline">\(y\)</span>-intercept and the <span class="math inline">\(x\)</span>-intercept are at 0.</p>
+<p>But if that is true, why does the output above not say <code>0</code>?</p>
+<p>This is a good opportunity to point out that when R runs into a lot of digits, it will often print things out in scientific notation. So here, the intercept value is a number times 10 to the negative 14, which is a very very very small number. To illustrate, you could re-write -1.83e-14 as: -0.0000000000000183</p>
+<p>Computers actually have a hard time computing things to be exactly zero in many cases, due to the limits of <em>floating point</em> numeric precision, so if you ever see a number this small in R, it’s basically equivalent to zero.</p>
+<p>Somewhat annoyingly, when you ask R to print something, the default is to print things out in a consistent way, so we also get scientific notation for the slope parameter when we print it along with this practically-zero intercept. Converting into regular notation, the value of the slope is 0.519, which is the same as in the other models we’ve fitted so far. Just keep an eye out for scientific notation when you’re reading results!</p>
+<p>Finally, let’s look at the code for <a href="./regression_foundations_reading.html">the example from the reading</a> where we created yet another version of the <code>son_height</code> variable by subtracting the mean <em>father’s</em> height. This gets us a variable that we can interpret as “relative height compared to an average father.”</p>
+<p>I gave this variable a suffix of <code>.adj</code> to stand for “adjusted”, because I couldn’t think of anything I liked better. Again, you should come up with a naming convention that makes sense to you. We can then once again fit a new model with these variables and print the parameter values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_height.adj <span class="ot">&lt;-</span> pl<span class="sc">$</span>son_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>father_height)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.adj <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height.adj <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.adj<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_height.adj <span class="ot">&lt;-</span> pl<span class="sc">$</span>son_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>father_height)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.adj <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height.adj <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.adj<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    (Intercept) father_height.c 
       0.9638219       0.5192646 </code></pre>
 </div>
 </div>
+<p>As discussed in the reading, this changes the interpretation of the intercept as “how much taller (on average) are the sons in this data, as compared to the average father height in this data.” And again, notice that the slope has not changed.</p>
+<section id="transformations-and-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="transformations-and-parameters">Transformations and parameters</h2>
+<p>As a bit of a side-note, the reason that the <em>slope</em> did not change in any of the above models is that the only transformation we were performing was simple subtraction. Other transformations would affect the slope (as well as the intercept), like multiplication/division or exponential/logarithmic transformation.</p>
+<p>The easiest way to wrap your head around this in an intuitive way is to remember that the slope parameter means “for every <em>unit</em> change in the <span class="math inline">\(x\)</span> variable, there is a change of <span class="math inline">\(\beta\)</span> units in the <span class="math inline">\(y\)</span> variable.” If you are doing something like division or log-transforming, you are affecting what the <em>units</em> are of one or both variables, so the interpretation of what a “unit change” refers to is also affected.</p>
+<p>We’ll see examples of this going forward; I just wanted to point it out now in case you were getting a false impression that the slope of a model is unaffected by changes to the variables. To be precise, the slope is unaffected when we are just doing simple addition or subtraction. Other transformations will affect both the slope and intercept.</p>
+</section>
 </section>
 <section id="categorical-predictors" class="level1">
 <h1>Categorical predictors</h1>
 <p>Now let’s look briefly at how to handle categorical predictors. Luckily, R does some of the work for us. We will be using the same sleep-study data discussed in the reading. This data set is pre-loaded in R as <code>sleep</code>, so it’s very convenient to work with.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  extra group ID
 1   0.7     1  1
@@ -672,11 +762,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 5  -0.1     1  5
 6   3.4     1  6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(sleep<span class="sc">$</span>group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(sleep<span class="sc">$</span>group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "factor"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     extra        group        ID   
  Min.   :-1.600   1:10   1      :2  
@@ -688,25 +778,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                          (Other):8  </code></pre>
 </div>
 </div>
-<p>When we look at the data, there is a <code>group</code> variable that’s our categorical “treatment” variable. But while it looks like it’s the number 1 and the number 2, it’s actually encoded in R as a “factor” data type. You can also see this if you use the <code>summary</code> function on the data frame, because instead of telling us the mean, median, min/max and quartiles of the variable (which it would do if R was treating it as a number), it tells us the tabulation of how many times each value shows up. This is the hint that this variable is a categorical factor.</p>
-<p>When a variable is a factor (or a string), then when you use <code>lm</code> to fit a model, R will do the dummy-coding for you, invisibly converting the factor to a variable of 0s and 1s when fitting the model.</p>
+<p>When we look at the data, there is a <code>group</code> variable that’s our categorical “treatment” variable. But while it looks like it’s the number 1 and the number 2, it’s actually encoded in R as a <code>factor</code> data type. You can also see this if you use the <code>summary</code> function on the data frame, because instead of telling us the mean, median, min/max and quartiles of the variable (which it would do if R was treating it as a number), it tells us the tabulation of how many times each value shows up. This is the hint that this variable is a categorical factor.</p>
+<section id="dummy-coding-for-free" class="level2">
+<h2 class="anchored" data-anchor-id="dummy-coding-for-free">Dummy coding for free</h2>
+<p>When a variable is a factor (or a string), then when you use <code>lm()</code> to fit a model, R will do the dummy-coding for you, invisibly converting the factor to a variable of 0s and 1s when fitting the model.</p>
 <p>So let’s fit a model to this data, with the categorical <code>group</code> predicting the <code>extra</code> column, which is the amount of extra hours of sleep each person got for the given treatments.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sleep_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(extra <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group, <span class="at">data =</span> sleep)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>sleep_regression<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sleep_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(extra <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group, <span class="at">data =</span> sleep)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sleep_regression<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)      group2 
        0.75        1.58 </code></pre>
 </div>
 </div>
-<p>Now notice that for the slope parameter, the name is “group2”, not just “group.” This is R telling us that the category “2” is the value that is assigned to the number 1 behind the scenes, and the other group category “1” is assigned to the number 0. So as described in the Unit 3 reading, this means that the intercept value of 0.75 represents the expected value of extra sleep for the “group 1” category, and “group 2” is estimated to get 1.58 <em>more</em> hours of sleep than group 1.</p>
+<p>Now notice that for the slope parameter, the name is “group2”, not just “group.” This is R telling us that the category “2” is the value that is assigned to the number 1 behind the scenes, and the other group category “1” is assigned to the number 0. So as described in the <a href="./regression_foundations_reading.html">Unit 3 reading</a>, this means that the intercept value of 0.75 represents the average value of extra sleep for the “group 1” category, and “group 2” is estimated to get 1.58 <em>more</em> hours of sleep than group 1.</p>
+</section>
 </section>
 <section id="more-to-come" class="level1">
 <h1>More to come</h1>
-<p>This is just the very beginning of fitting models with <code>lm</code> and extracting parameter values. Future notebooks will dig deeper into the “lm” objects and how to interpret the results of the regression.</p>
+<p>This is just the very beginning of fitting models with <code>lm()</code> and extracting parameter values. Tutorials in later units will dig deeper into <code>lm</code> objects and how to interpret the results of regression.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

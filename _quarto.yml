@@ -46,14 +46,16 @@ website:
         contents:
           - href: regression_foundations_reading.qmd
             text: "Concepts Reading: linear regression"
-          # - section: "Code Tutorials"
-          #   contents:
-          #     - href: R_scatterplots.qmd
-          #       text: "Visualizing relationships with scatterplots"
-          #     - href: R_lm_fitting.qmd
-          #       text: "Fitting linear models with the `lm()` function"
-          #     - href: R_boxplots_violinplots.qmd
-          #       text: "Visualizing differences with boxplots and violinplots"
+          - section: "Code Tutorials"
+            contents:
+              - href: R_scatterplots.qmd
+                text: "Visualizing relationships with scatterplots"
+              - href: R_lm_fitting.qmd
+                text: "Fitting linear models with the `lm()` function"
+              - href: R_boxplots_violinplots.qmd
+                text: "Visualizing differences with boxplots and violinplots"
+              - href: R_advanced_data_formatting_PearsonLee.qmd
+                text: "Example of some advanced data formatting (optional)"
 
 
 format:

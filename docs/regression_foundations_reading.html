@@ -440,6 +440,41 @@ window.Quarto = {
  <span class="menu-text">Concepts Reading: linear regression</span></a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_scatterplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing relationships with scatterplots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_lm_fitting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fitting linear models with the <code>lm()</code> function</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_boxplots_violinplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing differences with boxplots and violinplots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_advanced_data_formatting_PearsonLee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Example of some advanced data formatting (optional)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
       </ul>
   </li>
     </ul>
@@ -638,7 +673,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>As you will see in the Code Tutorial on scatterplots, it can be quite easy to adjust the jitter or transparency of points in order to quickly manage the obscuring effects of overplotting. However, even though the plot above gives us a better idea of what’s going on, it’s not necessarily ideal, because the jitter means that it is not depicting the data with 100% accuracy, and it makes the data look more continuous than it actually is.</p>
+<p>As you will see in the <a href="./R_scatterplots.html">Code Tutorial on scatterplots</a>, it can be quite easy to adjust the jitter or transparency of points in order to quickly manage the obscuring effects of overplotting. However, even though the plot above gives us a better idea of what’s going on, it’s not necessarily ideal, because the jitter means that it is not depicting the data with 100% accuracy, and it makes the data look more continuous than it actually is.</p>
 </section>
 <section id="managing-overplotting-take-4" class="level2">
 <h2 class="anchored" data-anchor-id="managing-overplotting-take-4">Managing overplotting, take 4</h2>
@@ -939,7 +974,7 @@ window.Quarto = {
 <div class="no-row-height column-margin column-container"><div id="fn9"><p><sup>9</sup>&nbsp;You may want to take a minute to work this out for yourself. Start with imagining what it would mean if the slope was exactly 1. It would mean that for every inch taller the father was, the son would also be an inch taller. And remember that the slope is in both directions, so for every inch shorter the father was, the son would also be an inch shorter. If the slope was greater than 1, then it would mean that if the father was shorter than average, his son would be <em>even shorter than that</em>, and if the father was taller than average, his son would be <em>even taller than that</em>. So if the slope is less than 1 (which it is), then it means that however the father is taller or shorter than average, the son is predicted to be less tall or less short – just less extreme either way.</p></div></div><p>This pattern was called “regression to mediocrity” by Francis Galton, whose work in 1886 was the direct predecessor of Pearson &amp; Lee’s 1903 study. Galton chose these words because that’s the way he saw it, that somehow the offspring of exceptional people “regressed” away from exceptionality, towards “mediocrity.”</p>
 <p>Interestingly, this is literally where the term <em>regression</em> comes from! We don’t use it with the same negative connotations, and we replaced “mediocrity” with the more mathematical “mean”, but this phenomenon is still called “regression to the mean.”</p>
 <p>What’s fascinating about this is that it’s not some special case having to do with how traits are inherited, it’s a general phenomenon that is just a mathematical byproduct of how random variation works. Remember the concept of a <em>model</em>? It’s a simplified way of looking at the world. Well, it turns out that if we take the simple view of the linear model, and we also assume that there is some amount of random <em>error</em>, then the regression to the mean phenomenon occurs automatically and inevitably. We don’t have to include anything in our model about heritability, or degradation over time, or any of the things implied by the observation that children tend to be closer to the average than their parents.</p>
-<p>One of the simple ways to illustrate this is to flip it around, and use childrens’ heights to predict their parents’. If we do that with our data, using the <code>son_height</code> variable to predict <code>father_height</code>, we get the same pattern, with a similar (though not exactly identical) slope of around 0.5. Now, I suppose you could make up a story where exceptional children somehow induce their parents to be more average, but in the case of physical height, that’s a bit of a stretch.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> But the main point is that you don’t need a “story” or explanation for this pattern, because it’s literally <em>inevitable</em>, just based on the math of variation. We will go through how to explore this yourself using R in a <a href="./R_regression_to_the_mean.html">dedicated Code Tutorial</a>.</p>
+<p>One of the simple ways to illustrate this is to flip it around, and use childrens’ heights to predict their parents’. If we do that with our data, using the <code>son_height</code> variable to predict <code>father_height</code>, we get the same pattern, with a similar (though not exactly identical) slope of around 0.5. Now, I suppose you could make up a story where exceptional children somehow induce their parents to be more average, but in the case of physical height, that’s a bit of a stretch.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> But the main point is that you don’t need a “story” or explanation for this pattern, because it’s literally <em>inevitable</em>, just based on the math of variation. We will go through how to explore this yourself using R in a dedicated Code Tutorial.</p>
 <div class="no-row-height column-margin column-container"><div id="fn10"><p><sup>10</sup>&nbsp;No pun intended…</p></div></div><section id="the-significance-of-regression-to-the-mean-in-daily-life" class="level2">
 <h2 class="anchored" data-anchor-id="the-significance-of-regression-to-the-mean-in-daily-life">The significance of regression to the mean in daily life</h2>
 <p>The concept of <em>regression to the mean</em> is not just an obscure bit of statistical trivia. This is a real phenomenon that we can observe all the time, but unfortunately, we often misinterpret it. For example, another way this shows up is in repeated test scores. Take a hypothetical class of 100 students. On the first exam, the professor records the scores, and notes the best- and worst-scoring students. On the second exam, the professor notes that the best students have (on average) scored worse this time than the first time, and the worst students have (on average) improved.</p>
@@ -1008,7 +1043,7 @@ window.Quarto = {
 </div>
 </div>
 <p>In a typical boxplot, the lower edge of the “box” is the 25% quantile, the line in the middle is the median (50% quantile), and the upper edge of the box is the 75% quantile. The “whiskers” are the lines that extend above and below the boxes, and in smaller data sets like this, they usually extend to the minimum and maximum values of the data. If there are extreme values beyond a certain range (which is usually 2.5 times the range of the “box”), then dots will be plotted in order to highlight these extreme values.</p>
-<p>The important thing is that these are easy plots to make when you want to compare two or more groups of data. If you look between this boxplot and the corresponding scatterplot above, you should be able to see how they ultimately represent the same data, just with different shapes.</p>
+<p>The important thing is that these are <a href="./R_boxplots_violinplots.html">easy plots to make</a> when you want to compare two or more groups of data. If you look between this boxplot and the corresponding scatterplot above, you should be able to see how they ultimately represent the same data, just with different shapes.</p>
 </section>
 <section id="the-linear-model-with-categorical-predictors" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="the-linear-model-with-categorical-predictors">The linear model with categorical predictors</h2>
@@ -1056,7 +1091,7 @@ window.Quarto = {
 </section>
 <section id="next-steps" class="level1">
 <h1>Next steps</h1>
-<p>Fortunately, the Code Tutorials are relatively concise in comparison to this reading. I have split them up a little more by topic, one for Scatterplots, one for <a href="./R_lm_fitting.html">Regression Fitting</a>, one for exploring <a href="./R_regression_to_the_mean.html">Regression to the Mean</a>, and one for Boxplots (and other plots).</p>
+<p>Fortunately, the Code Tutorials are relatively concise in comparison to this reading. I have split them up a little more by topic, one for <a href="./R_scatterplots.html">Scatterplots</a>, one for <a href="./R_lm_fitting.html">Regression Fitting</a>, one for <a href="./R_boxplots_violinplots.html">Boxplots (and other plots)</a>, and finally an optional “just for fun” deep dive into some of the data formatting I did to work with the Pearson &amp; Lee data used in this tutorial.</p>
 <p>Good luck!</p>
 
 

@@ -694,6 +694,6 @@ Make sure that you understand each of these different concepts, and review the r
 
 # Next steps
 
-Fortunately, the Code Tutorials are relatively concise in comparison to this reading. I have split them up a little more by topic, one for [Scatterplots](R_scatterplots.qmd), one for [Regression Fitting](R_lm_fitting.qmd), one for exploring [Regression to the Mean](R_regression_to_the_mean.qmd), and one for [Boxplots (and other plots)](R_boxplots_violinplots.qmd).
+Fortunately, the Code Tutorials are relatively concise in comparison to this reading. I have split them up a little more by topic, one for [Scatterplots](R_scatterplots.qmd), one for [Regression Fitting](R_lm_fitting.qmd), one for [Boxplots (and other plots)](R_boxplots_violinplots.qmd), and finally an optional "just for fun" deep dive into some of the data formatting I did to work with the Pearson & Lee data used in this tutorial.
 
 Good luck!

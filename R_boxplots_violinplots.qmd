@@ -1,6 +1,6 @@
 ---
 title: "Boxplots and Violinplots in R"
-draft: true
+draft: false
 format:
   html:
     grid:
@@ -9,15 +9,15 @@ reference-location: margin
 citation-location: margin
 ---
 
-# What's in this notebook?
+# What's in this tutorial?
 
-In this short guide, we will go over how to create a few basics plots to visualize data relationships when you have one continuous (or interval) variable, and one categorical variable.  This includes boxplots and violinplots.
+In this short guide, we will go over how to create a few basics plots to visualize data relationships when you have one continuous (or interval) variable, and one categorical variable.  This includes *boxplots* and *violin plots*.
 
 We will also use this opportunity to examine how to use the `color` and `fill` properties in `ggplot2` graphs.
 
 # Loading data and packages
 
-We only need to load the `ggplot2` package.
+We only need to load the `ggplot2` package for this tutorial.
 
 ```{r}
 library(ggplot2)
@@ -27,27 +27,31 @@ We will examine two of R's built-in data sets, `sleep` and `iris`.
 
 # Boxplots
 
-As we briefly demonstrated in the Unit 3 reading, boxplots (aka "box-and-whiskers" plots) are a useful tool for visualizing data when you have one continuous variable and one (or possibly more) categorical variable(s).
+As we briefly demonstrated in the [Unit 3 reading](regression_foundations_reading.qmd), boxplots (aka "box-and-whiskers" plots) are a useful tool for visualizing data when you have one continuous variable and one (or possibly more) categorical variable(s).
 
-A single boxplot is essentially a visualization of the quartiles of a variable. The "whiskers" (with any additional dots for "outlier" data) show the minimum and maximum values, and the "box" shows the other quartiles, where the lower edge of the box is the 25% quantile, the line in the middle of the box is the 50% quantile (aka median), and the upper edge of the box is the 75% quantile.
+A single boxplot is essentially a visualization of the *quartiles* of a variable. The "whiskers" typically show the minimum and maximum values, and the "box" shows the other quartiles, where the lower edge of the box is the 25% quantile, the line in the middle of the box is the 50% quantile (aka median), and the upper edge of the box is the 75% quantile. 
 
-In the `sleep` data, the `extra` variable is continuous, and the `group` variable is categorical. We can use a boxplot to easily compare the difference in extra sleep between the groups. In `ggplot2`, we will still use `x` and `y` coordinates, just like in a scatterplot, but instead of `geom_point`, we can use `geom_boxplot`.
+::: column-margin
+In R, if there are extreme values, those are sometimes represented as dots outside the whiskers. If you see this happening, then instead of the minimum/maximum, the length of the whisker is 1.5 times the "interquartile range" (IQR), which is the distance between the 25% and 75% quantiles (which is the length of the "box").
+:::
+
+In the `sleep` data, the `extra` variable is continuous, and the `group` variable is categorical. We can use boxplots to easily compare the difference in extra sleep between the groups, by displaying one boxplot for the values in `group 1` and another boxplot for the values in `group 2`. This is easy in `ggplot2`, because we will still use `x` and `y` coordinates, just like in a scatterplot, but instead of `geom_point`, we can use `geom_boxplot`.
 
 ```{r}
 ggplot(sleep, aes(x = group, y = extra)) + geom_boxplot()
 ```
 
-The nice thing about boxplots is that they don't require you to aggregrate your data (like computing averages to put into bar plots), and they very quickly give you a visual comparison of values that are in different categories, including some distribution information.
+The nice thing about boxplots is that they don't require you to aggregrate your data (like computing averages to put into bar plots would), and they very quickly give you a visual comparison of values that are in different categories, including some distribution information. In other words, not only do you get a quick visual on how the groups are different, you can also see how they overlap, and how they are distributed.
 
 ## Limitations
 
-However, boxplots also have a few limitations. They were actually invented by John Tukey as a technique for visualizing data *by hand*. That is, with just a pencil, some graph paper, and some numbers, you can construct a boxplot even without a computer. Because they were designed to be simple the drawback is that they convey very limited distributional information.
+However, boxplots also have a few limitations. They were actually invented by John Tukey as a technique for visualizing data *by hand*. That is, with just a pencil, some graph paper, and some numbers, you can construct a boxplot even without a computer. Because they were designed to be simple, one drawback is that they convey very limited distributional information.
 
-In other words, just as we discussed in Unit 2 that histograms and density plots gave better distributional information than just a summary of quartiles, boxplots are limited because they only plot the quartiles.
+In other words, just as we discussed in [Unit 2](univariate_distributions_reading.qmd) that histograms and density plots gave better distributional information than just a summary of quartiles, boxplots are limited because they only plot the quartiles.
 
 # Splitting density plots into groups
 
-One possible solution is to plot density plots for each group. Fortunately, `ggplot2` gives us a powerful tool for plotting superimposed density plots by different groups.
+One possible solution is to plot density plots for each group. Fortunately, `ggplot2` makes it easy to plot superimposed density plots for different groups.
 
 For example, here's a density plot of the `extra` variable in the `sleep` data:
 
@@ -55,7 +59,7 @@ For example, here's a density plot of the `extra` variable in the `sleep` data:
 ggplot(sleep, aes(extra)) + geom_density()
 ```
 
-We would like to modify this to show a different density plot for the two groups in the data, side-by-side in order to compare them. We can do that simply by assigning the color of the density plot to the `group` variable.
+We would like to modify this to show a different density plot for each of the two groups in the data, ideally side-by-side in order to compare them. We can do that simply by assigning the (line) color of the density plot to the `group` variable.
 
 ```{r}
 ggplot(sleep, aes(extra)) + geom_density(aes(color = group))
@@ -67,11 +71,13 @@ We can also use `fill` in `ggplot2` graphs, in order to change the "fill color" 
 ggplot(sleep, aes(extra)) + geom_density(aes(fill = group))
 ```
 
-And here we have another example of overplotting, since the group 2 density is "covering up" part of the group 1 density. Returning to our strategies for handling overplotting, jittering doesn't make much sense here, but changing the alpha (opacity) does:
+Using fill makes it easier to compare and distinguish the two distributions, but right now we have another example of overplotting, since the group 2 density is "covering up" part of the group 1 density. Returning to our [strategies for handling overplotting](R_scatterplots.qmd), *jittering* doesn't make much sense here, but changing the *alpha* (opacity) does:
 
 ```{r}
 ggplot(sleep, aes(extra)) + geom_density(aes(fill = group), alpha = .3)
 ```
+
+In this way, we can easily visualize and compare the two groups, with more fine-grained information about the distributions in those groups than we can get with a simple boxplot.
 
 ## Pros and cons of density plots
 
@@ -82,18 +88,17 @@ However, if you have a lot of categories that you are comparing, overlapping den
 
 # Violin plots
 
-Violin plots are an attempt to essentially combine boxplots and density plots. What they show are density plots, but they are "mirrored" back-to-back for each group, and plotted in separate positions much like boxplots. Let's see what this look like for the sleep data:
+Violin plots are an attempt to essentially combine boxplots and density plots, to try to get the advantages of both. What they show are density plots, but they are "mirrored" back-to-back for each group. This is where the "violin" term comes from, because I guess for someone who doesn't look at a lot of real violins, this mirrored density shape resembles a violin-like shape. These "violins" can then be plotted next to each other, like boxplots. Let's see what this look like for the sleep data:
 
 ```{r}
 ggplot(sleep, aes(group, extra)) + geom_violin()
 ```
 
-
-Sometimes we might still prefer boxplots for their visual simplicity, but violin plots are a good additional tool to consider when you are visualizing differences between groups.
+In short, you can think of violin plots sort of as "more fine-grained boxplots." Sometimes we might still prefer boxplots for their visual simplicity, but violin plots are a good additional tool to consider when you are visualizing differences between groups.
 
 # Re-capping and reviewing with `iris`
 
-Here we just show additional examples of these methods, using the `iris` data, which has more observations than the `sleep` data. In other words, looking at densities and violin plots when you only have 10 data points per group may be a little quetionable. There are 50 observations per Species in the iris data, which makes looking at densities a little more meaningful.
+Here we just show additional examples of these methods, using the `iris` data, which has more observations than the `sleep` data. In other words, looking at densities and violin plots when you only have 10 data points per group may be a little questionable, so let's look at a slightly larger data set. There are 50 observations per `Species` in the iris data, which makes looking at densities a little more meaningful.
 
 ## Boxplot of `iris` data
 
@@ -118,6 +123,8 @@ And finally, here's another look at the same data, this time using a violin plot
 ```{r}
 ggplot(iris, aes(Species, Petal.Width)) + geom_violin()
 ```
+
+Which of these do you like the best? In my opinion, each of these techniques has their place and purpose, and all can be useful.
 
 ## Adding color
 

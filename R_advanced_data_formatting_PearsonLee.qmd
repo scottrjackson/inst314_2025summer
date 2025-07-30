@@ -1,6 +1,6 @@
 ---
 title: "An advanced data formatting tutorial: `PearsonLee`"
-draft: true
+draft: false
 format:
   html:
     grid:
@@ -8,3 +8,226 @@ format:
 reference-location: margin
 citation-location: margin
 ---
+
+# What's in this tutorial?
+
+This is a completely optional tutorial, for people who would like to see a more in-depth example of data manipulation.
+
+In the [Unit 3 reading](regression_foundations_reading.qmd), our example data was drawn from a classic data set collected by Pearson & Lee (1896, 1903) on the heights of parents and their (adult) children. This data set was drawn from an [R package] call `HistData`, in a data frame called `PearsonLee`. However, the format of this data frame is a little unusual, so I needed to do some formatting and reshaping to get it into a more standard format.
+
+This tutorial is just a walk through of the code and techniques I used. This is completely optional, not required at all for this course, and only for your own interest/reference in case you're curious.
+
+# A first look at the data
+
+First things first, let's load and look at the data. The `HistData` package is an unusual R package in that it *only* contains data sets, no other functions or classes. It's a collection of "classic" data sets from statistics and data visualization, with documentation and references.
+
+So let's load this package (assuming you already installed it), and look at the top few rows of the `PearsonLee` data. We will also load the `dplyr` package for the data manipulation functions, but this package is part of the `tidyverse`, so if you instead load the `tidyverse` (which also loads `ggplot2`), you will have already loaded `dplyr`.
+
+```{r}
+library(HistData)
+library(dplyr) # part of the tidyverse
+head(PearsonLee)
+# ?PearsonLee # uncomment and run this to see the Help page
+```
+
+## Understanding the structure
+
+Now let's also look at the `gp` and `frequency` variables using `xtabs()`:
+
+```{r}
+xtabs(~ gp, PearsonLee)
+xtabs(~ frequency, PearsonLee)
+```
+
+And finally, we can ask, "how many different combinations of height values in the `child` and `parent` columns are there?" and, "how many combinations of these per value of `gp`"?
+
+```{r}
+max(xtabs(~ child + parent, PearsonLee))
+max(xtabs(~ child + parent + gp, PearsonLee))
+```
+
+After poking around a little and reading the documentation, we make the following observations:
+
+- Each row in the data gives the height (in inches) of a child-parent pair.
+- `gp` is a group variable that tells us what the child/parent pairing is
+  - `fs` is father-son, `md` is mother-daughter, and so on.
+- For a pair of *values*, like `child == 59.5` and `parent == 62.5`, there are at most four rows, but at most only *one* row for a given pair of values for a `gp` value.
+- The `frequency` value is in increments of 0.25, from 0.25 to 46.5.
+- This means that each row tells us:
+  - For a given pair of child-parent heights,
+  - For a given pair of child-parent relationships (father-son, etc.),
+  - How many of those pairs are in the data.
+  
+In other words, the first row (see the `head()` result above) says that there are two pairs of fathers/sons where the father is 62.5 inches tall and the son is 59.5 inches tall. I'm getting the "two pairs" from the `frequency` of 0.5, since the lowest value of `frequency` is 0.25 and all of the values are in increments of 0.25.  So we just need to multiply that `frequency` number by 4 to get integers that can represent our counts.
+
+We might wonder why the data is represented like this?  I'm not sure about the 0.25 thing, but you could easily imagine someone collecting data this way. A pair of people are measured, the person writes down the height of the child, the height of the parent, and then the identities of both ("father", "son", etc.), and then the next time a father-son pair comes in with the same values, the person just makes another tick mark count, instead of re-entering all that information again.
+
+# What are we trying to do?
+
+There's nothing "wrong" with this data. And in fact, we could run a regression using the `frequency` column to weight observations and so on and get the same results. But this is not a very common format, so I wanted to re-format the data into a more common form.
+
+The bigger point here is that you only need to bother reformatting data if you have a reason to, which means the first step is figuring out what you *want* the format to be. You need a clear idea of your target.
+
+Here's a run-down of my goals:
+
+- I just want a simple data set to demonstrate simple linear regression.
+- We know there are sex differences in height, so in order to simplify things, I'll just focus on one sex for both the parent and child. I flip a coin and decide to just look at the father-son pairs.
+- I want each row to represent one observation of a father-son pair. So if there are multiple pairs where (for example) the father is 64.5 inches tall and the son is 59.5 inches tall, I want that represented by multiple rows in the data.
+- I want a column that's called `father_height` and one called `son_height`.
+
+# Step one: filter
+
+The first step is simple, because I want to get just the data from father-son pairs.
+
+In base R, we can do that with something like the following:
+
+```{r}
+pl_men <- PearsonLee[PearsonLee$gp %in% "fs", ]
+```
+
+But just to show you another technique, the `dplyr` package provides a function called `filter()`, whose purpose is to get a subset of rows. The following does the exact same thing as above.
+
+```{r}
+pl_men <- filter(PearsonLee, gp %in% "fs")
+```
+
+In a simple case like this, there's not much advantage to one of the other method. But when things get more complex, like multiple conditions, the `filter()` method can be a little easier to use, because you don't need to retype the name of the data frame with the `$` notation over and over, and so on.
+
+But either way, this is the easy part.
+
+# Step two: figure out how to process each row
+
+The harder part is figuring out how to go from a structure where we are essentially "expanding" each row into multiple rows, depending on the value in the `frequency` column.
+
+When you encounter problems like this, a useful strategy is to try to use a "split-apply-combine" method. This means *splitting* your problem into very small chunks, figuring out what to *apply* to each of the chunks, and then *re-combining* the results back into one data frame.
+
+In this case, we basically know that we want each row to "expand" to (potentially) multiple rows. So let's start with just taking the first row of data and seeing if we can get this to work. I'll call this `test_row1`.
+
+```{r}
+test_row1 <- pl_men[1, ]
+print(test_row1)
+```
+
+With this test row, since the `frequency` is 0.5, we know we want this to "expand" to two rows, in order to represent two different father-son pairs who are 62.5 and 59.5 inches tall, respectively.  Here's one way we could do this:
+
+```{r}
+child_height <- test_row1$child
+parent_height <- test_row1$parent
+freq <- test_row1$frequency * 4
+expanded_test1 <- data.frame(child = rep(child_height, freq),
+                             parent = rep(parent_height, freq))
+print(expanded_test1)
+```
+
+Walking through the code:
+
+1. Get the height values
+2. Get the number of rows we want by multiplying the `frequency` by 4 (so 0.25 is 1, 0.5 is 2, and so on).
+3. Make a new data frame, where we make columns that are repetitions of the corresponding values.
+
+If you're unsure about any of the above functions, use the `?` to read the documentation for that function, like running `?rep` in the console to read about how the `rep()` function works. Note that when you get help like this, you leave off the parentheses, so it's `?rep`, not `?rep()`.
+
+## Turning the procedure into a function
+
+What we did above was create a small procedure where we took a single row and ended up with the "expanded" version (two rows, since the `frequency` was 0.5). In order to make this procedure easier to re-use, we can create a new function to perform this procedure.
+
+It's actually really easy to make new functions in R, which can be a powerful tool. The syntax is that you use a function that's literally called `function()`, and the arguments to `function()` are the arguments you want to give your new function. Following this, you create a block of code with curly braces (`{ }` characters), and whatever code you put inside those braces is the code of the function. To create this function, you just need to assign the recult to a variable, where the variable name is the name of your new function.
+
+In this case, we want to be able to apply the little procedure from above to each row of ourr data, so let's make a function called `expand_data()`, where the argument is just a row from the original data, and I'll call that argument `data_row`. Here's what this looks like, when we take the code from above and make a function out of it:
+
+```{r}
+expand_data <- function(data_row) {
+    child_height <- data_row$child
+    parent_height <- data_row$parent
+    freq <- data_row$frequency * 4
+    expanded_data <- data.frame(child = rep(child_height, freq),
+                                parent = rep(parent_height, freq))
+    return(expanded_data)
+}
+```
+
+At the end of the function code is a `return()` function, which is how we specify what value is the result of running this function. Running the above code *defines* the function, so now we can try it out! Let's try this out on our test row, but also on another test row, one that has a `frequency` of 1.0, so that we can make sure our new function gives us back 4 rows of "expanded" data.
+
+```{r}
+test_row2 <- pl_men[3, ]
+print(test_row2)
+```
+
+Okay, so let's test out our new function on these two test rows:
+
+```{r}
+expand_data(test_row1)
+expand_data(test_row2)
+```
+
+Looks pretty good!
+
+# Step three: performing this procedure on all rows and combining the results
+
+So at this point we know we can get what we want for any *individual* row, but we now want to do this for *all* the rows, but also put all of these expanded rows back together as one single data frame. This is where the tools in the `dplyr` package really shine.
+
+This is a two-step process.
+
+First, we need to create a "grouped" data frame. The `dplyr` package actually gives us several powerful tools for this, but in this case, we just want to "group" the `pl_men` data frame by each row, so we can use the function `rowwise()`. The result is a data frame where the data hasn't changed, but it's "prepared" so that it's ready for the next step.
+
+```{r}
+
+```
+
+The second step is to apply our new function using the special `do()` function. The result is that `do()` applies our function to each group in the data frame (and we set each *row* to be its own group with `rowwise()`), but it also puts the results all back together into a single data frame.
+
+```{r}
+pl_men_expanded <- do(pl_men, expand_data(.))
+head(pl_men_expanded)
+nrow(pl_men)
+nrow(pl_men_expanded)
+```
+
+As the `head()` and `nrow()` show, where we started with a data frame of 179 rows, once we expand all of the rows that represent repeated father-son pairs, we end up with 4,312 rows of `child` and `parent` height values.
+
+So to summarize, the process I illustrated here is:
+
+1. Figure out the code for a procedure for a single "group" in your data frame. This "group" can be a single row, as in this example, or it could be some other subsection of a data frame, depending on what you're doing.
+2. Adapt this code into a function that can be applied to each group.
+3. Use the `rowwise()` or `group_by()` functions from the `dplyr` package to created a grouped data frame from your original data.
+4. Use the `do()` function, also from `dplyr`, to apply your function to each group and then re-combine these results into a single data frame.
+
+# Final clean-up
+
+As a last step in preparing this data, I wanted to change the names of these columns, but since this data has "duplicate" rows, I also wanted to add a new column that is just an observation number, so that we don't accidentally lose track of rows later.
+
+Here's the code to do these two things:
+
+```{r}
+colnames(pl_men_expanded) <- c("son_height", "father_height")
+pl_men_expanded$observation <- 1:nrow(pl_men_expanded)
+```
+
+And just to be a little finicky, I wanted to re-arrange the column order. You can do that with the `select()` function, which you can also use to pick a subset of columns, but if you give it a vector of column names, it will give you back your data with the columns in that order.
+
+```{r}
+pl_men_expanded <- select(pl_men_expanded, c("observation", "father_height", "son_height"))
+head(pl_men_expanded)
+```
+
+And we're done!
+
+# An updated alternative to `do()`
+
+As a side-note, a double-edged sword of the `tidyverse` packages is that in part because they are so popular, they are also being actively developed and improved. That's good, because overall these functions continue to get better and better. The downside is that the `tidyverse` devs have a habit of making shiny new functions that are intended to replace older ones.
+
+This is the case with the `do()` function, which I have been happily using for years, and which still works just fine. But now when you look at the help page for `?do`, it informs you that this function has been *superceded*, meaning that the devs have developed some new toys that they think are better. They usually continue to allow people to use the older functions, so as of this writing, the code above using `do()` works just fine, but at some point, they might decide to retire `do()` entirely.
+
+So just as an illustration, I'll give you the more up-to-date code using the newer `reframe()` function below. This gets the exact same result as the line of code above that uses `do()`:
+
+```{r}
+pl_men_reframed <- reframe(pl_men, expand_data(pick(everything())))
+head(pl_men_reframed)
+nrow(pl_men_reframed)
+```
+
+I'll leave it as an exercise for the reader to decide for themselves which version they would like to use. To be fair, the `reframe()` function is more consistent with the rest of the updated family of `tidyverse` functions, so if it works for you, it's probably a better long-term choice to learn.
+
+# Recap summary
+
+Just to be clear, the topics in this tutorial are not required for anything particular in the course. That said, the ability to manipulate data and apply any function you can imagine yourself is an extremely powerful and useful tool when you need to do more than just change values in a column. The `tidyverse` packages, particularly the `dplyr` and `tidyr` packages have a lot of great tools for data wrangling, and I can highly recommend them as worth your time.

@@ -1,6 +1,6 @@
 ---
 title: "Scatterplots in R"
-draft: true
+draft: false
 format:
   html:
     grid:
@@ -37,12 +37,12 @@ library(tidyverse) # this loads ggplot2, dplyr, and others
 
 The tidyverse packages also have some nice online documentation, which includes tutorials, cheatsheets, etc:
 
-https://www.tidyverse.org/
+[https://www.tidyverse.org/](https://www.tidyverse.org/)
 
 
 ## Load the Pearson & Lee (1903) data
 
-In this tutorial, we'll look at a subset of the data from Pearson & Lee (1903), which is described in the [Unit 3 reading](regression_fitting_reading.qmd). This data is derived from the `PearsonLee` data set found in the `HistData` [package](https://cran.r-project.org/package=HistData).
+In this tutorial, we'll look at a subset of the data from Pearson & Lee (1903), which is described in the [Unit 3 reading](regression_foundations_reading.qmd). This data is derived from the `PearsonLee` data set found in the `HistData` [package](https://cran.r-project.org/package=HistData).
 
 I'll actually describe the code I used to reformat the `PearsonLee` data frame in a [separate tutorial](R_advanced_data_formatting_PearsonLee.qmd) because it demonstrates a few other tools, but for the purposes of the current tutorial, I encourage you to just download the following CSV file: 
 
@@ -65,33 +65,33 @@ The first step is just the basic scatterplot. Since we are using `ggplot2`, star
 
 Then, it's just a matter of picking the shape or "geom" that we want to plot. In `ggplot2`, the typical geom to use for scatterplots is `geom_point`.
 
-```{r}
+```{r, fig.cap = "basic scatterplot"}
 ggplot(data = pl, aes(x = father_height, y = son_height)) + geom_point()
 ```
 
 As a small aside, `x` and `y` are the default arguments of `aes`, so if we wanted to be a little lazier, the following code does the same as above:
 
-```{r}
+```{r, fig.cap = "same basic scatterplot, illustrating 'lazy' change in code"}
 ggplot(pl, aes(father_height, son_height)) + geom_point()
 ```
 
 ## Jittered scatterplots
 
-In the [reading](regression_fitting_reading.qmd), we discussed *overplotting*, and how one strategy to get around overplotting is to "jitter" the points by adding small random values to the values we're plotting.  There are a few ways to do this in `ggplot2`. The simplest one is to replace `geom_point()` with `geom_jitter()`.
+In the [reading](regression_foundations_reading.qmd), we discussed *overplotting*, and how one strategy to get around overplotting is to "jitter" the points by adding small random values to the values we're plotting.  There are a few ways to do this in `ggplot2`. The simplest one is to replace `geom_point()` with `geom_jitter()`.
 
-```{r}
+```{r, fig.cap = "default jittered scatterplot"}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter()
 ```
 
 Another way to do the same thing is by manipulating the `position` argument of `geom_point()`:
 
-```{r}
+```{r, fig.cap = "default jittered scatterplot, different way of coding"}
 ggplot(pl, aes(father_height, son_height)) + geom_point(position = "jitter")
 ```
 
 Note that because `jitter` means adding *random* noise, the plot will look slightly different each time you generate the plot. So if you would like to produce a *consistent* plot, you will need to use `set.seed()`, the standard R function used to set a consistent "state" in R's pseudo-random number generator. For example, the following plot will always look the same, because of `set.seed()`:
 
-```{r}
+```{r, fig.cap = "jittering with a fixed random seed gets a consistent result"}
 set.seed(183)
 ggplot(pl, aes(father_height, son_height)) + geom_jitter()
 ```
@@ -102,7 +102,7 @@ A final note about `geom_jitter`: controlling the *degree* of jitter. The docume
 
 So for example, we could decide to jitter all of the points by up to 2 units (2 inches in the present data) horizontally and vertically using:
 
-```{r}
+```{r, fig.cap = "jittering farther away"}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter(height = 2, width = 2)
 ```
 
@@ -116,7 +116,7 @@ Another useful strategy for dealing with overplotting is to adjust the transpare
 
 In practice, I usually start with an alpha around 0.5 (since it's halfway) and then play around with the values from there. In the case of this data, since there's so much overplotting, a lower value is probably a little better. But I encourage you to adjust the alpha value up and down in the code below to see how it changes.
 
-```{r}
+```{r, fig.cap = "combining jitter and transparency"}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter(alpha = 0.2)
 ```
 
@@ -128,19 +128,19 @@ For our purposes here, it turns out that an "empty circle" shape is actually an 
 
 For example, the following is a jittered set of points that use open circles. Compare this to the graph above that used transparency (alpha).
 
-```{r}
+```{r, fig.cap = "combining jitter and an 'empty circle' shape"}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter(shape = 1)
 ```
 
 Since the circles are unfilled, it inherently adds an element of "transparency", where points that overlap slightly are more distinguishable, and less likely to look like a shapeless "blob." This effect is improved even further with lowering alpha as well:
 
-```{r}
+```{r, fig.cap = "combining jitter, empty circle shape, and transparency"}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter(shape = 1, alpha = .2)
 ```
 
 As one final improvement to this graph, we can adjust the `theme` of the graph to make the background white, so that these very light circles are easier to see. More about `theme` is discussed [in a later section below](R_scatterplots.qmd#themes).
 
-```{r}
+```{r, fig.cap = "adding a simpler backgroudn theme"}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter(shape = 1, alpha = .2) +
     theme_classic()
 ```
@@ -173,7 +173,7 @@ Looking at the head of the resulting aggregated data frame, we see that in the o
 
 ## Back to plotting: using the `size` argument
 
-So why did we go through the above aggregation? Well now we have a data frame that not only has the x's and y's we want to plot (`father_height` and `son_height` for `x` and `y` coordinates), but we have a new column that tells us *how many values* are at each of those coordinates. And when you have columns in your data, you can map those to graphical properties in `ggplot`!
+So why did we go through the above aggregation? Well now we have a data frame that not only has the $x$'s and $y$'s we want to plot (`father_height` and `son_height` for `x` and `y` coordinates), but we have a new column that tells us *how many values* are at each of those coordinates. And when you have columns in your data, you can map those to graphical properties in `ggplot`!
 
 In this case, we can use the property of the `size` of the points we're plotting to reflect the count of how many father-son pairs are represented with that point. In the `ggplot2` package, every time we want to map something in our *data* to a *graphical property*, we need to use the `aes()` function.  The code looks like this" 
 
@@ -181,7 +181,7 @@ In this case, we can use the property of the `size` of the points we're plotting
 Note: I put the geom_point on a different line, which is fine because the + at the end of the first line is a signal to R that the code continues on the second line. This is a useful trick to make your code easier to read, especially when you have long, complex `ggplot` lines.
 :::
 
-```{r}
+```{r, fig.cap = "enhanced scatterplot with dot size representing data counts"}
 ggplot(pl_counts, aes(father_height, son_height)) + 
   geom_point(aes(size = count))
 ```
@@ -200,7 +200,7 @@ For example, let's start by plotting a simple 1-to-1 line, which has a slope of 
 
 The `ggplot2` package has a geom called `geom_abline` for this, and we can simply add it as a layer to our existing plot:
 
-```{r}
+```{r, fig.cap = "plot with a slope 1 line"}
 ggplot(pl_counts, aes(father_height, son_height)) + 
   geom_point(aes(size = count)) +
   geom_abline(intercept = 0, slope = 1)
@@ -208,7 +208,7 @@ ggplot(pl_counts, aes(father_height, son_height)) +
 
 This is good, but a black line over black dots might be a little hard to see, so let's make it a dashed blue line by changing the `color` and `linetype` properties of the line:
 
-```{r}
+```{r, fig.cap = "plot with a dashed blue slope 1 line"}
 ggplot(pl_counts, aes(father_height, son_height)) + 
   geom_point(aes(size = count)) +
   geom_abline(intercept = 0, slope = 1, color = "blue", linetype = 2)
@@ -224,9 +224,9 @@ regression_intercept <- pl_regression$coefficients[1]
 regression_slope <- pl_regression$coefficients[2]
 ```
 
-Now we can use these to add the regression line, which I will make red to help it stand out:
+Now we can use these to add the regression line, which I will make red to help it stand out (the blue line is still a line with a slope of 1 and an intercept of 0, for reference):
 
-```{r}
+```{r, fig.cap = "plot with regression line (red) and slope 1 line (blue)"}
 ggplot(pl_counts, aes(father_height, son_height)) + 
   geom_point(aes(size = count)) +
   geom_abline(intercept = 0, slope = 1, color = "blue", linetype = 2) +
@@ -237,9 +237,13 @@ ggplot(pl_counts, aes(father_height, son_height)) +
 
 ## Using the `geom_smooth` function
 
-Being able to add any line you want is very useful, especially when you know how to get the slopes and intercepts. However, there's also a geom called `geom_smooth` which can essentially calculate the regression line for you (as well as other smoothing options, if you want).
+Being able to add any line you want is very useful, especially when you know how to get the slopes and intercepts. However, there's also a geom called `geom_smooth()` which can essentially calculate the regression line for you (as well as other smoothing options, if you want).
 
-First I'll show you the basic use of this geom, but this is not exactly correct for the current data, which I'll explain next. And I'll leave off our other lines for now. (the `se = FALSE` option removes a shaded confidence interval, since we haven't discussed what that means yet)
+First I'll show you the basic use of this geom, but this is not exactly correct for the current data, which I'll explain next. And I'll leave off our other lines for now.
+
+::: column-margin
+The `se = FALSE` option removes a shaded confidence interval, since we haven't discussed what that means in the course yet.
+:::
 
 ```{r}
 ggplot(pl_counts, aes(father_height, son_height)) + 
@@ -247,9 +251,13 @@ ggplot(pl_counts, aes(father_height, son_height)) +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-Now, the issue here is that we're adding this line to the aggregated data, because that's what we're plotting. So the regression result we see isn't quite accurate, because it acts as if we only have one data point at each of the rows. But we know that the points in the middle have a lot more data than the outer points, and this make a difference in the regression result.
+This is a lot more convenient than going through the steps of manually fitting a model, getting the slope and intercept, and using those to "manually" plot the line! So when you are exploring data using a scatterplot, `geom_smooth()` is a convenient way to look at what the regression line would look like.
 
-Luckily, we can have our cake and eat it, too, because we can use a `weights` option to essentially have our `count` variable weight those values in the regression, which gives us the same result as if we had done the regression on the unaggregated data. I will plot the "wrong" regression line in red, and the corrected weighted regression line in blue:
+However, there's a problem with this specific case. The issue is that we're adding this line to the *aggregated* data, because that's what we're plotting. What this means is that the regression line plotted by `geom_smooth` isn't quite accurate, because it acts as if we only have one data point at each of the positions. In other words, since we aggregated the data and are only telling `ggplot` about our `x` and `y` variables, it doesn't "know" that there are more real data points at some coordinates than others. But *we* know that there is more data in the middile of the distributions, so our regression line should ideally take that into account.
+
+Luckily, we can have our cake and eat it, too, because we have the count of data points in a variable (`count`) in our data frame, so we can give this information to `ggplot`. Specifically, the `geom_smooth` function has a `weights` aesthetic[^aesthetic] to essentially have our `count` variable weight those values in the regression. This gives us the same result as if we had done the regression on the unaggregated data. I will plot the "wrong" regression line in red (i.e., the one that ignores our data counts), and the corrected weighted regression line in blue, so you can see the difference:
+
+[^aesthetic]: Recall that "aesthetic" is the jargon for a dimension of our data that we connect to the graph, which always needs to be inside an `aes()` function in our `ggplot` code.
 
 ```{r}
 ggplot(pl_counts, aes(father_height, son_height)) + 
@@ -258,18 +266,18 @@ ggplot(pl_counts, aes(father_height, son_height)) +
   geom_smooth(aes(weight = count), method = "lm", se = FALSE, color = "blue")
 ```
 
-It turns out not to be a huge difference in this example, but you can see that the blue line is a little less steep than the red line. The point here is that if you want to plot regression lines, you can always fall back on using `geom_abline` once you get the actual slope and intercept parameters, but if you want to use `ggplot2` to add regression lines, `geom_smooth` can be convenient. You just need to think about it a bit to make sure it's producing the line you meant for it to.
+It turns out not to be a huge difference in this example, but you can see that the blue line is a little less steep than the red line. The point here is that if you want to plot regression lines, `geom_smooth` with the `method = "lm"` option is very convenient, but when in doubt, you can always fall back on figuring out the actual slope and intercept parameters and plotting those with `geom_abline`. As always, carefully thinking about what you're doing should be part of your process!
 
 
 # Other options and tips
 
-You may have noticed that the plots in the reading sometimes look a little different than the plots you create. One of the nice things about the `ggplot2` package is that the default appearance of graphs looks pretty good, but you also have a lot of control over the final appearance if you want to tweak things.
+You may have noticed that the plots in the readings sometimes look a little different than the plots you create. One of the nice things about the `ggplot2` package is that the default appearance of graphs looks pretty good, but you also have a lot of control over the final appearance if you want to tweak things.
 
 The downside is that it can get *very* fiddly to make certain kinds of adjustments. It's beyond the scope of this course to do a deep-dive into all the various options, but I'll show you a few of the easier things you can do here.
 
 ## Themes
 
-First, there's a powerful *theme* system in `ggplot2`, which is a way of sort of compiling various options into a unified theme. Luckily, `ggplot2` comes with a few nice themes built in to choose from.  Just compare the following:
+First, there's a powerful *theme* system in `ggplot2`, which is a way of compiling various options into a unified theme. Luckily, `ggplot2` comes with a few nice themes built in to choose from.  Just compare the following:
 
 ```{r}
 ggplot(pl, aes(father_height, son_height)) + geom_jitter(alpha = .1) + 
@@ -289,7 +297,7 @@ ggplot(pl, aes(father_height, son_height)) + geom_jitter(alpha = .1) +
 
 Sometimes just picking a good theme can go a long way towards making your plots more readable or enjoyable to look at.
 
-More generally, there is a `theme` function that will also allow you to override any of the settings in these built-in themes. If you ever find yourself wanting to tweak any parts of the plot that aren't the data themselves, it's often the case that it's a setting or parameter that you can tweak inside `theme`. I have the following page bookmarked and I frequently refer to it myself whenever I am trying to fiddle with some of the nitty-gritty of a plot:
+In addition to these "built-in" themes, there is a general `theme` function that will allow you to override any of the settings in the built-in themes. If you ever find yourself wanting to tweak any parts of the plot that aren't connected to the data themselves, it's often the case that it's a setting or parameter that you can tweak inside `theme`. I have the following page bookmarked and I frequently refer to it myself whenever I am trying to fiddle with some of the nitty-gritty of a plot:
 
 https://ggplot2.tidyverse.org/reference/theme.html
 
@@ -297,7 +305,7 @@ https://ggplot2.tidyverse.org/reference/theme.html
 
 Another easy thing to do is to adjust the axis labels. Sometimes you find yourself wanting column names that are easy to work with in R (no spaces, lowercase, etc.), but then they are ugly to look at in a plot, because by default, `ggplot2` uses the names of the columns when it labels things like axes, legends, etc.
 
-Fortunately, it's very easy to tweak this. So for example, I like having simple column names like `father_height` and `son_height` in my data, but they are not pretty axis labels. Here's how I can adjust those, and how to add a "title" to the plot:
+Fortunately, it's very easy to tweak this. So for example, I like having simple column names like `father_height` and `son_height` in my data, but they are not pretty axis labels. Here's how you can adjust those, and how to add a "title" to the plot:
 
 ```{r}
 ggplot(pl_counts, aes(father_height, son_height)) + 
@@ -309,4 +317,4 @@ ggplot(pl_counts, aes(father_height, son_height)) +
 
 # Summary
 
-Scatterplots are a powerful tool for visualizing the relationship between two numeric (continuous or interval) variables in your data. Review the discussion of Anscombe's Quartet in the Unit 3 reading if you need any more convincing that visualizing your data is not just a "nice-to-have" step in regression analysis -- it's absolutely crucial, and should come before you bother fitting a model, because a good scatterplot may help you realize that you need to make some changes before fitting and interpreting a model!
+Scatterplots are a powerful tool for visualizing the relationship between two numeric (continuous or interval) variables in your data. Review the discussion of Anscombe's Quartet in the [Unit 3 reading](regression_foundations_reading.qmd#sidetrack-anscombes-quartet-and-the-power-of-visualization) if you need any more convincing that visualizing your data is not just a "nice-to-have" step in regression analysis -- it's absolutely crucial. This process should come before you even bother fitting a model, because a good scatterplot may help you realize that fitting a model may be a waste of time or even misleading without some additional work (like transformation, etc.).
