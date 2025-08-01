@@ -46,7 +46,7 @@ In this tutorial, we'll look at a subset of the data from Pearson & Lee (1903), 
 
 I'll actually describe the code I used to reformat the `PearsonLee` data frame in a [separate tutorial](R_advanced_data_formatting_PearsonLee.qmd) because it demonstrates a few other tools, but for the purposes of the current tutorial, I encourage you to just download the following CSV file: 
 
-> [https://scottrjackson.githib.io/inst314_summer/FatherSonHeights.csv](https://scottrjackson.githib.io/inst314_summer/FatherSonHeights.csv)
+> [https://scottrjackson.github.io/inst314_2025summer/FatherSonHeights.csv](https://scottrjackson.github.io/inst314_2025summer/FatherSonHeights.csv)
 
 I'm naming the variable `pl` to stand for Pearson & Lee.
 
