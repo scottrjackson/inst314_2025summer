@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: docs
+  resources: 
+    - FatherSonHeights.csv
+
 
 website:
   title: "INST 314 (Summer 2025)"

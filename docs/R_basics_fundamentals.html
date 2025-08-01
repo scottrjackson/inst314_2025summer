@@ -702,8 +702,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] -0.28950180  0.20157685 -0.25199324  0.24247307 -0.02314493 -0.44441475
- [7] -0.44818702 -0.95201147 -0.92686971  2.37562383</code></pre>
+<pre><code> [1]  1.7561196 -1.8994044  0.4901683 -0.1002362  0.4727712 -1.3392644
+ [7] -2.5241774 -1.7488271  2.1906417 -0.7873954</code></pre>
 </div>
 </div>
 <p>Every time you run it, you’ll get different numbers. Now try deleting the 10 and see what happens (see below). It will give you an error and tell you that an argument is missing.</p>
@@ -715,8 +715,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] -1.2511848  1.4032077 -1.3966393  0.5680623  0.7978842 -1.2305867
- [7]  1.5807342  0.6746925  0.8572946 -0.4522953</code></pre>
+<pre><code> [1]  0.7471020 -1.5143238  1.4131576 -0.3066486 -0.5882811  1.8476379
+ [7] -0.9998469 -0.7682525  0.1332250 -0.3179768</code></pre>
 </div>
 </div>
 <p>The syntax here is that you put the name of the argument first, followed by a <code>=</code> symbol, followed by a value, and spaces are optional. Note that when we are assigning values to arguments, we use the <code>=</code> sign, not the “assignment arrow” <code>&lt;-</code> symbol. In this example, we are just being very explicit about which argument we want that <code>10</code> to go to.</p>
@@ -724,11 +724,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 109.33737  92.39042 112.04798  99.23602  90.92473</code></pre>
+<pre><code>[1]  92.13487 104.65270  87.98345  98.17265  88.81884</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]  95.85718 112.41924 102.49428  96.47612 115.72291</code></pre>
+<pre><code>[1]  88.51709 127.96825 104.34378 124.80455 117.16782</code></pre>
 </div>
 </div>
 </section>
@@ -742,23 +742,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] -0.12622803 -1.59361063 -0.56313452  1.58464883 -0.58477369  0.58679969
- [7]  0.07005581 -0.87104100  0.56194216  0.44960226</code></pre>
+<pre><code> [1] -1.1960129 -0.1837699 -1.3230335  1.2177388 -0.7364707  1.2658818
+ [7]  0.3335834  0.4492385  1.2599962  0.2748692</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 28.54616 28.24194 28.99783 30.33647 28.70414 27.62682 29.51165 29.93998
- [9] 29.33105 30.39175</code></pre>
+<pre><code> [1] 31.13479 30.79581 28.71405 29.37258 30.17530 29.44341 31.91844 31.00303
+ [9] 30.21235 28.67445</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  -9.520026  -5.290822   7.106298   9.981702 -24.394339  -6.735897
- [7]  -7.714032   8.786160  -2.450225   1.744525</code></pre>
+<pre><code> [1]   6.463436  -4.317394 -24.440111  22.335538  -9.588657   8.124740
+ [7]  -3.808175   4.665610  -3.596303   3.618229</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 36.69367 32.72950 25.51863 17.52463 34.80584 35.20262 36.54990 30.99338
- [9] 36.51316 28.87670</code></pre>
+<pre><code> [1] 46.44764 37.07250 35.01232 12.18603 32.21334 20.12300 41.26347 23.97944
+ [9] 13.72606 23.83968</code></pre>
 </div>
 </div>
 <p>You should see different patterns according to the different arguments, which you can see as changing the “settings” of the function. Recall that the default of <code>mean</code> is 0 and the default of <code>sd</code> is 1.If you don’t notice any differences, edit the values to be larger to make more extreme patterns.</p>
