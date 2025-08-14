@@ -1,0 +1,276 @@
+---
+title: "Unit 3 Concepts Reading: Examining Errors"
+draft: false
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+```{r, echo=FALSE, message=FALSE}
+# loading packages and formatting classic data
+library(tidyverse)
+library(HistData)
+pl_men <- filter(PearsonLee, gp %in% "fs")
+
+expand_data <- function(pl_row) {
+    child <- pl_row$child
+    parent <- pl_row$parent
+    freq <- pl_row$frequency * 4
+    expanded_data <- data.frame(child = rep(child, freq),
+                                parent = rep(parent, freq))
+    return(expanded_data)
+}
+
+pl_men_obs <- select(pl_men, child, parent, frequency) %>% rowwise() %>%
+    do(expand_data(.))
+
+colnames(pl_men_obs) <- c("son_height", "father_height")
+pl_men_obs$observation <- 1:nrow(pl_men_obs)
+pl_men_obs <- select(pl_men_obs, c("observation", "father_height", "son_height"))
+
+pl_men_counted <- pl_men_obs %>% group_by(son_height, father_height) %>%
+    summarize(count = n()) %>% ungroup()
+```
+
+
+# What's in this document?
+
+In Unit 3, we introduced the *linear model* as a way of analyzing relationships between variables. We learned how to fit models and how to understand and interpret the parameters of the model, namely the *intercept* and the *slope*.
+
+The main goal of the present document is to go the next step to discuss how we can start thinking about whether our model is a *good* model or not, by thinking about the *patterns of errors* that our model might be making.
+
+I will call attention to key terminology with margin notes. I will also ramble about side thoughts in margin notes as well. Sometimes the margin notes will be numbered,[^sidenote] like footnotes that connect to a specific part of the main text.  Sometimes they're unnumbered, just hanging out whenever you feel like reading them.
+
+::: column-margin
+This is a margin note.
+:::
+
+[^sidenote]: This is a numbered side-note.
+
+Interspersed in the text below are some Knowledge Checks for quizzing yourself. I encourage you to attempt to answer these as you encounter them, to help force yourself to process and understand the material more thorougly. After working through this entire page, make sure you answer these questions in the Unit 4 Knowledge Check Quiz on ELMS. I recommend writing your answers down in notes as you work through this page, and then just referring to your notes to review and provide answers when you take the quiz on ELMS. This is built-in way for you to review the material as you go.
+
+If you have questions, reach out on the course Discord, and/or come to an Open Discussion Zoom session.
+
+Happy reading!
+
+# What makes a model good?
+
+In Unit 3, I made the claim that the *linear model* is a useful model for understanding relationships in our data. Let's take a step back and think about this. Recall that the point of a *model* is to provide us a (relatively) simple description of our data that we can inspect, use to make predictions, and so on. Once you wrap your head around the linear model, I think we can agree that it's a fairly simple model, since it just has two parameters, the *intercept* and the *slope* of the regression line.[^regressionline] Well, simple is nice, but is it actually a *good* model?
+
+[^regressionline]: And recall that the *regression line* is the line that gives us the simple "shape" of the relationship. It tells us as one variable increases, the other increases or decreases, and the slope tells us how steep the increase/decrease is.
+
+This raises an important question: how can we judge if a model is good? What if we have two different models and we would like to compare them? Can we quantify how good a model is? The good news is that yes, there are methods for assessing and quantifying just how good a model is. The key concept that we will use to explore assessing models is the concept of *errors*.
+
+# Residuals
+
+First, a bit of terminology. We have been talking about *errors*, and our definition is:
+
+> **Error (also Residual)**: the difference between a predicted value and an actual observed value
+
+The whole idea of the Ordinary Least Squares (OLS) algorithm is that the best-fitting regression line is the line that minimizes the (squared) errors. 
+
+However, we are going to pivot to using the term *residual* to mean the same thing as *error*. The reason for this pivot is that the term *residual* is a little more common when we talk about regression, and it's the word that R uses in many of its functions and objects, so if we get used to talking about *residuals*, that will help us stay on track. The point is that it has the exact same definition as above, and is synonymous with *error*, at least in the way we have been using the terms.
+
+::: column-margin
+Just a reminder that terminology is one of the challenging things about statistics, but that it's worth the time to get it right. One of the annoying truths is that some terminology (like *error*, *normal*, *uniform*, etc.) uses words that at least in English have common meanings, but the way they are used in statistics is very specific and technical. So we need to be careful and precise when we are using those kinds of terms. But also, you will find that the same statistical concept may have multiple different terms, used by different people. So whenever you are reading, writing, or talking about statistics, just take extra care to track exactly how the terms are being used.
+:::
+
+# Residuals as Unexplained Variance
+
+Along with this terminological pivot, we will also make a conceptual pivot. When we talked before about errors/residuals, we were focused on each data point, because that's how they're calculated. You take the $y$ value that your model predicts for a specific data point, and you subtract (take the difference of) the $y$ value that you actually observed, and that's a residual.
+
+But now it's time for us to think about the overall *pattern* of residuals as a whole. What do they mean?
+
+One important way to think about residuals is that they represent the *unexplained* part of the variation in our $y$ variable. Let's unpack that a bit. When we look at our variables, we know that they vary a lot (otherwise they'd be constants!), and we can look at the variation with tools like histograms. But what we are usually interested in is trying to *explain* that variation. Why are some people taller than others? Why are some songs streamed more than others? Why do some animals have bigger brains? Why do some people have higher salaries than others?
+
+Some of these questions may have very deep answers that require a lot of knowledge about topics like biology and behavior. But in statistics, we again use a term in a slightly different way, so when we talk about *explaining* variation in statistics, we are talking about using some variables to predict the variation in other variables. In this statistical sense, knowing the heights of fathers helps *explain* some of the variation in the heights of sons. 
+
+To put this another way, we can look at the heights of sons and ask "can we predict some of this variation?", and the answer is "yes, the height of the father predicts or *explains* some of the variation in the heights of sons, because the taller the father is, the taller (on average) the son is."
+
+But as we've discussed before, predictions aren't perfect! So where we can talk about a model explaining some variation (or more technically, *variance*), we can also talk about what's left over, what's left to explain. In a word: what's left to explain is represented in the *residuals*. That is, we can think of residuals as the part of the variation that our model still doesn't explain. The model might be better than sheer guesses, but it's not perfect, and the residuals represent the leftover variance that we still need to explain.
+
+That's where the term *residual* comes from, referring to the "leftover" or "remaining" variance that our model still doesn't explain.
+
+# Adding residual variance to the model
+
+Before we get into exploring residuals, let's talk about where it belongs in the linear model. Recall our linear equation from Unit 3:
+
+> $y = \alpha + \beta{}x$
+
+This has the following parts:
+
+- $y$ is the response variable, the variable we are trying to predict
+- $x$ is the predictor variable, the variable we are using make predictions about $y$
+- $\alpha$ is what we call the *intercept* parameter, that gives us a kind of "overall" adjustment, or the value of $y$ when $x$ is zero
+- $\beta$ is the *slope* parameter that tells us how steep the line is (larger absolute values are steeper) and whether the line is going up or down (positive numbers mean the line goes up to the right, negative numbers mean the line goes down to the right)
+
+But where are the residuals? Well it turns out that this is not exactly the full model. The full model is more properly given as:
+
+> $y = \alpha + \beta{}x + \epsilon$
+
+::: column-margin
+The $\epsilon$ is a small Greek letter epsilon, but we usually just call it the "error" term, and use epsilon because it looks like "e" for "error." Some textbooks may use different symbols. Note also that there are other mathematical ways of expressing errors/residuals in a linear equation. We are picking this one because it's easy to understand and easy to implement in R.
+:::
+
+This new term represents the residuals that get added to get the final $y$ values that we actually observe. Without the $\epsilon$ component of the model, all we can do is describe a straight, perfect line. In order to also describe how much variation we have left, we  need to describe how most of the individual data points might lie above or below our line, which you might think of as the "noise" around the prediction line. To capture this in our model, we need the $\epsilon$ term -- the residuals.
+
+It's also crucial to note that in this version of the model, the $\alpha$ and $\beta$ are single-value parameters, but the $\epsilon$ is an entire distribution of values, like our $x$ and $y$ variables. That is, we have just one value for the intercept ($\alpha$) and one value for the slope of the line ($\beta$), but the errors ($\epsilon$) are a vector of values, one for each observation. The $x$ variable represents all the individual data measurements we have for the predictor(s), and the $y$ variable is all of the values of the response. But we know that most of the actual $y$ values don't lie perfectly on the regression line, and they are all displaced from the line by various amounts. To capture this, the residual term $\epsilon$ is also a bunch of individual numbers[^residdist], one for each of the $y$ values, which represent the remaining, *residual* differences between the predicted $y$ and the actual observed $y$ values.
+
+More properly, we can say that the residuals are a *distribution* of values. Each value corresponds to one of the $y$ values, representing how far off the regression line that $y$ value is. We use the $\epsilon$ term in our model to represent this distribution of residuals.
+
+# Exploring residuals is part of understanding and applying a model
+
+Now let's come back to the question we started with: how can we tell if our model is good, or better than a different model? It all comes down to the residuals. Knowing how much residual variance is still left, but also knowing something about the *pattern* of residuals is crucial for us to be able to evaluate our models.
+
+We care about the pattern of residuals not only to evaluate models in a statistical sense, but also so that we can apply them in the real world. Most of the time our models are not perfect and that's expected, but if a model makes systematic errors of a certain kind, this can lead to real problems. For example, imagine if we had a model of some kind of social service impact, but the pattern of model errors/residuals for a certain marginalized group of people were very different from those of other groups. This could mean that the model was more accurate for some groups than for other groups, unintentionally. Depending on what kinds of decisions the model was supposed to help with, the result could be serious inequity in the way services were implemented. Understanding model errors can be hugely important for real-world impact!
+
+We will look at residuals in a couple of different ways. First, we will talk about the *distribution* they should take, and how to examine that. Second, we will talk about some special statistics that are derived from the residuals that can give us more of an "overall" sense of how our model is doing.
+
+
+# Residuals should be normally-distributed
+
+After we fit a model, one of the first things we should do is check the distribution of our residuals. Why? It turns out that an important assumption of the mathematics behind simple linear regression is that the residuals should follow a normal distribution. What this means is that if residuals are *not* normally-distributed, then there may be something really off about the model, and it may be ill-advised to use the model to make predictions or draw conclusions.
+
+But why should residuals be normal? There are interesting mathematical reasons, but there's also a more intuitive reason if we recall the Central Limit Theorem (CLT) and apply a little logic. Remember that the CLT tells us that if you have a bunch of different values that are unrelated to each other and you add or average them, that sum or average will tend to follow a normal distribution. Now think about what we said above about what residuals represent. They represent the sum total of *all* of the different factors that we still haven't explained in our model. And because many or most of those unexplained factors are probably unrelated to one another, then the CLT tells us that the combination of those factors should tend towards a normal distribution.
+
+Fortunately, this is easy to check, and the [Code Tutorial on residuals](R_residuals.qmd) walks through a few different techniques, including histograms and scatterplots. The guide shows you what "well-behaved" residuals look like, and the Challenge and Practice will show you a contrast between residuals that look relatively well-behaved and ones that are clearly degenerate.
+
+The point here is that before we worry too much about what kinds of conclusions we can draw from our model, we should look carefully at our residuals in order to know whether we should even bother trying to draw conclusions, or whether we need to take the model with more than a grain of salt.
+
+
+# Measuring overall explained variance
+
+Looking at the distribution of all the individual residual values is a good idea. However, sometimes it's helpful to have a single number (or *statistic*) that acts like an overall "rating" of how good the model is. But again, these numbers should be considered carefully and not overused. That is, a single rating of "how good is this model" can be convenient, but it doesn't replace the careful examination of residuals and other techniques.
+
+With that caveat, we will look at two different statistics that have slightly different uses: $R^2$ and AIC.
+
+
+# Interpreting the $R^2$ of a model
+
+One useful statistic is referred to as $R^2$ (pronounced "R-squared").[^corr] The value of $R^2$ normally ranges between 0 and 1, though depending on how it's calculated and what type of model is being fitted, it's technically possible for it to end up as a (small) negative value, though it cannot exceed 1.
+
+We won't go into the math, but the concept is that it's the proportion of how much variance is explained by the regression line, divided by the total amount of variance there is to be explained. In other words, it's like the percentage of the total variation in the $y$ variable that is explained by our model. This is of course related to the residuals. You can imagine that if the residuals of our model are all very small, it means that there's not not much more to explain, and our model might be explaining nearly all the variance in the $y$ variable.
+
+[^corr]: If you're curious, where this term comes from is that the correlation coefficient has been historically called $r$, and the typical calculation of $R^2$ is equivalent to the square of the correlation coefficient.
+
+For example, an $R^2$ value of .9 would mean that the model is explaining about 90% of the variance, which is quite a close-fitting model.[^digits] And conversely, a model with an $R^2$ of only .15 would indicate that the model is only explaining around 15% of the variance in the $y$ variable. In short, the larger the $R^2$, the better.
+
+[^digits]: Since $R^2$ is a proportion that is bounded between 0 and 1, the convention is to only report it to 2 or 3 digits at most, and to leave off the initial 0 before the decimal.
+
+The [Code Tutorial on model fit statistics](R_modelstats.qmd) shows how $R^2$ can be easily extracted from a model object in R.
+
+
+# Limitations of $R^2$
+
+No single statistic tells you everything you need, and as useful as $R^2$ is, there are some limitations and caveats.
+
+First, while $R^2$ is easily computed and has a natural interpretation in simple linear regression, more complex models may not have a comparable statistic. Once you get beyond simple linear models, into models like hierarchical models, logistic regression, and others, there may simply not be an analogous way to calculate something that means the same thing.
+
+When considering regular linear regression, one fact about $R^2$ is that it always gets larger when you add more predictors. We are not covering multiple regression in this course, but the gist is that it's possible (and quite common) to fit models with more than one predictor. When you do this, you are often curious about which predictors are actually improving the prediction of your model, and which ones are basically "dead weight." But since $R^2$ *always* gets bigger (which means better) if you add more predictors, it's not the best way to decide if a new predictor is worth including.[^adjr2]
+
+[^adjr2]: There is also an "adjusted" $R^2$ statistic, which includes a "penalty" for more predictors. The idea is that where adding a predictor always increases regular $R^2$, it may not increase the adjusted $R^2$. However, if you want to compare models, the AIC statistic we discuss below is better than using adjusted $R^2$, and since the adjustment is based on something other than the variance terms, it means that adjusted $R^2$ doesn't quite have exactly the same interpretation. It's useful, but not strictly a better measure.
+
+Finally, there is the issue of deciding how large of an $R^2$ value is actually "good." This can vary widely depending on the field. In fields like social sciences, we are often dealing with very "noisy" data and complex phenomena with potentially very many influencing factors, so we might never really expect that our models would get into the .90 range, and we might be happy to see $R^2$ values even in the .30 or .40 range. In other fields that have more precise or concrete measurements and more controlled or simple phenomena, we might think that anything less than .50 or .60 is basically worthless. There is not a "magic number" or threshold that tells you if your model is good, but different fields might have different accepted conventions.
+
+So in short, for simple situations, especially in models where there is just one predictor, $R^2$ is a simple and intuitive statistic that can give you a good overall indication of how good your model is. But for more complex situations or models, other statistics or metrics might be more useful.
+
+
+# The Akaike Information Criterion
+
+One alternative model fit statistic that is commonly used is the so-called Akaike Information Criterion[^akaike] (AIC). AIC is based on a slightly different theoretical framework in statistics (the *likelihood* framework), so we will not go through the math, but it is strikingly simple for what it does. The idea is that in a good model, the observed data would be relatively likely to occur. But the real innovation that Akaike introduced and formulated is the idea that a model should be "penalized" for having predictors that don't actually improve prediction beyond what might be expected due to chance. The genius of AIC is that this turns out to be a relatively simple calculation, but it is surprisingly robust.
+
+[^akaike]: This was an invention of Hirotugu Akaike, from a 1974 paper. Akaike actually called it "an information criterion" (AIC), and only later people substituted his name as the "A" in the acronym.
+
+The [Code Tutorial on model fit statistics](R_modelstats.qmd) shows how to compute an AIC value from a model. It is very simple.
+
+Interpreting AIC is simple in one way, but more challenging in other ways. What's good about it is that it's very straightforward, in that **lower AIC values mean a better model**. This makes AIC very good as a way to compare two competing models, even when the models have different numbers of predictors. However, you can only compare models using AIC if they are fit on *exactly* the same response data. In other words, the $y$ variable you are trying to predict has to have the exact same values in both models. 
+
+As an example, think about a different model where we again predicted the height of sons, but we used their mothers' heights instead of their fathers'. We might be interested in comparing this model to the model where the fathers' heights were the predictor. Comparing the AIC values of these two models (where *smaller* is better) would be a good approach, but we could only use AIC to compare these models if the variable representing the heights of sons (i.e., the $y$ variable or response variable) was the exact same set of values in the two models.  For example, if you only had the mothers' heights for some of the sons and you ended up with a smaller data set, then the AIC values could not be compared.[^subset] Or if you wanted to compare a model where the son height data was log-transformed to a model where it was left untransformed, that could also not be compared with AIC, since the $y$ values have changed. But you *could* compare a model that used a log-transformed predictor to a model with an untransformed predictor. 
+
+[^subset]: But you could compare them if you also removed the same data points and re-fit the father height model, of course.
+
+The rule to remember is that AIC values can only be compared if the $y$ values in both data sets are identical. Fortunately, it is not uncommon to try to predict the same set of $y$ values with different sets of predictors, so AIC is frequently very useful.
+
+Another aspect of AIC that is more challenging to understand is that the actual values you get are sort of meaningless, or at least do not give us an intuitive interpretation. This contrasts with $R^2$, where if you get an $R^2$ of .75, you have an understanding that this is quite good, explaining around three-fourths of the variance. But if you have an AIC of 2,000 or 20,000, that doesn't necessarily tell you anything. This is because any given AIC value is a product of both the quantity of data as well as how much variation there is, the scales of the measures, and so on. So even though lower AIC values are better when you're comparing two models fit to the same data, the actual AIC value of a model doesn't say anything by itself. If you have a very large data set, you might have an AIC of 40,000 or something, even with an extremely accurate model, and you could have a terrible model of a different data set with an AIC of 600. This is why you can only compare AIC values of models fit to the same data.
+
+One aspect of this that also misleads people is that you shouldn't pay much attention to the magnitude of the *difference* in AIC, either. For example, you could have one model with an AIC of 2,000 and another with an AIC of 2,015. All you should conclude is that the one with the lower value (2,000) is the better model. You shouldn't think to yourself, "well, it's only different by 15 out of 2,000, that can't really be very much better, can it?" That kind of thinking does not fit the mathematics because the measure, so that's an invalid way of thinking about AIC numbers.[^info] Even AIC differences that *seem* small (like 2,000 vs. 2,015) may still be important and valid to consider.
+
+[^info]: There is actually an entire sub-field of statistics dedicated to information-theoretic statistics and inference. In this paradigm, there are more systematic and detailed ways to analyze AIC comparisons, such as calculating something like "the odds that model X is a better model than model Y". If you are interested, I recommend the text by Burnham & Anderson (2002), and the `AICcmodavg` package in R. The point I am making here is that unless you get into the specifics of this kind of approach, you shouldn't make judgment calls about the relative sizes or differences of AIC values. Just stick to "lower is better." 
+
+So in short, when using AIC, just look at the ranking of which model has a lower value, and ignore the actual magnitude of the AIC values. Sometimes all you want to know is whether one model is better than another, and AIC provides a very robust way of picking the best model, even when there are different numbers of predictors and even completely different sets of predictors in the two models. As long as the models are fit on the same set of $y$ values (the values you are trying to predict), you can compare them with AIC, and this makes it a good complement to $R^2$ in your toolbox of ways to assess models.
+
+
+# Using model simulations to evaluate a model
+
+So far, we have discussed two different types of strategies to answer the question, "how good is my model?" First, we can examine residuals to see how well those fit the assumption of a normal distribution. This is one indicator of a good model. Second, we can use model fit statistics like $R^2$ and AIC to evaluate a model or compare it with alternative models. Now, we turn to a third technique, using the model to simulate data.
+
+The idea is that if we use the information in our model to generate "fake" data, but this data looks very similar to our actual real data, then our model is doing a pretty good job. Conversely, if our model generates data that is systematically very different from what real data looks like, then that might give us some clues about how to improve our model, or at least give us pause before we try to apply our model too confidently.
+
+I will explain the concept a little more here, but example code for how to actually carry out these simulations is given in the Code Tutorial on model simulations.
+
+The core of the concept goes back to our initial discussion of why we have *models* in the first place. A model is something we use to represent something in the real world, but in a simplified way. In our model of father-son height data, we are taking something very complex -- all of the biological, genetic, and environmental factors that influence someone's adult height -- and trying to model it in a simple way, as just a linear function of the father's height.
+
+It's a common saying to say that "all models are wrong, but some are useful."[^box] Another way of phrasing this is that all models are inherently simplifications of the real world, but if they help us understand the world in a way that holds up with the facts, then that is useful. We clearly know that your father's height is not the only factor in determining your own height, but if our model gives us predictions that are accurate enough for whatever purpose we have, then that is useful.
+
+[^box]: This saying is often attributed to George Box, a 20th century British statistician.
+
+So if our model is a (simplified) model of the real world, we should be able to use the model to imitate the real world in some way. In a statistical model, this means that we should be able to simulate data in a way that is "fake but realistic." It's "fake" because we are creating data with the model, not actually observing it. But if it's "realistic," that means the data we create should look similar to data we might collect in the real world. In our example of father-son heights, this means we should be able to take a set of (real or hypothetical) heights of fathers and then generate a matching set of heights of sons. Of course we can't magically recreate the son height data perfectly, but if our model is good, we should be able to create a set of son heights that looks like they could be real data.
+
+# Simulations are predictions plus residuals 
+
+You might be thinking that we've already done this, because we've already generated predictions. Aren't predictions "fake but realistic"? In a way, yes, because they represent our best guesses, which aim to minimize the error (residual) between our guess and real data. But this does not generate a realistic data set, because it "generates" a set of data that falls exactly on our regression line. And that's not realistic!
+
+Our clue is back to the new term in our linear model, the residuals term $\epsilon$. Think about what this model is actually saying:
+
+> $y = \alpha + \beta{}x + \epsilon$
+
+It's saying that the $y$ values (the value we are trying to predict or generate) is the result of our prediction (which is the $\alpha + \beta{}x$ part of the equation) plus our remaining uncertainty, the residuals.
+
+What this means is that in order to simulate a realistic $y$, we need to add variability to our predictions.
+
+
+# Residual mean and residual standard error
+
+The question now is how we actually add variability in the right way. Part of the answer is what we already discussed, that our model assumes that residuals are normally distributed. So all we really need to do is to generate a set of normally-distributed residuals. We know how to do this, and any decent statistical software will let us generate numbers from a normal distribution. The catch is that we need to know how to specify the normal distribution, namely we need to know the two parameters of the distribution: the mean and the standard deviation.
+
+The mean is the easy part, because we assume that the mean is zero. It *must* be zero, based on the definition of residuals! If this is not clear to you, think about what residuals are. They are how much our "best guess" prediction is off from the observed value. The way that linear regression works is that we draw a line through the "middle" of the data, so residuals are going to be both positive and negative, averaging around zero. Another way to think about it is that the intercept term has already defined the "zero point" (the value of $y$ when $x$ is zero), and if our residuals had a mean other than zero, it would indicate that the data tended to be off by that much (it would be *biased*), but this is what the intercept already tells us.[^intercept] So long story short, we know the mean of our residuals must be zero, based on the definition of the linear model and how the regression line is determined.
+
+[^intercept]: This actually sets up an alternative way to fit the model, which is legitimate, but it's rarely used. If you fit a model without an intercept, then you end up needing to estimate the mean of the residuals instead, but that turns out to have exactly the value of the intercept if you had fit a regular model. Exploring and verifying this is left as an exercise for the reader.
+
+What about the standard deviation? One possibility is that you could examine the model and literally just take the standard deviation of the observed residuals. This is not a bad concept, but it turns out to not be quite right. In fact, it's *biased*[^biasterm]. The bias is that since we are examining a finite data set (a *sample*), if we only took the standard deviation of the residuals we actually saw, we are very likely *underestimating* how much variability there would be if we sampled additional data. If you think about it, it's the same reason we don't use the mean of the observed residuals. It won't be exactly zero, because we have a finite data set. But we know mathematically that it should be zero. In the case of the residual variance, we know mathematically that the variance of the residual is likely to be larger than whatever it is that we observed in our data.
+
+[^biasterm]: The word *bias* is yet another technical term that looks like a common word in English. They are related, of course, but the statistical term is a bit more precise, meaning that some statistical estimate is consistently wrong in one direction.
+
+Fortunately there a standard "correction" that can be applied.[^rmsecorrection] It essentially changes the denominator in the equation so that we get an estimated standard deviation slightly larger than our observed standard deviation of residuals. The result is usually called the *residual standard error*. Fortunately, this value is easy to obtain from a model object in R, and the [Code Tutorial for model simulations](R_modelsimulations.qmd) shows you how to do this.
+
+[^rmsecorrection]: The math is basically the equivalent of changing the denominator when calculating the average (squared) error. As an example, if you calculated a literal average value, that's the same as summing the values and then dividing by the number of values. Standard deviations are already slightly "corrected" because they divide by one less than the number of values (N - 1) instead of all of the values (N). For the residual standard error, you actually subtract the number of parameters, so it's (N - k). In a simple regression with just the intercept and one predictor, k = 2. The good news is that you don't have to make these calculations by hand.
+
+
+# Generating simulations
+
+Armed with these parameter values -- a mean of zero and a standard deviation from the *residual standard error* of the model -- we can generate our "fake" residuals from a normal distribution. We need a different random number for each of the $y$ values we are trying to generate, because that's what residuals are, a point-by-point adjustment to the $y$ values.
+
+The only thing we have left to plug in is the predictor ($x$) values. We have a few options here. We can make these values up as well, by pulling from some other distribution based on what we expect $x$ values to look like. In our father-son data, we could generate more random numbers using the mean and standard deviation of the father data we had, or just make up a different set of numbers for a different set of hypothetical fathers. The other option is to use real data, our actual observed $x$ values (e.g., the actual father height data we have).
+
+There are reasons why either of these approaches could be useful. For example, you might be interested in simulating data for a hypothetical situation that is different from your original data, like from a country where average heights tend to be higher or lower. But our original purpose here is to examine our model and see if our "fake but realistic" simulations actually look like our real data, as a way to examine and assess our model. In this case, it makes the most sense to use our real $x$ data to generate simulated $y$ data, because it will make it easier to compare our simulated $y$ values to our actual $y$ values.
+
+So in summary, all we need to simulate realistic data with our model is to add predictions plus residuals. We can easily generate predictions with the "linear" part of our model, for each of the $x$ values we have, and we can easily generate residuals by getting random numbers from a normal distribution with a mean of zero and a standard deviation equal to the residual standard error of our model. Then we literally just add the residuals to the predictions, and we have our simulated $y$ values.
+
+Finally, we can create $x$-$y$ scatterplots of both our real data and our simulations, and we can quite literally see how close the overall patterns look. Again, the [Code Tutorial for model simulations](R_modelsimulations.qmd) takes you through this process in R.
+
+
+# Summary and recap
+
+In this unit, we reviewed three major techniques for exploring a model and assessing whether it's a "good" model:
+
+1. Examining residuals, which we expect to be normally-distributed
+2. Calculating model-fit statistics such a $R^2$ and AIC, which give more of an "overall rating" of how well the model is doing.
+3. Simulating "fake but realistic" data based on the model, and comparing it to the pattern of data we actually observed.
+
+What you can learn from these techniques is whether your model seems to be operating as intended. Is it doing a reasonable job of describing the data? Or does it seem to be biased or faulty in a way that we shouldn't trust? Finding things "wrong" with a model can actually be a very helpful step, because it may help indicate what you can do to improve the model, or it may help you pick from different candidate models.
+
+Once we take steps like these to check that we can actually *trust* the model, then we can turn to the topic of the next and final Unit in this course, drawing conclusions and making inferences about our data based on the model results.
+

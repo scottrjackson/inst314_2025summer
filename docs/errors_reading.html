@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Unit 3 Concepts Reading: Examining Errors – INST 314 (Summer 2025)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5f8498b817ae5b2cb3a7a87727a6ad5f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-2c7af7b2a4cbf6e016b7c3feffc32b4a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">INST 314 (Summer 2025)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./errors_reading.html">Unit 4: Examining Errors and Evaluating Models</a></li><li class="breadcrumb-item"><a href="./errors_reading.html">Concepts Reading: errors in regression models</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installing_R_RStudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing R and RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 1: Starting with the Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_basics_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: some basic data concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_fundamentals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vectors: a basic building block of data in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Frames: the most useful data structure in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 2: Univariate Distributions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./univariate_distributions_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_basics_packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_univariate_distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating, visualizing, and exploring univariate distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applying transformations</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 3: Fitting Regression Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regression_foundations_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: linear regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_scatterplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing relationships with scatterplots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_lm_fitting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fitting linear models with the <code>lm()</code> function</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_boxplots_violinplots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing differences with boxplots and violinplots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_advanced_data_formatting_PearsonLee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Example of some advanced data formatting (optional)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 4: Examining Errors and Evaluating Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./errors_reading.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Concepts Reading: errors in regression models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_residuals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examining model residuals in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_modelsimulations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating data from a model in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_modelstats.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extracting model fit statistics in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-in-this-document" id="toc-whats-in-this-document" class="nav-link active" data-scroll-target="#whats-in-this-document">What’s in this document?</a></li>
+  <li><a href="#what-makes-a-model-good" id="toc-what-makes-a-model-good" class="nav-link" data-scroll-target="#what-makes-a-model-good">What makes a model good?</a></li>
+  <li><a href="#residuals" id="toc-residuals" class="nav-link" data-scroll-target="#residuals">Residuals</a></li>
+  <li><a href="#residuals-as-unexplained-variance" id="toc-residuals-as-unexplained-variance" class="nav-link" data-scroll-target="#residuals-as-unexplained-variance">Residuals as Unexplained Variance</a></li>
+  <li><a href="#adding-residual-variance-to-the-model" id="toc-adding-residual-variance-to-the-model" class="nav-link" data-scroll-target="#adding-residual-variance-to-the-model">Adding residual variance to the model</a></li>
+  <li><a href="#exploring-residuals-is-part-of-understanding-and-applying-a-model" id="toc-exploring-residuals-is-part-of-understanding-and-applying-a-model" class="nav-link" data-scroll-target="#exploring-residuals-is-part-of-understanding-and-applying-a-model">Exploring residuals is part of understanding and applying a model</a></li>
+  <li><a href="#residuals-should-be-normally-distributed" id="toc-residuals-should-be-normally-distributed" class="nav-link" data-scroll-target="#residuals-should-be-normally-distributed">Residuals should be normally-distributed</a></li>
+  <li><a href="#measuring-overall-explained-variance" id="toc-measuring-overall-explained-variance" class="nav-link" data-scroll-target="#measuring-overall-explained-variance">Measuring overall explained variance</a></li>
+  <li><a href="#interpreting-the-r2-of-a-model" id="toc-interpreting-the-r2-of-a-model" class="nav-link" data-scroll-target="#interpreting-the-r2-of-a-model">Interpreting the <span class="math inline">\(R^2\)</span> of a model</a></li>
+  <li><a href="#limitations-of-r2" id="toc-limitations-of-r2" class="nav-link" data-scroll-target="#limitations-of-r2">Limitations of <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#the-akaike-information-criterion" id="toc-the-akaike-information-criterion" class="nav-link" data-scroll-target="#the-akaike-information-criterion">The Akaike Information Criterion</a></li>
+  <li><a href="#using-model-simulations-to-evaluate-a-model" id="toc-using-model-simulations-to-evaluate-a-model" class="nav-link" data-scroll-target="#using-model-simulations-to-evaluate-a-model">Using model simulations to evaluate a model</a></li>
+  <li><a href="#simulations-are-predictions-plus-residuals" id="toc-simulations-are-predictions-plus-residuals" class="nav-link" data-scroll-target="#simulations-are-predictions-plus-residuals">Simulations are predictions plus residuals</a></li>
+  <li><a href="#residual-mean-and-residual-standard-error" id="toc-residual-mean-and-residual-standard-error" class="nav-link" data-scroll-target="#residual-mean-and-residual-standard-error">Residual mean and residual standard error</a></li>
+  <li><a href="#generating-simulations" id="toc-generating-simulations" class="nav-link" data-scroll-target="#generating-simulations">Generating simulations</a></li>
+  <li><a href="#summary-and-recap" id="toc-summary-and-recap" class="nav-link" data-scroll-target="#summary-and-recap">Summary and recap</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./errors_reading.html">Unit 4: Examining Errors and Evaluating Models</a></li><li class="breadcrumb-item"><a href="./errors_reading.html">Concepts Reading: errors in regression models</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Unit 3 Concepts Reading: Examining Errors</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="whats-in-this-document" class="level1 page-columns page-full">
+<h1>What’s in this document?</h1>
+<p>In Unit 3, we introduced the <em>linear model</em> as a way of analyzing relationships between variables. We learned how to fit models and how to understand and interpret the parameters of the model, namely the <em>intercept</em> and the <em>slope</em>.</p>
+<p>The main goal of the present document is to go the next step to discuss how we can start thinking about whether our model is a <em>good</em> model or not, by thinking about the <em>patterns of errors</em> that our model might be making.</p>
+<p>I will call attention to key terminology with margin notes. I will also ramble about side thoughts in margin notes as well. Sometimes the margin notes will be numbered,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> like footnotes that connect to a specific part of the main text. Sometimes they’re unnumbered, just hanging out whenever you feel like reading them.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This is a numbered side-note.</p></div><div class="">
+<p>This is a margin note.</p>
+</div></div>
+<p>Interspersed in the text below are some Knowledge Checks for quizzing yourself. I encourage you to attempt to answer these as you encounter them, to help force yourself to process and understand the material more thorougly. After working through this entire page, make sure you answer these questions in the Unit 4 Knowledge Check Quiz on ELMS. I recommend writing your answers down in notes as you work through this page, and then just referring to your notes to review and provide answers when you take the quiz on ELMS. This is built-in way for you to review the material as you go.</p>
+<p>If you have questions, reach out on the course Discord, and/or come to an Open Discussion Zoom session.</p>
+<p>Happy reading!</p>
+</section>
+<section id="what-makes-a-model-good" class="level1 page-columns page-full">
+<h1>What makes a model good?</h1>
+<p>In Unit 3, I made the claim that the <em>linear model</em> is a useful model for understanding relationships in our data. Let’s take a step back and think about this. Recall that the point of a <em>model</em> is to provide us a (relatively) simple description of our data that we can inspect, use to make predictions, and so on. Once you wrap your head around the linear model, I think we can agree that it’s a fairly simple model, since it just has two parameters, the <em>intercept</em> and the <em>slope</em> of the regression line.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Well, simple is nice, but is it actually a <em>good</em> model?</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;And recall that the <em>regression line</em> is the line that gives us the simple “shape” of the relationship. It tells us as one variable increases, the other increases or decreases, and the slope tells us how steep the increase/decrease is.</p></div></div><p>This raises an important question: how can we judge if a model is good? What if we have two different models and we would like to compare them? Can we quantify how good a model is? The good news is that yes, there are methods for assessing and quantifying just how good a model is. The key concept that we will use to explore assessing models is the concept of <em>errors</em>.</p>
+</section>
+<section id="residuals" class="level1 page-columns page-full">
+<h1>Residuals</h1>
+<p>First, a bit of terminology. We have been talking about <em>errors</em>, and our definition is:</p>
+<blockquote class="blockquote">
+<p><strong>Error (also Residual)</strong>: the difference between a predicted value and an actual observed value</p>
+</blockquote>
+<p>The whole idea of the Ordinary Least Squares (OLS) algorithm is that the best-fitting regression line is the line that minimizes the (squared) errors.</p>
+<p>However, we are going to pivot to using the term <em>residual</em> to mean the same thing as <em>error</em>. The reason for this pivot is that the term <em>residual</em> is a little more common when we talk about regression, and it’s the word that R uses in many of its functions and objects, so if we get used to talking about <em>residuals</em>, that will help us stay on track. The point is that it has the exact same definition as above, and is synonymous with <em>error</em>, at least in the way we have been using the terms.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Just a reminder that terminology is one of the challenging things about statistics, but that it’s worth the time to get it right. One of the annoying truths is that some terminology (like <em>error</em>, <em>normal</em>, <em>uniform</em>, etc.) uses words that at least in English have common meanings, but the way they are used in statistics is very specific and technical. So we need to be careful and precise when we are using those kinds of terms. But also, you will find that the same statistical concept may have multiple different terms, used by different people. So whenever you are reading, writing, or talking about statistics, just take extra care to track exactly how the terms are being used.</p>
+</div></div></section>
+<section id="residuals-as-unexplained-variance" class="level1">
+<h1>Residuals as Unexplained Variance</h1>
+<p>Along with this terminological pivot, we will also make a conceptual pivot. When we talked before about errors/residuals, we were focused on each data point, because that’s how they’re calculated. You take the <span class="math inline">\(y\)</span> value that your model predicts for a specific data point, and you subtract (take the difference of) the <span class="math inline">\(y\)</span> value that you actually observed, and that’s a residual.</p>
+<p>But now it’s time for us to think about the overall <em>pattern</em> of residuals as a whole. What do they mean?</p>
+<p>One important way to think about residuals is that they represent the <em>unexplained</em> part of the variation in our <span class="math inline">\(y\)</span> variable. Let’s unpack that a bit. When we look at our variables, we know that they vary a lot (otherwise they’d be constants!), and we can look at the variation with tools like histograms. But what we are usually interested in is trying to <em>explain</em> that variation. Why are some people taller than others? Why are some songs streamed more than others? Why do some animals have bigger brains? Why do some people have higher salaries than others?</p>
+<p>Some of these questions may have very deep answers that require a lot of knowledge about topics like biology and behavior. But in statistics, we again use a term in a slightly different way, so when we talk about <em>explaining</em> variation in statistics, we are talking about using some variables to predict the variation in other variables. In this statistical sense, knowing the heights of fathers helps <em>explain</em> some of the variation in the heights of sons.</p>
+<p>To put this another way, we can look at the heights of sons and ask “can we predict some of this variation?”, and the answer is “yes, the height of the father predicts or <em>explains</em> some of the variation in the heights of sons, because the taller the father is, the taller (on average) the son is.”</p>
+<p>But as we’ve discussed before, predictions aren’t perfect! So where we can talk about a model explaining some variation (or more technically, <em>variance</em>), we can also talk about what’s left over, what’s left to explain. In a word: what’s left to explain is represented in the <em>residuals</em>. That is, we can think of residuals as the part of the variation that our model still doesn’t explain. The model might be better than sheer guesses, but it’s not perfect, and the residuals represent the leftover variance that we still need to explain.</p>
+<p>That’s where the term <em>residual</em> comes from, referring to the “leftover” or “remaining” variance that our model still doesn’t explain.</p>
+</section>
+<section id="adding-residual-variance-to-the-model" class="level1 page-columns page-full">
+<h1>Adding residual variance to the model</h1>
+<p>Before we get into exploring residuals, let’s talk about where it belongs in the linear model. Recall our linear equation from Unit 3:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = \alpha + \beta{}x\)</span></p>
+</blockquote>
+<p>This has the following parts:</p>
+<ul>
+<li><span class="math inline">\(y\)</span> is the response variable, the variable we are trying to predict</li>
+<li><span class="math inline">\(x\)</span> is the predictor variable, the variable we are using make predictions about <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(\alpha\)</span> is what we call the <em>intercept</em> parameter, that gives us a kind of “overall” adjustment, or the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> is zero</li>
+<li><span class="math inline">\(\beta\)</span> is the <em>slope</em> parameter that tells us how steep the line is (larger absolute values are steeper) and whether the line is going up or down (positive numbers mean the line goes up to the right, negative numbers mean the line goes down to the right)</li>
+</ul>
+<p>But where are the residuals? Well it turns out that this is not exactly the full model. The full model is more properly given as:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = \alpha + \beta{}x + \epsilon\)</span></p>
+</blockquote>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The <span class="math inline">\(\epsilon\)</span> is a small Greek letter epsilon, but we usually just call it the “error” term, and use epsilon because it looks like “e” for “error.” Some textbooks may use different symbols. Note also that there are other mathematical ways of expressing errors/residuals in a linear equation. We are picking this one because it’s easy to understand and easy to implement in R.</p>
+</div></div><p>This new term represents the residuals that get added to get the final <span class="math inline">\(y\)</span> values that we actually observe. Without the <span class="math inline">\(\epsilon\)</span> component of the model, all we can do is describe a straight, perfect line. In order to also describe how much variation we have left, we need to describe how most of the individual data points might lie above or below our line, which you might think of as the “noise” around the prediction line. To capture this in our model, we need the <span class="math inline">\(\epsilon\)</span> term – the residuals.</p>
+<p>It’s also crucial to note that in this version of the model, the <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are single-value parameters, but the <span class="math inline">\(\epsilon\)</span> is an entire distribution of values, like our <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> variables. That is, we have just one value for the intercept (<span class="math inline">\(\alpha\)</span>) and one value for the slope of the line (<span class="math inline">\(\beta\)</span>), but the errors (<span class="math inline">\(\epsilon\)</span>) are a vector of values, one for each observation. The <span class="math inline">\(x\)</span> variable represents all the individual data measurements we have for the predictor(s), and the <span class="math inline">\(y\)</span> variable is all of the values of the response. But we know that most of the actual <span class="math inline">\(y\)</span> values don’t lie perfectly on the regression line, and they are all displaced from the line by various amounts. To capture this, the residual term <span class="math inline">\(\epsilon\)</span> is also a bunch of individual numbers[^residdist], one for each of the <span class="math inline">\(y\)</span> values, which represent the remaining, <em>residual</em> differences between the predicted <span class="math inline">\(y\)</span> and the actual observed <span class="math inline">\(y\)</span> values.</p>
+<p>More properly, we can say that the residuals are a <em>distribution</em> of values. Each value corresponds to one of the <span class="math inline">\(y\)</span> values, representing how far off the regression line that <span class="math inline">\(y\)</span> value is. We use the <span class="math inline">\(\epsilon\)</span> term in our model to represent this distribution of residuals.</p>
+</section>
+<section id="exploring-residuals-is-part-of-understanding-and-applying-a-model" class="level1">
+<h1>Exploring residuals is part of understanding and applying a model</h1>
+<p>Now let’s come back to the question we started with: how can we tell if our model is good, or better than a different model? It all comes down to the residuals. Knowing how much residual variance is still left, but also knowing something about the <em>pattern</em> of residuals is crucial for us to be able to evaluate our models.</p>
+<p>We care about the pattern of residuals not only to evaluate models in a statistical sense, but also so that we can apply them in the real world. Most of the time our models are not perfect and that’s expected, but if a model makes systematic errors of a certain kind, this can lead to real problems. For example, imagine if we had a model of some kind of social service impact, but the pattern of model errors/residuals for a certain marginalized group of people were very different from those of other groups. This could mean that the model was more accurate for some groups than for other groups, unintentionally. Depending on what kinds of decisions the model was supposed to help with, the result could be serious inequity in the way services were implemented. Understanding model errors can be hugely important for real-world impact!</p>
+<p>We will look at residuals in a couple of different ways. First, we will talk about the <em>distribution</em> they should take, and how to examine that. Second, we will talk about some special statistics that are derived from the residuals that can give us more of an “overall” sense of how our model is doing.</p>
+</section>
+<section id="residuals-should-be-normally-distributed" class="level1">
+<h1>Residuals should be normally-distributed</h1>
+<p>After we fit a model, one of the first things we should do is check the distribution of our residuals. Why? It turns out that an important assumption of the mathematics behind simple linear regression is that the residuals should follow a normal distribution. What this means is that if residuals are <em>not</em> normally-distributed, then there may be something really off about the model, and it may be ill-advised to use the model to make predictions or draw conclusions.</p>
+<p>But why should residuals be normal? There are interesting mathematical reasons, but there’s also a more intuitive reason if we recall the Central Limit Theorem (CLT) and apply a little logic. Remember that the CLT tells us that if you have a bunch of different values that are unrelated to each other and you add or average them, that sum or average will tend to follow a normal distribution. Now think about what we said above about what residuals represent. They represent the sum total of <em>all</em> of the different factors that we still haven’t explained in our model. And because many or most of those unexplained factors are probably unrelated to one another, then the CLT tells us that the combination of those factors should tend towards a normal distribution.</p>
+<p>Fortunately, this is easy to check, and the <a href="./R_residuals.html">Code Tutorial on residuals</a> walks through a few different techniques, including histograms and scatterplots. The guide shows you what “well-behaved” residuals look like, and the Challenge and Practice will show you a contrast between residuals that look relatively well-behaved and ones that are clearly degenerate.</p>
+<p>The point here is that before we worry too much about what kinds of conclusions we can draw from our model, we should look carefully at our residuals in order to know whether we should even bother trying to draw conclusions, or whether we need to take the model with more than a grain of salt.</p>
+</section>
+<section id="measuring-overall-explained-variance" class="level1">
+<h1>Measuring overall explained variance</h1>
+<p>Looking at the distribution of all the individual residual values is a good idea. However, sometimes it’s helpful to have a single number (or <em>statistic</em>) that acts like an overall “rating” of how good the model is. But again, these numbers should be considered carefully and not overused. That is, a single rating of “how good is this model” can be convenient, but it doesn’t replace the careful examination of residuals and other techniques.</p>
+<p>With that caveat, we will look at two different statistics that have slightly different uses: <span class="math inline">\(R^2\)</span> and AIC.</p>
+</section>
+<section id="interpreting-the-r2-of-a-model" class="level1 page-columns page-full">
+<h1>Interpreting the <span class="math inline">\(R^2\)</span> of a model</h1>
+<p>One useful statistic is referred to as <span class="math inline">\(R^2\)</span> (pronounced “R-squared”).<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> The value of <span class="math inline">\(R^2\)</span> normally ranges between 0 and 1, though depending on how it’s calculated and what type of model is being fitted, it’s technically possible for it to end up as a (small) negative value, though it cannot exceed 1.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;If you’re curious, where this term comes from is that the correlation coefficient has been historically called <span class="math inline">\(r\)</span>, and the typical calculation of <span class="math inline">\(R^2\)</span> is equivalent to the square of the correlation coefficient.</p></div></div><p>We won’t go into the math, but the concept is that it’s the proportion of how much variance is explained by the regression line, divided by the total amount of variance there is to be explained. In other words, it’s like the percentage of the total variation in the <span class="math inline">\(y\)</span> variable that is explained by our model. This is of course related to the residuals. You can imagine that if the residuals of our model are all very small, it means that there’s not not much more to explain, and our model might be explaining nearly all the variance in the <span class="math inline">\(y\)</span> variable.</p>
+<p>For example, an <span class="math inline">\(R^2\)</span> value of .9 would mean that the model is explaining about 90% of the variance, which is quite a close-fitting model.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> And conversely, a model with an <span class="math inline">\(R^2\)</span> of only .15 would indicate that the model is only explaining around 15% of the variance in the <span class="math inline">\(y\)</span> variable. In short, the larger the <span class="math inline">\(R^2\)</span>, the better.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Since <span class="math inline">\(R^2\)</span> is a proportion that is bounded between 0 and 1, the convention is to only report it to 2 or 3 digits at most, and to leave off the initial 0 before the decimal.</p></div></div><p>The <a href="./R_modelstats.html">Code Tutorial on model fit statistics</a> shows how <span class="math inline">\(R^2\)</span> can be easily extracted from a model object in R.</p>
+</section>
+<section id="limitations-of-r2" class="level1 page-columns page-full">
+<h1>Limitations of <span class="math inline">\(R^2\)</span></h1>
+<p>No single statistic tells you everything you need, and as useful as <span class="math inline">\(R^2\)</span> is, there are some limitations and caveats.</p>
+<p>First, while <span class="math inline">\(R^2\)</span> is easily computed and has a natural interpretation in simple linear regression, more complex models may not have a comparable statistic. Once you get beyond simple linear models, into models like hierarchical models, logistic regression, and others, there may simply not be an analogous way to calculate something that means the same thing.</p>
+<p>When considering regular linear regression, one fact about <span class="math inline">\(R^2\)</span> is that it always gets larger when you add more predictors. We are not covering multiple regression in this course, but the gist is that it’s possible (and quite common) to fit models with more than one predictor. When you do this, you are often curious about which predictors are actually improving the prediction of your model, and which ones are basically “dead weight.” But since <span class="math inline">\(R^2\)</span> <em>always</em> gets bigger (which means better) if you add more predictors, it’s not the best way to decide if a new predictor is worth including.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;There is also an “adjusted” <span class="math inline">\(R^2\)</span> statistic, which includes a “penalty” for more predictors. The idea is that where adding a predictor always increases regular <span class="math inline">\(R^2\)</span>, it may not increase the adjusted <span class="math inline">\(R^2\)</span>. However, if you want to compare models, the AIC statistic we discuss below is better than using adjusted <span class="math inline">\(R^2\)</span>, and since the adjustment is based on something other than the variance terms, it means that adjusted <span class="math inline">\(R^2\)</span> doesn’t quite have exactly the same interpretation. It’s useful, but not strictly a better measure.</p></div></div><p>Finally, there is the issue of deciding how large of an <span class="math inline">\(R^2\)</span> value is actually “good.” This can vary widely depending on the field. In fields like social sciences, we are often dealing with very “noisy” data and complex phenomena with potentially very many influencing factors, so we might never really expect that our models would get into the .90 range, and we might be happy to see <span class="math inline">\(R^2\)</span> values even in the .30 or .40 range. In other fields that have more precise or concrete measurements and more controlled or simple phenomena, we might think that anything less than .50 or .60 is basically worthless. There is not a “magic number” or threshold that tells you if your model is good, but different fields might have different accepted conventions.</p>
+<p>So in short, for simple situations, especially in models where there is just one predictor, <span class="math inline">\(R^2\)</span> is a simple and intuitive statistic that can give you a good overall indication of how good your model is. But for more complex situations or models, other statistics or metrics might be more useful.</p>
+</section>
+<section id="the-akaike-information-criterion" class="level1 page-columns page-full">
+<h1>The Akaike Information Criterion</h1>
+<p>One alternative model fit statistic that is commonly used is the so-called Akaike Information Criterion<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> (AIC). AIC is based on a slightly different theoretical framework in statistics (the <em>likelihood</em> framework), so we will not go through the math, but it is strikingly simple for what it does. The idea is that in a good model, the observed data would be relatively likely to occur. But the real innovation that Akaike introduced and formulated is the idea that a model should be “penalized” for having predictors that don’t actually improve prediction beyond what might be expected due to chance. The genius of AIC is that this turns out to be a relatively simple calculation, but it is surprisingly robust.</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;This was an invention of Hirotugu Akaike, from a 1974 paper. Akaike actually called it “an information criterion” (AIC), and only later people substituted his name as the “A” in the acronym.</p></div></div><p>The <a href="./R_modelstats.html">Code Tutorial on model fit statistics</a> shows how to compute an AIC value from a model. It is very simple.</p>
+<p>Interpreting AIC is simple in one way, but more challenging in other ways. What’s good about it is that it’s very straightforward, in that <strong>lower AIC values mean a better model</strong>. This makes AIC very good as a way to compare two competing models, even when the models have different numbers of predictors. However, you can only compare models using AIC if they are fit on <em>exactly</em> the same response data. In other words, the <span class="math inline">\(y\)</span> variable you are trying to predict has to have the exact same values in both models.</p>
+<p>As an example, think about a different model where we again predicted the height of sons, but we used their mothers’ heights instead of their fathers’. We might be interested in comparing this model to the model where the fathers’ heights were the predictor. Comparing the AIC values of these two models (where <em>smaller</em> is better) would be a good approach, but we could only use AIC to compare these models if the variable representing the heights of sons (i.e., the <span class="math inline">\(y\)</span> variable or response variable) was the exact same set of values in the two models. For example, if you only had the mothers’ heights for some of the sons and you ended up with a smaller data set, then the AIC values could not be compared.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> Or if you wanted to compare a model where the son height data was log-transformed to a model where it was left untransformed, that could also not be compared with AIC, since the <span class="math inline">\(y\)</span> values have changed. But you <em>could</em> compare a model that used a log-transformed predictor to a model with an untransformed predictor.</p>
+<div class="no-row-height column-margin column-container"><div id="fn7"><p><sup>7</sup>&nbsp;But you could compare them if you also removed the same data points and re-fit the father height model, of course.</p></div></div><p>The rule to remember is that AIC values can only be compared if the <span class="math inline">\(y\)</span> values in both data sets are identical. Fortunately, it is not uncommon to try to predict the same set of <span class="math inline">\(y\)</span> values with different sets of predictors, so AIC is frequently very useful.</p>
+<p>Another aspect of AIC that is more challenging to understand is that the actual values you get are sort of meaningless, or at least do not give us an intuitive interpretation. This contrasts with <span class="math inline">\(R^2\)</span>, where if you get an <span class="math inline">\(R^2\)</span> of .75, you have an understanding that this is quite good, explaining around three-fourths of the variance. But if you have an AIC of 2,000 or 20,000, that doesn’t necessarily tell you anything. This is because any given AIC value is a product of both the quantity of data as well as how much variation there is, the scales of the measures, and so on. So even though lower AIC values are better when you’re comparing two models fit to the same data, the actual AIC value of a model doesn’t say anything by itself. If you have a very large data set, you might have an AIC of 40,000 or something, even with an extremely accurate model, and you could have a terrible model of a different data set with an AIC of 600. This is why you can only compare AIC values of models fit to the same data.</p>
+<p>One aspect of this that also misleads people is that you shouldn’t pay much attention to the magnitude of the <em>difference</em> in AIC, either. For example, you could have one model with an AIC of 2,000 and another with an AIC of 2,015. All you should conclude is that the one with the lower value (2,000) is the better model. You shouldn’t think to yourself, “well, it’s only different by 15 out of 2,000, that can’t really be very much better, can it?” That kind of thinking does not fit the mathematics because the measure, so that’s an invalid way of thinking about AIC numbers.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> Even AIC differences that <em>seem</em> small (like 2,000 vs.&nbsp;2,015) may still be important and valid to consider.</p>
+<div class="no-row-height column-margin column-container"><div id="fn8"><p><sup>8</sup>&nbsp;There is actually an entire sub-field of statistics dedicated to information-theoretic statistics and inference. In this paradigm, there are more systematic and detailed ways to analyze AIC comparisons, such as calculating something like “the odds that model X is a better model than model Y”. If you are interested, I recommend the text by Burnham &amp; Anderson (2002), and the <code>AICcmodavg</code> package in R. The point I am making here is that unless you get into the specifics of this kind of approach, you shouldn’t make judgment calls about the relative sizes or differences of AIC values. Just stick to “lower is better.”</p></div></div><p>So in short, when using AIC, just look at the ranking of which model has a lower value, and ignore the actual magnitude of the AIC values. Sometimes all you want to know is whether one model is better than another, and AIC provides a very robust way of picking the best model, even when there are different numbers of predictors and even completely different sets of predictors in the two models. As long as the models are fit on the same set of <span class="math inline">\(y\)</span> values (the values you are trying to predict), you can compare them with AIC, and this makes it a good complement to <span class="math inline">\(R^2\)</span> in your toolbox of ways to assess models.</p>
+</section>
+<section id="using-model-simulations-to-evaluate-a-model" class="level1 page-columns page-full">
+<h1>Using model simulations to evaluate a model</h1>
+<p>So far, we have discussed two different types of strategies to answer the question, “how good is my model?” First, we can examine residuals to see how well those fit the assumption of a normal distribution. This is one indicator of a good model. Second, we can use model fit statistics like <span class="math inline">\(R^2\)</span> and AIC to evaluate a model or compare it with alternative models. Now, we turn to a third technique, using the model to simulate data.</p>
+<p>The idea is that if we use the information in our model to generate “fake” data, but this data looks very similar to our actual real data, then our model is doing a pretty good job. Conversely, if our model generates data that is systematically very different from what real data looks like, then that might give us some clues about how to improve our model, or at least give us pause before we try to apply our model too confidently.</p>
+<p>I will explain the concept a little more here, but example code for how to actually carry out these simulations is given in the Code Tutorial on model simulations.</p>
+<p>The core of the concept goes back to our initial discussion of why we have <em>models</em> in the first place. A model is something we use to represent something in the real world, but in a simplified way. In our model of father-son height data, we are taking something very complex – all of the biological, genetic, and environmental factors that influence someone’s adult height – and trying to model it in a simple way, as just a linear function of the father’s height.</p>
+<p>It’s a common saying to say that “all models are wrong, but some are useful.”<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> Another way of phrasing this is that all models are inherently simplifications of the real world, but if they help us understand the world in a way that holds up with the facts, then that is useful. We clearly know that your father’s height is not the only factor in determining your own height, but if our model gives us predictions that are accurate enough for whatever purpose we have, then that is useful.</p>
+<div class="no-row-height column-margin column-container"><div id="fn9"><p><sup>9</sup>&nbsp;This saying is often attributed to George Box, a 20th century British statistician.</p></div></div><p>So if our model is a (simplified) model of the real world, we should be able to use the model to imitate the real world in some way. In a statistical model, this means that we should be able to simulate data in a way that is “fake but realistic.” It’s “fake” because we are creating data with the model, not actually observing it. But if it’s “realistic,” that means the data we create should look similar to data we might collect in the real world. In our example of father-son heights, this means we should be able to take a set of (real or hypothetical) heights of fathers and then generate a matching set of heights of sons. Of course we can’t magically recreate the son height data perfectly, but if our model is good, we should be able to create a set of son heights that looks like they could be real data.</p>
+</section>
+<section id="simulations-are-predictions-plus-residuals" class="level1">
+<h1>Simulations are predictions plus residuals</h1>
+<p>You might be thinking that we’ve already done this, because we’ve already generated predictions. Aren’t predictions “fake but realistic”? In a way, yes, because they represent our best guesses, which aim to minimize the error (residual) between our guess and real data. But this does not generate a realistic data set, because it “generates” a set of data that falls exactly on our regression line. And that’s not realistic!</p>
+<p>Our clue is back to the new term in our linear model, the residuals term <span class="math inline">\(\epsilon\)</span>. Think about what this model is actually saying:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(y = \alpha + \beta{}x + \epsilon\)</span></p>
+</blockquote>
+<p>It’s saying that the <span class="math inline">\(y\)</span> values (the value we are trying to predict or generate) is the result of our prediction (which is the <span class="math inline">\(\alpha + \beta{}x\)</span> part of the equation) plus our remaining uncertainty, the residuals.</p>
+<p>What this means is that in order to simulate a realistic <span class="math inline">\(y\)</span>, we need to add variability to our predictions.</p>
+</section>
+<section id="residual-mean-and-residual-standard-error" class="level1 page-columns page-full">
+<h1>Residual mean and residual standard error</h1>
+<p>The question now is how we actually add variability in the right way. Part of the answer is what we already discussed, that our model assumes that residuals are normally distributed. So all we really need to do is to generate a set of normally-distributed residuals. We know how to do this, and any decent statistical software will let us generate numbers from a normal distribution. The catch is that we need to know how to specify the normal distribution, namely we need to know the two parameters of the distribution: the mean and the standard deviation.</p>
+<p>The mean is the easy part, because we assume that the mean is zero. It <em>must</em> be zero, based on the definition of residuals! If this is not clear to you, think about what residuals are. They are how much our “best guess” prediction is off from the observed value. The way that linear regression works is that we draw a line through the “middle” of the data, so residuals are going to be both positive and negative, averaging around zero. Another way to think about it is that the intercept term has already defined the “zero point” (the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> is zero), and if our residuals had a mean other than zero, it would indicate that the data tended to be off by that much (it would be <em>biased</em>), but this is what the intercept already tells us.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> So long story short, we know the mean of our residuals must be zero, based on the definition of the linear model and how the regression line is determined.</p>
+<div class="no-row-height column-margin column-container"><div id="fn10"><p><sup>10</sup>&nbsp;This actually sets up an alternative way to fit the model, which is legitimate, but it’s rarely used. If you fit a model without an intercept, then you end up needing to estimate the mean of the residuals instead, but that turns out to have exactly the value of the intercept if you had fit a regular model. Exploring and verifying this is left as an exercise for the reader.</p></div><div id="fn11"><p><sup>11</sup>&nbsp;The word <em>bias</em> is yet another technical term that looks like a common word in English. They are related, of course, but the statistical term is a bit more precise, meaning that some statistical estimate is consistently wrong in one direction.</p></div></div><p>What about the standard deviation? One possibility is that you could examine the model and literally just take the standard deviation of the observed residuals. This is not a bad concept, but it turns out to not be quite right. In fact, it’s <em>biased</em><a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>. The bias is that since we are examining a finite data set (a <em>sample</em>), if we only took the standard deviation of the residuals we actually saw, we are very likely <em>underestimating</em> how much variability there would be if we sampled additional data. If you think about it, it’s the same reason we don’t use the mean of the observed residuals. It won’t be exactly zero, because we have a finite data set. But we know mathematically that it should be zero. In the case of the residual variance, we know mathematically that the variance of the residual is likely to be larger than whatever it is that we observed in our data.</p>
+<p>Fortunately there a standard “correction” that can be applied.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> It essentially changes the denominator in the equation so that we get an estimated standard deviation slightly larger than our observed standard deviation of residuals. The result is usually called the <em>residual standard error</em>. Fortunately, this value is easy to obtain from a model object in R, and the <a href="./R_modelsimulations.html">Code Tutorial for model simulations</a> shows you how to do this.</p>
+<div class="no-row-height column-margin column-container"><div id="fn12"><p><sup>12</sup>&nbsp;The math is basically the equivalent of changing the denominator when calculating the average (squared) error. As an example, if you calculated a literal average value, that’s the same as summing the values and then dividing by the number of values. Standard deviations are already slightly “corrected” because they divide by one less than the number of values (N - 1) instead of all of the values (N). For the residual standard error, you actually subtract the number of parameters, so it’s (N - k). In a simple regression with just the intercept and one predictor, k = 2. The good news is that you don’t have to make these calculations by hand.</p></div></div></section>
+<section id="generating-simulations" class="level1">
+<h1>Generating simulations</h1>
+<p>Armed with these parameter values – a mean of zero and a standard deviation from the <em>residual standard error</em> of the model – we can generate our “fake” residuals from a normal distribution. We need a different random number for each of the <span class="math inline">\(y\)</span> values we are trying to generate, because that’s what residuals are, a point-by-point adjustment to the <span class="math inline">\(y\)</span> values.</p>
+<p>The only thing we have left to plug in is the predictor (<span class="math inline">\(x\)</span>) values. We have a few options here. We can make these values up as well, by pulling from some other distribution based on what we expect <span class="math inline">\(x\)</span> values to look like. In our father-son data, we could generate more random numbers using the mean and standard deviation of the father data we had, or just make up a different set of numbers for a different set of hypothetical fathers. The other option is to use real data, our actual observed <span class="math inline">\(x\)</span> values (e.g., the actual father height data we have).</p>
+<p>There are reasons why either of these approaches could be useful. For example, you might be interested in simulating data for a hypothetical situation that is different from your original data, like from a country where average heights tend to be higher or lower. But our original purpose here is to examine our model and see if our “fake but realistic” simulations actually look like our real data, as a way to examine and assess our model. In this case, it makes the most sense to use our real <span class="math inline">\(x\)</span> data to generate simulated <span class="math inline">\(y\)</span> data, because it will make it easier to compare our simulated <span class="math inline">\(y\)</span> values to our actual <span class="math inline">\(y\)</span> values.</p>
+<p>So in summary, all we need to simulate realistic data with our model is to add predictions plus residuals. We can easily generate predictions with the “linear” part of our model, for each of the <span class="math inline">\(x\)</span> values we have, and we can easily generate residuals by getting random numbers from a normal distribution with a mean of zero and a standard deviation equal to the residual standard error of our model. Then we literally just add the residuals to the predictions, and we have our simulated <span class="math inline">\(y\)</span> values.</p>
+<p>Finally, we can create <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> scatterplots of both our real data and our simulations, and we can quite literally see how close the overall patterns look. Again, the <a href="./R_modelsimulations.html">Code Tutorial for model simulations</a> takes you through this process in R.</p>
+</section>
+<section id="summary-and-recap" class="level1">
+<h1>Summary and recap</h1>
+<p>In this unit, we reviewed three major techniques for exploring a model and assessing whether it’s a “good” model:</p>
+<ol type="1">
+<li>Examining residuals, which we expect to be normally-distributed</li>
+<li>Calculating model-fit statistics such a <span class="math inline">\(R^2\)</span> and AIC, which give more of an “overall rating” of how well the model is doing.</li>
+<li>Simulating “fake but realistic” data based on the model, and comparing it to the pattern of data we actually observed.</li>
+</ol>
+<p>What you can learn from these techniques is whether your model seems to be operating as intended. Is it doing a reasonable job of describing the data? Or does it seem to be biased or faulty in a way that we shouldn’t trust? Finding things “wrong” with a model can actually be a very helpful step, because it may help indicate what you can do to improve the model, or it may help you pick from different candidate models.</p>
+<p>Once we take steps like these to check that we can actually <em>trust</em> the model, then we can turn to the topic of the next and final Unit in this course, drawing conclusions and making inferences about our data based on the model results.</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

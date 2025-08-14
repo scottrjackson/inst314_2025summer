@@ -483,6 +483,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Unit 4: Examining Errors and Evaluating Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./errors_reading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concepts Reading: errors in regression models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_residuals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examining model residuals in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_modelsimulations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulating data from a model in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R_modelstats.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extracting model fit statistics in R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -702,8 +748,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  1.7561196 -1.8994044  0.4901683 -0.1002362  0.4727712 -1.3392644
- [7] -2.5241774 -1.7488271  2.1906417 -0.7873954</code></pre>
+<pre><code> [1]  0.59507199 -0.12378390 -0.04878456  0.51881204  0.57600117  1.80594785
+ [7]  0.89212262  0.03628710 -0.28450080 -0.81848557</code></pre>
 </div>
 </div>
 <p>Every time you run it, you’ll get different numbers. Now try deleting the 10 and see what happens (see below). It will give you an error and tell you that an argument is missing.</p>
@@ -715,8 +761,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  0.7471020 -1.5143238  1.4131576 -0.3066486 -0.5882811  1.8476379
- [7] -0.9998469 -0.7682525  0.1332250 -0.3179768</code></pre>
+<pre><code> [1]  0.1325104 -0.3783838 -1.1030148  1.1584970 -0.3629850  0.8962621
+ [7] -0.5883878  0.3712694  0.5461770 -1.7211258</code></pre>
 </div>
 </div>
 <p>The syntax here is that you put the name of the argument first, followed by a <code>=</code> symbol, followed by a value, and spaces are optional. Note that when we are assigning values to arguments, we use the <code>=</code> sign, not the “assignment arrow” <code>&lt;-</code> symbol. In this example, we are just being very explicit about which argument we want that <code>10</code> to go to.</p>
@@ -724,11 +770,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]  92.13487 104.65270  87.98345  98.17265  88.81884</code></pre>
+<pre><code>[1]  97.86440 101.85357 102.00962  93.65312  92.83218</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]  88.51709 127.96825 104.34378 124.80455 117.16782</code></pre>
+<pre><code>[1] 112.34608 111.70124  84.06326  92.32364 101.31649</code></pre>
 </div>
 </div>
 </section>
@@ -742,23 +788,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] -1.1960129 -0.1837699 -1.3230335  1.2177388 -0.7364707  1.2658818
- [7]  0.3335834  0.4492385  1.2599962  0.2748692</code></pre>
+<pre><code> [1] -1.1846936 -1.1556354  0.5621262 -1.1481288  0.6683736 -0.4803782
+ [7] -0.9756674  0.5378871  0.1408905  0.6844790</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 31.13479 30.79581 28.71405 29.37258 30.17530 29.44341 31.91844 31.00303
- [9] 30.21235 28.67445</code></pre>
+<pre><code> [1] 29.88729 29.30417 29.27703 29.53877 30.68125 30.93580 30.34344 29.05174
+ [9] 29.65134 31.81148</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]   6.463436  -4.317394 -24.440111  22.335538  -9.588657   8.124740
- [7]  -3.808175   4.665610  -3.596303   3.618229</code></pre>
+<pre><code> [1]  -3.80570911  12.12912666  -3.49990261   1.56678029 -14.51531363
+ [6]   0.01067339  -5.57577627   3.41947305  -6.19909026  -2.26690919</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 46.44764 37.07250 35.01232 12.18603 32.21334 20.12300 41.26347 23.97944
- [9] 13.72606 23.83968</code></pre>
+<pre><code> [1] 20.90453 37.56149 38.29549 37.85594 37.96389 11.01623 28.00301 25.97212
+ [9] 27.03734 33.51422</code></pre>
 </div>
 </div>
 <p>You should see different patterns according to the different arguments, which you can see as changing the “settings” of the function. Recall that the default of <code>mean</code> is 0 and the default of <code>sd</code> is 1.If you don’t notice any differences, edit the values to be larger to make more extreme patterns.</p>

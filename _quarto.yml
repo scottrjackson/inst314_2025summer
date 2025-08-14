@@ -59,6 +59,18 @@ website:
                 text: "Visualizing differences with boxplots and violinplots"
               - href: R_advanced_data_formatting_PearsonLee.qmd
                 text: "Example of some advanced data formatting (optional)"
+      - section: "Unit 4: Examining Errors and Evaluating Models"
+        contents:
+          - href: errors_reading.qmd
+            text: "Concepts Reading: errors in regression models"
+          - section: "Code Tutorials"
+            contents:
+              - href: R_residuals.qmd
+                text: "Examining model residuals in R"
+              - href: R_modelsimulations.qmd
+                text: "Simulating data from a model in R"
+              - href: R_modelstats.qmd
+                text: "Extracting model fit statistics in R"
 
 
 format:

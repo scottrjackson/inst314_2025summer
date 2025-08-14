@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>INST 314: Statistics for Information Science – INST 314 (Summer 2025)</title>
+<title>Examining model residuals (errors) in R – INST 314 (Summer 2025)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,8 +75,8 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-50162f9c674aa89ea11e54b2c77d7e7c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-c71eb06a285b930afbb0047c65a9fd88.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-5f8498b817ae5b2cb3a7a87727a6ad5f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-2c7af7b2a4cbf6e016b7c3feffc32b4a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -252,7 +287,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -267,7 +302,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">INST 314: Statistics for Information Science</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./errors_reading.html">Unit 4: Examining Errors and Evaluating Models</a></li><li class="breadcrumb-item"><a href="./R_residuals.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_residuals.html">Examining model residuals in R</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -465,16 +500,16 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
  <span class="menu-text">Code Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./R_residuals.html" class="sidebar-item-text sidebar-link">
+  <a href="./R_residuals.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Examining model residuals in R</span></a>
   </div>
 </li>
@@ -504,19 +539,38 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#whats-on-this-site" id="toc-whats-on-this-site" class="nav-link active" data-scroll-target="#whats-on-this-site">What’s on this site</a></li>
-  <li><a href="#how-to-use-this-site" id="toc-how-to-use-this-site" class="nav-link" data-scroll-target="#how-to-use-this-site">How to use this site</a></li>
-  <li><a href="#code-and-code-tutorials" id="toc-code-and-code-tutorials" class="nav-link" data-scroll-target="#code-and-code-tutorials">Code and Code Tutorials</a></li>
+  <li><a href="#whats-in-this-tutorial" id="toc-whats-in-this-tutorial" class="nav-link active" data-scroll-target="#whats-in-this-tutorial">What’s in this tutorial?</a></li>
+  <li><a href="#loading-data-and-packages" id="toc-loading-data-and-packages" class="nav-link" data-scroll-target="#loading-data-and-packages">Loading data and packages</a>
+  <ul class="collapse">
+  <li><a href="#load-ggplot2" id="toc-load-ggplot2" class="nav-link" data-scroll-target="#load-ggplot2">Load <code>ggplot2</code></a></li>
+  <li><a href="#load-the-pearson-lee-1903-data" id="toc-load-the-pearson-lee-1903-data" class="nav-link" data-scroll-target="#load-the-pearson-lee-1903-data">Load the Pearson &amp; Lee (1903) data</a></li>
+  </ul></li>
+  <li><a href="#quick-recap-what-are-residuals" id="toc-quick-recap-what-are-residuals" class="nav-link" data-scroll-target="#quick-recap-what-are-residuals">Quick recap: what are residuals?</a></li>
+  <li><a href="#getting-residuals-from-a-fitted-model" id="toc-getting-residuals-from-a-fitted-model" class="nav-link" data-scroll-target="#getting-residuals-from-a-fitted-model">Getting residuals from a fitted model</a>
+  <ul class="collapse">
+  <li><a href="#residuals-function" id="toc-residuals-function" class="nav-link" data-scroll-target="#residuals-function"><code>residuals</code> function</a></li>
+  <li><a href="#getting-residuals-from-the-model-object" id="toc-getting-residuals-from-the-model-object" class="nav-link" data-scroll-target="#getting-residuals-from-the-model-object">Getting residuals from the model object</a></li>
+  <li><a href="#complex-objects-are-usually-list-like" id="toc-complex-objects-are-usually-list-like" class="nav-link" data-scroll-target="#complex-objects-are-usually-list-like">Complex objects are usually “list-like”</a></li>
+  <li><a href="#getting-residuals-from-the-lm-object" id="toc-getting-residuals-from-the-lm-object" class="nav-link" data-scroll-target="#getting-residuals-from-the-lm-object">Getting residuals from the “lm” object</a></li>
+  </ul></li>
+  <li><a href="#getting-model-predictions" id="toc-getting-model-predictions" class="nav-link" data-scroll-target="#getting-model-predictions">Getting model predictions</a></li>
+  <li><a href="#how-to-visualize-residuals" id="toc-how-to-visualize-residuals" class="nav-link" data-scroll-target="#how-to-visualize-residuals">How to visualize residuals</a>
+  <ul class="collapse">
+  <li><a href="#attaching-the-residuals-and-predictions-to-your-data-frame" id="toc-attaching-the-residuals-and-predictions-to-your-data-frame" class="nav-link" data-scroll-target="#attaching-the-residuals-and-predictions-to-your-data-frame">Attaching the residuals and predictions to your data frame</a></li>
+  <li><a href="#visualizing-residuals-step-1-histogram" id="toc-visualizing-residuals-step-1-histogram" class="nav-link" data-scroll-target="#visualizing-residuals-step-1-histogram">Visualizing residuals step 1: histogram</a></li>
+  <li><a href="#visualizing-residuals-step-2-plotting-residuals-vs.-predicted-values" id="toc-visualizing-residuals-step-2-plotting-residuals-vs.-predicted-values" class="nav-link" data-scroll-target="#visualizing-residuals-step-2-plotting-residuals-vs.-predicted-values">Visualizing residuals step 2: plotting residuals vs.&nbsp;predicted values</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./errors_reading.html">Unit 4: Examining Errors and Evaluating Models</a></li><li class="breadcrumb-item"><a href="./R_residuals.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_residuals.html">Examining model residuals in R</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">INST 314: Statistics for Information Science</h1>
+<h1 class="title">Examining model residuals (errors) in R</h1>
 </div>
 
 
@@ -533,37 +587,311 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="whats-on-this-site" class="level1">
-<h1>What’s on this site</h1>
-<p>Welcome! If you are registered for the 2025 Summer II session of INST 314 (section 21) at the University of Maryland, with Scott Jackson as your instructor, you are in the right place.</p>
-<p>This is where I am hosting the main instructional mnaterials including:</p>
-<ul>
-<li>The weekly <em>readings</em> for each Unit, including practice Knowledge Checks.</li>
-<li>The weekly <em>code tutorials</em> for each Unit.</li>
-</ul>
-<p>Other materials like the Practice exercises, weekly Challenges, data files, etc. are available on the official course site on ELMS.</p>
+<section id="whats-in-this-tutorial" class="level1">
+<h1>What’s in this tutorial?</h1>
+<p>This tutorial explains how to access and visualize the residuals and predicted values from a linear model in R. In the process, we will also discuss some about <em>list</em> objects in R, because when you understand that many complex objects in R are structured similar to lists, it makes it easier to extract values from them.</p>
+<p>I recommend going through the <a href="./errors_reading.html">Unit 4 reading</a> before going through this tutorial.</p>
 </section>
-<section id="how-to-use-this-site" class="level1">
-<h1>How to use this site</h1>
+<section id="loading-data-and-packages" class="level1">
+<h1>Loading data and packages</h1>
+<section id="load-ggplot2" class="level2">
+<h2 class="anchored" data-anchor-id="load-ggplot2">Load <code>ggplot2</code></h2>
+<p>We will use the <code>ggplot2</code> package for visualizing residuals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-the-pearson-lee-1903-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-the-pearson-lee-1903-data">Load the Pearson &amp; Lee (1903) data</h2>
+<p>Use the code here to read in a subset of the data from Pearson &amp; Lee (1903), which is a classic data set of the heights of fathers and their sons collected in a survey. This data is derived from the <code>PearsonLee</code> data set found in the <code>HistData</code> package, and more details can be found in the documentation for that package.</p>
+<p>I’m naming the variable “pl” to stand for Pearson &amp; Lee.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"FatherSonHeights.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  observation father_height son_height
+1           1          62.5       59.5
+2           2          62.5       59.5
+3           3          63.5       59.5
+4           4          63.5       59.5
+5           5          64.5       59.5
+6           6          64.5       59.5</code></pre>
+</div>
+</div>
+<p>This data should have 4,312 rows and three variables, though the <code>observation</code> variable is just an arbitrary number matching the row number.</p>
+<p>The <code>father_height</code> and <code>son_height</code> variables are expressed as inches. All of the measurements were rounded to the nearest inch but then recorded on the “half-inch”. In other words, there are values 62.5, 63.5, 64.5, and so on, but no values 62.0, or any value between the XX.5 values.</p>
+<p>This means we will frequently use “jitter” when we create scatterplots. See the <a href="./R_scatterplots.html">Code Tutorial for scatterplots</a> for details on jitter and other techniques for handling overplotting.</p>
+</section>
+</section>
+<section id="quick-recap-what-are-residuals" class="level1">
+<h1>Quick recap: what are residuals?</h1>
+<p>The basic concept (discussed in the <a href="./errors_reading.html">Unit 4 reading</a>) is that when we have a fitted model, the regression line represents our predictions for the model, where we use <code>x</code> values to predict <code>y</code> values. The <em>difference</em> (meaning literally subtraction) between a predicted <code>y</code> value and the actual <code>y</code> value observed for a data point is called the “error” or “residual.” In this guide, I will henceforth call them “residuals”, because that’s the term most of the R functions and objects use.</p>
+<p>The reading for <a href="./errors_reading.html">Unit 4</a> goes into more detail about why we care about residuals. This guide is just here to show you how to work with them in R.</p>
+</section>
+<section id="getting-residuals-from-a-fitted-model" class="level1 page-columns page-full">
+<h1>Getting residuals from a fitted model</h1>
+<p>The first step is to fit a model. Here, we have a simple linear model with the heights of fathers predicting the heights of their sons:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>height_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> father_height, <span class="at">data =</span> pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then there are basically two ways of getting residuals from this model: the <code>residuals</code> function (which also has an alias called <code>resid</code>) and the “residuals” vector that’s in the model object itself.</p>
+<section id="residuals-function" class="level2">
+<h2 class="anchored" data-anchor-id="residuals-function"><code>residuals</code> function</h2>
+<p>Here’s how the function works:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>height_residuals <span class="ot">&lt;-</span> <span class="fu">residuals</span>(height_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What you get is just a vector of numbers that is in the order of the data that was used to fit the model. Easy. This function works for other kinds of models in R as well, if it’s been implemented by the designers of those model objects.</p>
+</section>
+<section id="getting-residuals-from-the-model-object" class="level2">
+<h2 class="anchored" data-anchor-id="getting-residuals-from-the-model-object">Getting residuals from the model object</h2>
+<p>The residuals are also already stored in the model object itself. But to get them out, we need to talk a bit about complex objects and <em>list</em> objects in R.</p>
+<p>R has a basic data structure called a <em>list</em>. It differs from the simpler <a href="./R_basics_vectors.html">vectors</a>, because all of the values in a vector have to have the same data type (like all numbers, or all strings), but a list is more like a “grab bag” of potentially different kinds of objects. For example, the following is a possible list:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>weird_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">2</span>, <span class="st">"A"</span>, height_model, <span class="at">some_resids =</span> <span class="fu">head</span>(height_residuals))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(weird_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 2
+
+[[2]]
+[1] "A"
+
+[[3]]
+
+Call:
+lm(formula = son_height ~ 1 + father_height, data = pl)
+
+Coefficients:
+  (Intercept)  father_height  
+      33.2681         0.5193  
+
+
+$some_resids
+        1         2         3         4         5         6 
+-6.222119 -6.222119 -6.741383 -6.741383 -7.260648 -7.260648 </code></pre>
+</div>
+</div>
+<p>Note a few things here:</p>
 <ul>
-<li>The navigation is mainly on the left-hand side. The selections are grouped, so there is an item for each Unit, but then under each Unit there is a <em>Concepts Reading</em>, and then a set of <em>Code Tutorials</em>. The latter are broken into multiple files as well.</li>
-<li>Once you’re on a page, there should be a list of sections on the right hand side to help you navigate to specific topics. I’m hoping this is helpful when you want to return to a section for review.</li>
-<li>All of these materials are intended to be read through from beginning to end (though of course you can take breaks). If you try to skip around and read sections out of order, it might not make as much sense.</li>
-<li>I will be adding material and additional resources as we go through the course, so this is still a work in progress.</li>
-<li>There’s a little toggle in the upper right if you want to switch between light and dark color schemes.</li>
+<li>The items are still numbered starting from 1 like a vector, but there are double brackets <code>[[ ]]</code> instead of the single brackets that vectors use. This means that we can get just the value “A” from the above list with <code>weird_list[[2]]</code>.</li>
+<li>This list has a single number, a string, the entire model we fit, and then a vector of numbers. All of these are different types of things, but they are all fine as members of a list.</li>
+<li>For the last item, we gave it a <em>name</em> when we used the “argment-like” notation of <code>some_resids = ...</code>. You can see this in the print-out, because instead of seeing <code>[[4]]</code> for the final member of the list, we see <code>$some_resids</code>. This is important, and we’ll say more in the next section.</li>
 </ul>
 </section>
-<section id="code-and-code-tutorials" class="level1">
-<h1>Code and Code Tutorials</h1>
-<ul>
-<li>This site is created using <a href="https://quarto.org/">Quarto</a>, which means the pages are mostly written in a flavor of <a href="https://rmarkdown.rstudio.com/">R Markdown</a>.</li>
-<li>This also means there will be sections of code and results, especially in the Code Tutorials.</li>
-<li>You should be running all of the code yoruself on your own machine as you work through the material.</li>
-<li>You can either copy &amp; paste the code from this site, or you can just download the <code>.qmd</code> source files, either by cloning this entire repository off of GitHub, or by visiting the course site on ELMS and downloading them from the <em>Modules</em> section of that site.</li>
-</ul>
+<section id="complex-objects-are-usually-list-like" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="complex-objects-are-usually-list-like">Complex objects are usually “list-like”</h2>
+<p>So it turns out that a LOT of objects in R share this basic property with lists, that they are collections of different things, bundled together into a single object. This means that we can access the different parts of these objects just like we would access different parts of a list.</p>
+<p>This is how we will examine the model fit object. First, to be a little more precise, we should say that this is an “lm” object, because that’s what the function <code>class</code> tells us:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(height_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "lm"</code></pre>
+</div>
+</div>
+<p>So what’s contained in an “lm” object? The first step is to use the <code>names</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(height_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "coefficients"  "residuals"     "effects"       "rank"         
+ [5] "fitted.values" "assign"        "qr"            "df.residual"  
+ [9] "xlevels"       "call"          "terms"         "model"        </code></pre>
+</div>
+</div>
+<p>This is a great way to get more info about objects you’re working with in R. Basically any kind of complex object that is more complicated that a vector or a data frame is likely to have a list-like structure, which means it probably has names of the things in it.</p>
+<p>And as we can see here, there’s something called “residuals” right there in the model itself, as well as “coefficients”, “fitted.values”, and other handy stuff.</p>
+<p>Using <code>names()</code> is usually a first good step, because the output is simpler to look at, but if you want more details, you can use the <code>str()</code> function (which stands for “structure”) to see a lot more info about the structure of the “lm” object, what kinds of things each member of the object is, and so on:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(height_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 12
+ $ coefficients : Named num [1:2] 33.268 0.519
+  ..- attr(*, "names")= chr [1:2] "(Intercept)" "father_height"
+ $ residuals    : Named num [1:4312] -6.22 -6.22 -6.74 -6.74 -7.26 ...
+  ..- attr(*, "names")= chr [1:4312] "1" "2" "3" "4" ...
+ $ effects      : Named num [1:4312] -4475.87 92.75 -6.53 -6.53 -7.08 ...
+  ..- attr(*, "names")= chr [1:4312] "(Intercept)" "father_height" "" "" ...
+ $ rank         : int 2
+ $ fitted.values: Named num [1:4312] 65.7 65.7 66.2 66.2 66.8 ...
+  ..- attr(*, "names")= chr [1:4312] "1" "2" "3" "4" ...
+ $ assign       : int [1:2] 0 1
+ $ qr           :List of 5
+  ..$ qr   : num [1:4312, 1:2] -65.6658 0.0152 0.0152 0.0152 0.0152 ...
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : chr [1:4312] "1" "2" "3" "4" ...
+  .. .. ..$ : chr [1:2] "(Intercept)" "father_height"
+  .. ..- attr(*, "assign")= int [1:2] 0 1
+  ..$ qraux: num [1:2] 1.02 1.03
+  ..$ pivot: int [1:2] 1 2
+  ..$ tol  : num 1e-07
+  ..$ rank : int 2
+  ..- attr(*, "class")= chr "qr"
+ $ df.residual  : int 4310
+ $ xlevels      : Named list()
+ $ call         : language lm(formula = son_height ~ 1 + father_height, data = pl)
+ $ terms        :Classes 'terms', 'formula'  language son_height ~ 1 + father_height
+  .. ..- attr(*, "variables")= language list(son_height, father_height)
+  .. ..- attr(*, "factors")= int [1:2, 1] 0 1
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:2] "son_height" "father_height"
+  .. .. .. ..$ : chr "father_height"
+  .. ..- attr(*, "term.labels")= chr "father_height"
+  .. ..- attr(*, "order")= int 1
+  .. ..- attr(*, "intercept")= int 1
+  .. ..- attr(*, "response")= int 1
+  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+  .. ..- attr(*, "predvars")= language list(son_height, father_height)
+  .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "numeric"
+  .. .. ..- attr(*, "names")= chr [1:2] "son_height" "father_height"
+ $ model        :'data.frame':  4312 obs. of  2 variables:
+  ..$ son_height   : num [1:4312] 59.5 59.5 59.5 59.5 59.5 59.5 59.5 59.5 60.5 60.5 ...
+  ..$ father_height: num [1:4312] 62.5 62.5 63.5 63.5 64.5 64.5 64.5 64.5 62.5 62.5 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language son_height ~ 1 + father_height
+  .. .. ..- attr(*, "variables")= language list(son_height, father_height)
+  .. .. ..- attr(*, "factors")= int [1:2, 1] 0 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:2] "son_height" "father_height"
+  .. .. .. .. ..$ : chr "father_height"
+  .. .. ..- attr(*, "term.labels")= chr "father_height"
+  .. .. ..- attr(*, "order")= int 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 1
+  .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+  .. .. ..- attr(*, "predvars")= language list(son_height, father_height)
+  .. .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "numeric"
+  .. .. .. ..- attr(*, "names")= chr [1:2] "son_height" "father_height"
+ - attr(*, "class")= chr "lm"</code></pre>
+</div>
+</div>
+<p>As you can see, this output can be a little more overwhelming. But you can also see that there are the “dollar-sign” names at each level, so at the top we can see <code>$ coefficients</code>, <code>$ residuals</code>, and so on. These are the names we got with <code>names()</code>, and by using the <code>$</code> notation, we can easily extract the values.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This dollar-sign notation is the same that we use to get columns from a data frame. The reason is not a coincidence, because data frames are also similar to lists, where you can think about them as a list of columns.</p></div></div></section>
+<section id="getting-residuals-from-the-lm-object" class="level2">
+<h2 class="anchored" data-anchor-id="getting-residuals-from-the-lm-object">Getting residuals from the “lm” object</h2>
+<p>So here’s where we can use the list-like structure of the “lm” model object to just grab those residuals from the model. And we can print out the first and last few values to convince ourselves that this gets us the same values as the <code>residuals()</code> function we used above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>height_residuals_v2 <span class="ot">&lt;-</span> height_model<span class="sc">$</span>residuals</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(height_residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        1         2         3         4         5         6 
+-6.222119 -6.222119 -6.741383 -6.741383 -7.260648 -7.260648 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(height_residuals_v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        1         2         3         4         5         6 
+-6.222119 -6.222119 -6.741383 -6.741383 -7.260648 -7.260648 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(height_residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    4307     4308     4309     4310     4311     4312 
+7.104500 6.585235 6.585235 6.585235 8.104500 7.585235 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(height_residuals_v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    4307     4308     4309     4310     4311     4312 
+7.104500 6.585235 6.585235 6.585235 8.104500 7.585235 </code></pre>
+</div>
+</div>
+<p>Moving forward, it doesn’t matter which of these techniques we use. So either <code>residuals(model_fit)</code> or <code>model_fit$residuals</code> is a valid way of getting the residual values.</p>
+</section>
+</section>
+<section id="getting-model-predictions" class="level1">
+<h1>Getting model predictions</h1>
+<p>In Challenge 3, we calculated model predictions “manually,” using the linear equation and our model parameters (intercept and slope), so that we could build understanding of how those predictions are generated.</p>
+<p>But in practice, there are handier ways of doing things. Like with the residuals, there are a couple of convenient ways to get the model predictions. The following two things are equivalent:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>height_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(height_model)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>height_predictions_v2 <span class="ot">&lt;-</span> height_model<span class="sc">$</span>fitted.values</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(height_predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1        2        3        4        5        6 
+65.72212 65.72212 66.24138 66.24138 66.76065 66.76065 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(height_predictions_v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1        2        3        4        5        6 
+65.72212 65.72212 66.24138 66.24138 66.76065 66.76065 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(height_predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    4307     4308     4309     4310     4311     4312 
+70.39550 70.91477 70.91477 70.91477 70.39550 70.91477 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(height_predictions_v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    4307     4308     4309     4310     4311     4312 
+70.39550 70.91477 70.91477 70.91477 70.39550 70.91477 </code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-visualize-residuals" class="level1">
+<h1>How to visualize residuals</h1>
+<p>Now that we know how to get residuals (and predicted values), we can look at how to visualize them. We can use the same tools we have learned in other tutorials, namely histograms and scatterplots.</p>
+<section id="attaching-the-residuals-and-predictions-to-your-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="attaching-the-residuals-and-predictions-to-your-data-frame">Attaching the residuals and predictions to your data frame</h2>
+<p>As a preliminary step, I recommend that after you fit your model, you can create new columns that represent the residuals and predicted values. One reason for this is that it’s possible you may do some other manipulation of your data, and if you do something that changes the order of how rows are sorted, the values you get for residuals and predictions may no longer line up with the values they originally came from. In other words, each individual residual or prediction is associated with a row of your data, and the best way to keep that association in sync is to make the residuals/predictions into new columns in the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>height_residuals <span class="ot">&lt;-</span> <span class="fu">residuals</span>(height_model)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(height_model)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  observation father_height son_height height_residuals son_predictions
+1           1          62.5       59.5        -6.222119        65.72212
+2           2          62.5       59.5        -6.222119        65.72212
+3           3          63.5       59.5        -6.741383        66.24138
+4           4          63.5       59.5        -6.741383        66.24138
+5           5          64.5       59.5        -7.260648        66.76065
+6           6          64.5       59.5        -7.260648        66.76065</code></pre>
+</div>
+</div>
+<p>Is this somewhat redundant? Yes. If you have a huge amount of data, could this increase the data frame’s size in memory too much? Yes. But most of the time, it’s a bit of a safer route to go, especially when you are still in the midst of exploring your data. In other words, if you want to closely examine your residuals and/or fitted values, it can be a good idea to just make them columns in the same data frame as your data, to make it just a little easier to get to them.</p>
+</section>
+<section id="visualizing-residuals-step-1-histogram" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-residuals-step-1-histogram">Visualizing residuals step 1: histogram</h2>
+<p>Another side-benefit of making the residuals and predictions columns in your data is that it makes it a little more convenient when we use <code>ggplot()</code>, since we can just refer to the column names.</p>
+<p>Much like when we are examining our data variables for the first time, the first step when looking at residuals is to get a histogram. This is especially important for residuals since the linear model has a fairly strong assumption that residuals are <em>normally distributed</em>, and a histogram is a great way to check that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pl, <span class="fu">aes</span>(height_residuals)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_residuals_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You may want to also plot a normal distribution using densities as we did in the <a href="./R_univariate_distributions.html">Code Tutorial on univariate distributions</a>, because as discussed in the reading, it is an assumption of linear regression that residuals should be normally distributed.</p>
+</section>
+<section id="visualizing-residuals-step-2-plotting-residuals-vs.-predicted-values" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-residuals-step-2-plotting-residuals-vs.-predicted-values">Visualizing residuals step 2: plotting residuals vs.&nbsp;predicted values</h2>
+<p>The next step is a scatterplot. The question is that if residuals are on one axis, which axis should they be on, and what variable should be on the other axis?</p>
+<p>There are lots of different options, which can tell you different things, but one of the most useful visualizations is to plot <em>predicted</em> values on the x-axis and <em>residuals</em> on the y-axis. The reason for this is that moving along the predicted values is like moving along the prediction line. And as we move along the prediction line, we hope to see a similar spread and pattern of residuals as we go. In other words, the “spread” of residuals around a prediction should ideally look similar whether you are predicting small values or large values.</p>
+<p>We can see a nice example of this in our height model. Here, we want to jitter values (because of the overplotting issue described above), but we need to adjust the height of the jittering, due to the different scales of the data. I am using the “classic” theme to get rid of the background “grid” to make the patterns a little easier to see. The red dashed line indicates residual values of zero.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pl, <span class="fu">aes</span>(son_predictions, height_residuals)) <span class="sc">+</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">height =</span> .<span class="dv">4</span>, <span class="at">alpha =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_residuals_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There are still some vertical “stripes” in the data, due to the fact that predictions are still based on our real data, which has the “1 inch resolution” issue discussed above.</p>
+<p>But the main takeaway here is that the data looks like kind of a random “cloud” centered vertically around 0 on the y axis. This is what a “good” distribution of residuals when you have a linear regression. The Practice and Challenge for Unit 4 will give you a look at what some “bad” or “degenerate” patterns of residuals can look like.</p>
+</section>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>Using either the built-in functions <code>residuals</code> and <code>predict</code> or the values stored in the model “lm” object itself, it’s easy to access the residuals and predicted values from a linear model in R.</p>
+<p>When examining residuals, a simple histogram and a scatterplot of residuals by predictions are the two first things you can do in order to check for potential problems in your model.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

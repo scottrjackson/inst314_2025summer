@@ -68,5 +68,17 @@
   },
   "R_lm_fitting.qmd": {
     "R_lm_fitting.html": "8a188ef7"
+  },
+  "R_modelsimulations.qmd": {
+    "R_modelsimulations.html": "eed07374"
+  },
+  "R_modelstats.qmd": {
+    "R_modelstats.html": "ddc7fbbb"
+  },
+  "R_residuals.qmd": {
+    "R_residuals.html": "0bc133d4"
+  },
+  "errors_reading.qmd": {
+    "errors_reading.html": "adf95d3e"
   }
 }
