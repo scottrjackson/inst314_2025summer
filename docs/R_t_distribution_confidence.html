@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Fitting linear regression models in R – INST 314 (Summer 2025)</title>
+<title>The t distribution, computing p-values, and constructing confidence intervals. – INST 314 (Summer 2025)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -331,7 +331,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Unit 3: Fitting Regression Models</a></li><li class="breadcrumb-item"><a href="./R_scatterplots.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_lm_fitting.html">Fitting linear models with the <code>lm()</code> function</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./inference_reading.html">Unit 5: Making Inferences</a></li><li class="breadcrumb-item"><a href="./R_t_distribution_confidence.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_t_distribution_confidence.html">Working with t-values, p-values, and confidence intervals</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -477,13 +477,13 @@ window.Quarto = {
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
  <span class="menu-text">Code Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./R_scatterplots.html" class="sidebar-item-text sidebar-link">
@@ -492,7 +492,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./R_lm_fitting.html" class="sidebar-item-text sidebar-link active">
+  <a href="./R_lm_fitting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Fitting linear models with the <code>lm()</code> function</span></a>
   </div>
 </li>
@@ -575,16 +575,16 @@ window.Quarto = {
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true">
  <span class="menu-text">Code Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./R_t_distribution_confidence.html" class="sidebar-item-text sidebar-link">
+  <a href="./R_t_distribution_confidence.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Working with t-values, p-values, and confidence intervals</span></a>
   </div>
 </li>
@@ -610,22 +610,29 @@ window.Quarto = {
   <ul>
   <li><a href="#whats-in-this-tutorial" id="toc-whats-in-this-tutorial" class="nav-link active" data-scroll-target="#whats-in-this-tutorial">What’s in this tutorial?</a></li>
   <li><a href="#loading-data-and-packages" id="toc-loading-data-and-packages" class="nav-link" data-scroll-target="#loading-data-and-packages">Loading data and packages</a></li>
-  <li><a href="#the-workhorse-lm-function" id="toc-the-workhorse-lm-function" class="nav-link" data-scroll-target="#the-workhorse-lm-function">The workhorse <code>lm</code> function</a>
+  <li><a href="#the-t-distribution" id="toc-the-t-distribution" class="nav-link" data-scroll-target="#the-t-distribution">The <em>t</em> distribution</a>
   <ul class="collapse">
-  <li><a href="#formulas-in-r" id="toc-formulas-in-r" class="nav-link" data-scroll-target="#formulas-in-r">Formulas in R</a></li>
-  <li><a href="#building-a-regression-formula" id="toc-building-a-regression-formula" class="nav-link" data-scroll-target="#building-a-regression-formula">Building a regression formula</a></li>
-  <li><a href="#example-pearson-lees-height-data" id="toc-example-pearson-lees-height-data" class="nav-link" data-scroll-target="#example-pearson-lees-height-data">Example: Pearson &amp; Lee’s height data</a></li>
-  </ul></li>
-  <li><a href="#inspecting-lm-objects-and-getting-parameter-values" id="toc-inspecting-lm-objects-and-getting-parameter-values" class="nav-link" data-scroll-target="#inspecting-lm-objects-and-getting-parameter-values">Inspecting lm objects and getting parameter values</a></li>
-  <li><a href="#example-fitting-a-model-with-a-centered-predictor" id="toc-example-fitting-a-model-with-a-centered-predictor" class="nav-link" data-scroll-target="#example-fitting-a-model-with-a-centered-predictor">Example: fitting a model with a centered predictor</a>
+  <li><a href="#visualizing-the-distribution" id="toc-visualizing-the-distribution" class="nav-link" data-scroll-target="#visualizing-the-distribution">Visualizing the distribution</a>
   <ul class="collapse">
-  <li><a href="#transformations-and-parameters" id="toc-transformations-and-parameters" class="nav-link" data-scroll-target="#transformations-and-parameters">Transformations and parameters</a></li>
+  <li><a href="#densities" id="toc-densities" class="nav-link" data-scroll-target="#densities">Densities</a></li>
+  <li><a href="#degrees-of-freedom" id="toc-degrees-of-freedom" class="nav-link" data-scroll-target="#degrees-of-freedom">Degrees of freedom</a></li>
+  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting">Plotting</a></li>
   </ul></li>
-  <li><a href="#categorical-predictors" id="toc-categorical-predictors" class="nav-link" data-scroll-target="#categorical-predictors">Categorical predictors</a>
+  </ul></li>
+  <li><a href="#calculating-a-p-value-from-a-t-distribution" id="toc-calculating-a-p-value-from-a-t-distribution" class="nav-link" data-scroll-target="#calculating-a-p-value-from-a-t-distribution">Calculating a <em>p</em> value from a <em>t</em> distribution</a>
   <ul class="collapse">
-  <li><a href="#dummy-coding-for-free" id="toc-dummy-coding-for-free" class="nav-link" data-scroll-target="#dummy-coding-for-free">Dummy coding for free</a></li>
+  <li><a href="#populations-and-samples" id="toc-populations-and-samples" class="nav-link" data-scroll-target="#populations-and-samples">Populations and samples</a></li>
+  <li><a href="#computing-standard-errors-and-t-values" id="toc-computing-standard-errors-and-t-values" class="nav-link" data-scroll-target="#computing-standard-errors-and-t-values">Computing standard errors and <em>t</em> values</a></li>
+  <li><a href="#testing-the-t" id="toc-testing-the-t" class="nav-link" data-scroll-target="#testing-the-t">Testing the <em>t</em></a></li>
+  <li><a href="#regression-coefficient-tests" id="toc-regression-coefficient-tests" class="nav-link" data-scroll-target="#regression-coefficient-tests">Regression coefficient tests</a></li>
   </ul></li>
-  <li><a href="#more-to-come" id="toc-more-to-come" class="nav-link" data-scroll-target="#more-to-come">More to come</a></li>
+  <li><a href="#constructing-a-confidence-interval" id="toc-constructing-a-confidence-interval" class="nav-link" data-scroll-target="#constructing-a-confidence-interval">Constructing a confidence interval</a>
+  <ul class="collapse">
+  <li><a href="#confidence-intervals-for-regression-parameters" id="toc-confidence-intervals-for-regression-parameters" class="nav-link" data-scroll-target="#confidence-intervals-for-regression-parameters">Confidence intervals for regression parameters</a></li>
+  <li><a href="#other-confidence-intervals" id="toc-other-confidence-intervals" class="nav-link" data-scroll-target="#other-confidence-intervals">Other confidence intervals</a></li>
+  <li><a href="#quick-and-dirty-confidence" id="toc-quick-and-dirty-confidence" class="nav-link" data-scroll-target="#quick-and-dirty-confidence">Quick and dirty confidence</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -633,9 +640,9 @@ window.Quarto = {
 <main class="content page-columns page-full" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./regression_foundations_reading.html">Unit 3: Fitting Regression Models</a></li><li class="breadcrumb-item"><a href="./R_scatterplots.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_lm_fitting.html">Fitting linear models with the <code>lm()</code> function</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./inference_reading.html">Unit 5: Making Inferences</a></li><li class="breadcrumb-item"><a href="./R_t_distribution_confidence.html">Code Tutorials</a></li><li class="breadcrumb-item"><a href="./R_t_distribution_confidence.html">Working with t-values, p-values, and confidence intervals</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Fitting linear regression models in R</h1>
+<h1 class="title">The t distribution, computing p-values, and constructing confidence intervals.</h1>
 </div>
 
 
@@ -654,235 +661,246 @@ window.Quarto = {
 
 <section id="whats-in-this-tutorial" class="level1">
 <h1>What’s in this tutorial?</h1>
-<p>The main goal of this tutorial is to present and explain the code for fitting a simple regression model in R and getting the parameter estimates from a fitted model.</p>
+<p>This tutorial walks through some of the calculations and code related to a few topics. First, we will examine the <em>t</em> distribution in a bit more detail. I mentioned <em>t</em> values in the <a href="./inference_reading.html">Unit 5 reading</a>, as an example of a <em>test statistic</em>, but I did not explain much about it. We will fill in those gaps here.</p>
+<p>The <em>t</em> value is an important distribution, especially for NHST, and we will go through how <em>p</em>-values are computed from this distribution.</p>
+<p>Finally, we will combine these topics together in order to show how to construct a precise <em>confidence interval</em> around an estimate.</p>
+<p>I recommend going through the <a href="./inference_reading.html">Unit 5 reading</a> before going through this tutorial, in order to get more background on these concepts and their uses.</p>
 </section>
 <section id="loading-data-and-packages" class="level1">
 <h1>Loading data and packages</h1>
-<p>The main function we’ll be using is the <code>lm</code> function from base R, so we don’t need to load any additional packages. We’ll use the subset of data from Pearson &amp; Lee (1903) as described in the <a href="./regression_foundations_reading.html">Unit 3 reading</a>, so we’ll load that data in the code below, the same as we did for the tutorial on <a href="./R_scatterplots.html">scatterplots</a>.</p>
+<p>We will once again use the Pearson &amp; Lee (1908) data on the heights of fathers and their sons, and we will use the <code>ggplot2</code> package for some graphs. Finally, we will also use the <code>dplyr</code> and <code>tidyr</code> packages for some data manipulation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"FatherSonHeights.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"FatherSonHeights.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-t-distribution" class="level1 page-columns page-full">
+<h1>The <em>t</em> distribution</h1>
+<p>Our initial focus in <a href="./univariate_distributions_reading.html">Unit 2</a> was on the uniform and normal (Gaussian) distributions. However, these are just a few of many important and useful distributions that have been described and formulated by statisticians.</p>
+<p>One of the most important is the <em>t</em> distribution.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Here is a run down of some of the highlights of this distribution:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This is sometimes called the “Student’s <em>t</em>”, and there’s a fun bit of trivia about that name. The originator of the <em>t</em> distribution and the <em>t-test</em> was a statistician named William Gosset, whose day job was to work as a brewer and chemist for the Guinness beer company at the beginning of the 20th century. He developed these concepts as a way for Guinness to improve their brewing processes. But this was a “high tech” advancement at the time, and Guinness did not want to risk tipping off their competitors that they were using such advanced mathematical techniques to improve their beer. So Gosset had to publish much of his influential work under a pseudonym, “Student.”</p></div></div><ul>
+<li>The <em>t</em> distribution has just a single parameter: <em>degrees of freedom</em>, which has to be a positive number (and is usually an integer).</li>
+<li>The distribution is very similar to a <em>standard normal</em> distribution, but with thicker “tails”, meaning that extreme values that are farther from the central values are more common in the <em>t</em> than in a normal.</li>
+<li>As the degrees of freedom get larger, the closer the distribution resembles a <em>standard normal</em> distribution.</li>
+<li>The distribution is a good description of the difference between two sample means.</li>
+<li>The distribution is used to assess statistical significance in regression parameters.</li>
+</ul>
+<section id="visualizing-the-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-distribution">Visualizing the distribution</h2>
+<p>In order to illustrate a few of these points, let’s visualize what the distribution looks like, by changing the degrees of freedom, and comparing these to a standard normal distribution.</p>
+<section id="densities" class="level3">
+<h3 class="anchored" data-anchor-id="densities">Densities</h3>
+<p>First, just as we used <code>dnorm()</code> to calculate densities for values from normal distributions, we can use <code>dt()</code> to do the same for the <em>t</em> distribution. One difference is that while we needed to provide both a mean and standard deviation for the normal distribution, all we need for a <em>t</em> distribution is the <em>degrees of freedom</em> parameter.</p>
+<p>The following code starts by creating a bunch of values from -4 to 4, and then uses the <code>dt()</code> function to calculate the corresponding <em>t</em>-distribution densities, for a few different values of degrees of freedom (1, 2, 4, and 10).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x_vals <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">05</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>t_01 <span class="ot">&lt;-</span> <span class="fu">dt</span>(x_vals, <span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>t_02 <span class="ot">&lt;-</span> <span class="fu">dt</span>(x_vals, <span class="dv">2</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>t_04 <span class="ot">&lt;-</span> <span class="fu">dt</span>(x_vals, <span class="dv">4</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>t_10 <span class="ot">&lt;-</span> <span class="fu">dt</span>(x_vals, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will visualize these below, after doing a little work to make the graph prettier.</p>
+</section>
+<section id="degrees-of-freedom" class="level3">
+<h3 class="anchored" data-anchor-id="degrees-of-freedom">Degrees of freedom</h3>
+<p>But first, what’s a “degree of freedom”? This is a concept that comes up in other places in statistics, so it’s worth spending a little time on. Let’s imagine that we are talking about estimating a mean for a set of values. And let’s say that we play a guessing game, where we both know the mean, but we don’t yet know the values we are averaging. My job is to make up values, and my only rule is that by the time I finish listing the numbers, they have to average out to the mean that we already know. Your job is to try to guess each of the numbers that I pick. How well do you think you could do?</p>
+<p>As an example, imagine that we know that the mean is 10. For the first number, you have essentially no chance at guessing, because I could pick literally any number. I have total <em>freedom</em> in determining a value. So I’ll just pick -3,742.933. Bet you couldn’t have guessed that! But now, if you just do a little math, you know exactly what the next number will be, because my hands are tied. I <em>have</em> to pick 3,762.933 if the mean value is already determined to be 10.</p>
+<p>Now imagine that we play the game again, and we still set the mean to be 10, but now I have 100 numbers to pick. How many do you think you could get? After thinking about for a bit, you should come to the conclusion that for the first 99 numbers, I have total freedom, and there’s almost zero chance of you reading my mind to multiple decimal numbers. But again, once we get to that final number, as long as you do the math, you have a 100% chance of guessing correctly, because we both know what the final mean value is.</p>
+<p>In statistical terms, this situation describes how I have a very simple model with one parameter, namely the mean. And so I end up having <em>degrees of freedom</em> (the freedom to be able to pick any number I want) equal to the total number of data points, minus one. As we have more complex models with more parameters, those parameters each “spend” a degree of freedom.</p>
+<p>If you think about a simple regression, it has two parameters: the intercept and slope. And if there are only two <em>data</em> points, there can’t be any “noise” in the model because just having two points defines the line exactly. There are no degrees of freedom left! Similarly, if we have three data points in a regression, then there’s just one degree of freedom left, because if we both know the slope and intercept, I could pick a point anywhere I wanted in coordinate space for the first point, but then I wouldn’t have any choice about where to put the last two points in order to make the regression line fit the target intercept and slope.</p>
+<p>This pattern continues as we have models with more parameters. Therefore, the general formula (most of the time) is that the degrees of freedom parameter is calculated as <span class="math inline">\(N\)</span>, the number of data points, minus <span class="math inline">\(k\)</span>, the number of parameters.</p>
+<p>Bringing this back to the <em>t</em> distribution, this means that as we get more data, the degrees of freedom will also increase, and as the degrees of freedom increase, the <em>t</em> looks more and more like a standard normal distribution.</p>
+</section>
+<section id="plotting" class="level3">
+<h3 class="anchored" data-anchor-id="plotting">Plotting</h3>
+<p>So let’s visualize this.</p>
+<p>In this next step, I take the densities we calculated above, and put them together into a data frame, along with densities calculated from a normal distribution, for comparison.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>distplot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">values =</span> x_vals,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">normal =</span> <span class="fu">dnorm</span>(x_vals, <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">t_01 =</span> t_01,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">t_02 =</span> t_02,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">t_04 =</span> t_04,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">t_10 =</span> t_10)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, I’ll use a handy function from the <code>tidyr</code> package in order to reshape the data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>distplot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(distplot_data, <span class="at">cols =</span> normal<span class="sc">:</span>t_10,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">values_to =</span> <span class="st">"density"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">names_to =</span> <span class="st">"distribution"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we can use this reshaped data to plot the different curves in different colors. The normal distribution is plotted in black with a dashed line. As you can see, as the degrees of freedom parameter increases, it gets closer to a normal distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(distplot_long, <span class="fu">aes</span>(values, density)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> distribution, <span class="at">linetype =</span> distribution)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"blue"</span>, <span class="st">"purple"</span>)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R_t_distribution_confidence_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Neat!</p>
+</section>
+</section>
+</section>
+<section id="calculating-a-p-value-from-a-t-distribution" class="level1">
+<h1>Calculating a <em>p</em> value from a <em>t</em> distribution</h1>
+<section id="populations-and-samples" class="level2">
+<h2 class="anchored" data-anchor-id="populations-and-samples">Populations and samples</h2>
+<p>One of the main roles of the <em>t</em> distribution is as a <em>test statistic</em>, which means that the distribution holds under a certain null hypothesis. One original application was for evaluating whether two populations of values have different means, based on the means of two samples.</p>
+<p>For example, take the father/son height data we’ve looked at throughout the course. We have a sample of fathers and a sample of (adult) sons, and normally we wouldn’t necessarily think of these as separate groups, since all fathers are also someone’s son. But these also represent different generations, so in that sense they could be from two different populations.</p>
+<p>This raises a question: do these two generations of men differ in their average height? We are asking a question about the <em>populations</em> (the overall groups of men from these two generations), but we only have <em>samples</em> of data.</p>
+<p>What Gosset showed was that if these two populations had exactly the same average height – a form of the <em>null hypothesis</em>, since the difference is hypothesized to be exactly zero – you could calculate a statistic that followed the distribution that we now call the <em>t</em> distribution. And if that <em>t</em> value was unexpectedly large (positive or negative), it would produce a small <em>p</em> value, indicating that the data would be surprising to find if the null hypothesis were true.</p>
+<p>So let’s take an even smaller sample of data from the full data set, and go through the steps of calculating the <em>t</em> and <em>p</em> values for this kind of test. First, I will select a random sample of 30 rows of data from our full data set (representing 30 father-son pairs), and by using the <code>set.seed()</code> function, I can make sure that we pull the same 30 pairs each time we run this code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">33</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>father_son_sample <span class="ot">&lt;-</span> pl[<span class="fu">sample</span>(<span class="fu">nrow</span>(pl), <span class="dv">30</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, let’s compute the difference between the two. The following gets the pairwise differences and puts them in a new column. We can inspect the top few rows to check that we did this correctly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>father_son_sample<span class="sc">$</span>difference <span class="ot">&lt;-</span> father_son_sample<span class="sc">$</span>father_height <span class="sc">-</span> father_son_sample<span class="sc">$</span>son_height</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(father_son_sample)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  observation father_height son_height
-1           1          62.5       59.5
-2           2          62.5       59.5
-3           3          63.5       59.5
-4           4          63.5       59.5
-5           5          64.5       59.5
-6           6          64.5       59.5</code></pre>
+<pre><code>     observation father_height son_height difference
+1288        1288          67.5       66.5          1
+2876        2876          66.5       69.5         -3
+1138        1138          65.5       66.5         -1
+4072        4072          70.5       72.5         -2
+1017        1017          64.5       66.5         -2
+688          688          65.5       65.5          0</code></pre>
 </div>
 </div>
 </section>
-<section id="the-workhorse-lm-function" class="level1">
-<h1>The workhorse <code>lm</code> function</h1>
-<p>One of the core functions of R is the <code>lm</code> function, which stands for “linear model”. This function is used to estimate linear regression parameters using <a href="./regression_foundations_reading.html#model-estimation-ordinary-least-squares">ordinary least squares</a>. There are several more advanced options and parameters in order to work with more complex uses, but we will focus on just two main arguments, the <code>formula</code> and the <code>data</code>.</p>
-<p>The <code>data</code> argument is straightforward, and is just the data frame with the variables that we will use in the regression.</p>
-<p>The <code>formula</code> argument warrants a little more discussion.</p>
-<section id="formulas-in-r" class="level2">
-<h2 class="anchored" data-anchor-id="formulas-in-r">Formulas in R</h2>
-<p>R actually has a specific type of data object called “formulas”, and once you understand what they look like, you’ll notice them across many different functions. The main thing that tells you that you are working with a formula in R is the use of the tilde character: <code>~</code></p>
-<p>This is the character that is on the key just to the left of the “1” key on most English keyboards, but you need to use Shift with it, otherwise you get a “backtick” (e.g., the character used at the beginning and end of R code chunks in R Markdown).</p>
-<p>The tilde symbol in a formula can usually be read as “is distributed as a function of”. So for example, a typical regression formula might look like:</p>
-<p><code>y ~ 1 + x</code></p>
-<p>This could be read as something like “the variable <span class="math inline">\(y\)</span> is distributed as a function of a constant (1) and a variable <span class="math inline">\(x\)</span>”. So when you have a formula, thinking about what’s on the left side or right side of the tilde is the key.</p>
+<section id="computing-standard-errors-and-t-values" class="level2">
+<h2 class="anchored" data-anchor-id="computing-standard-errors-and-t-values">Computing standard errors and <em>t</em> values</h2>
+<p>Now all we need to compute the <em>t</em> test is to divide the mean difference by the standard error of the mean. The standard error of the mean difference is the standard <em>deviation</em> of the vector of differences, divided the square root of <span class="math inline">\(N\)</span>, the total number of difference values. In equation form, the standard error of the mean looks like this:</p>
+<p><span class="math display">\[t = \frac{\sigma}{\sqrt{n}}\]</span></p>
+<p>In order to capture this in R, we can just write out the code for these calculations. But this is a good opportunity to show you how to make your own functions in R. In the code below, we can create a new function definition. In this case, we decide that it will take an argument called <code>x</code>, and it simply performs the standard error calculation to return the result. We then show that this works on the column of height differences that we added to our data frame above. Finally, we can calculate the <em>t</em> value by dividing the mean of the differences by this standard error of the mean.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define a function</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>std_err_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">sd</span>(x)<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">length</span>(x)))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use our new function</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(std_err_differences <span class="ot">&lt;-</span> <span class="fu">std_err_mean</span>(father_son_sample<span class="sc">$</span>difference))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3895178</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate t</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>(t_diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(father_son_sample<span class="sc">$</span>difference)<span class="sc">/</span>std_err_differences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -2.567277</code></pre>
+</div>
+</div>
+<p>The result is a <em>t</em> value of -2.57 (rounding off to two decimals). The <em>t</em> distribution is symmetrical around zero, so the negative doesn’t really matter for our purposes. All it indicates is that the sons are on average taller than their fathers (rather than vice versa), since we subtracted the son heights from the father heights. If we had subtracted in the other direction, we would have ended up with a positive <em>t</em>, but the same value.</p>
 </section>
-<section id="building-a-regression-formula" class="level2">
-<h2 class="anchored" data-anchor-id="building-a-regression-formula">Building a regression formula</h2>
-<p>In terms of regression, this formula syntax basically corresponds directly to the linear equation:</p>
-<p><span class="math inline">\(y = \alpha + \beta \times x\)</span></p>
-<p>On the left side of the tilde is the <em>response</em> variable, which we usually call the “y” variable. This is the quantity we are trying to predict.</p>
-<p>On the right side of the tilde is the rest of the linear equation. First we have an <em>intercept</em>, which is essentially a constant. In the R formula, we use the number 1 to signify that constant. The intercept in a linear model is a constant because the intercept is just a single fixed value, no matter where on the line we are.</p>
-<p>The “x” on the right side is the <em>predictor</em> variable. In terms of our linear equation, it’s the data that get multiplied by the slope.</p>
-<p>This is one of the nice things about R’s use of formulas in the <code>lm()</code> function – the straightforward mapping between our <em>statistical</em> model and the syntax of how we specify it in the function.</p>
-</section>
-<section id="example-pearson-lees-height-data" class="level2">
-<h2 class="anchored" data-anchor-id="example-pearson-lees-height-data">Example: Pearson &amp; Lee’s height data</h2>
-<p>Let’s make these abstract concepts a little more concrete with our example data. In this data, let’s use the <code>father_height</code> variable as a predictor to predict the <code>son_height</code> variable. This means our formula should look like this:</p>
-<p><code>son_height ~ 1 + father_height</code></p>
-<p>This essentially translates to: “we are predicting <code>son_height</code> as a function of a constant (intercept) and the <code>father_height</code> variable.”</p>
-<p>What we don’t know yet is the actual parameters of this model: the exact value of the intercept constant, or the exact value of the slope that the <code>father_height</code> is multiplied by in order to get the predicted <code>son_height</code> value. But that’s exactly what the <code>lm</code> function will do for us: estimate those parameters!</p>
-<p>So here’s the code that puts this into action:</p>
+<section id="testing-the-t" class="level2">
+<h2 class="anchored" data-anchor-id="testing-the-t">Testing the <em>t</em></h2>
+<p>The final step is to compute a <em>p</em>-value, which tells us how surprising this <em>t</em> value of -2.57 would be if the null hypothesis were true. How do we know if -2.57 is a surprising value? First, look up at the graph of the <em>t</em> distribution from earlier. Clearly -2.57 is in the left tail, so it’s fairly extreme. What we want is to know exactly how much of the <em>t</em> distribution would be as negative or more negative than this value, essentially the area under the curve to the left of -2.57. But in this kind of test, we also need to test the other side, how much of the distribution would be as high or higher than 2.57. This is also why the +/- sign doesn’t matter so much, because we almost always perform two-tailed tests, since we could have found out that the sons were taller or shorter than the fathers. What we care about is that whichever direction this difference is, it’s significantly different from zero, so that we can reject the null hypothesis.</p>
+<p>We can use the <code>pt()</code> function in R, but we need one more piece of information: the degrees of freedom. This is because this is the one parameter of the <em>t</em> distribution. You can review the discussion from the Unit 5 reading, but in brief since we have one parameter in our analysis (the mean value we are testing), our degrees of freedom is the number of observations minus one (because there’s one parameter), so that’s 30 - 1 = 29.</p>
+<p>Armed with a <em>t</em> and a degrees of freedom, we can now calculate how much of the distribution is at or lower than our <em>t</em> value of -2.57:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pl_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> father_height, <span class="at">data =</span> pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>So in the <code>lm()</code> function, we start by giving the formula, using the names of the columns that represent our variables. Then in the next argument we just need to tell R what data frame to look at to find these columns.</p>
-<p>Note that because we want to “save” the results of the regression, we assign the results to a variable like normal. The results are a special type of object with the class <code>lm</code>, which we can verify using the <code>class()</code> function like so:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pl_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">pt</span>(<span class="sc">-</span><span class="fl">2.57</span>, <span class="dv">29</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "lm"</code></pre>
+<pre><code>[1] 0.007786343</code></pre>
 </div>
 </div>
-<p>Once we fit the model, basically all the information we need is in this new object, so let’s turn to how to get values from it.</p>
+<p>But recall that we also need the upper tail, so we can essentially multiply this by two in order to get the final <em>p</em>-value.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(p_value <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fl">2.57</span>, <span class="dv">29</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01557269</code></pre>
+</div>
+</div>
+<p>And since this <em>p</em>-value of around 0.016 is less than 0.05, we say that this difference is statistically significant, and we can reject the null hypothesis.</p>
+<p>In other words, we can end up concluding that on average, we expect the average height of the younger generation to be taller than the older generation.</p>
+</section>
+<section id="regression-coefficient-tests" class="level2">
+<h2 class="anchored" data-anchor-id="regression-coefficient-tests">Regression coefficient tests</h2>
+<p>The process above is essentially the same when we test the signficance of regression coefficients. <a href="./R_regression_inference.html">A separate tutorial</a> shows you how to extract these values from an <code>lm</code> object in R, so you don’t need to do any of these calculations, but they work essentially the same way. The <em>t</em> is the result of the regression parameter (for example, a slope) divided by its standard error, and the degrees of freedom are determined as the number of observations minus the number of parameters. Once you have a <em>t</em> and a degrees of freedom, you can calculate the <em>p</em>-value just the same as we did here above.</p>
 </section>
 </section>
-<section id="inspecting-lm-objects-and-getting-parameter-values" class="level1">
-<h1>Inspecting lm objects and getting parameter values</h1>
-<p>There’s actually a <em>lot</em> of information in an “lm” object, so we won’t go into exhaustive detail right now, but we’ll return to it throughout the course. It’s useful to think about the <code>lm</code> object as representing our fitted model, and we can use that model to do all sorts of things, and we can inspect the model in various ways.</p>
-<p>As we discussed in the <a href="./regression_foundations_reading.html#the-linear-model">reading</a>, the most fundamental aspect of the model is the <em>parameter values</em>. In our simple linear model, that’s the <em>intercept</em> (aka “alpha” or <span class="math inline">\(\alpha\)</span>) and the <em>slope</em> (aka “beta” or <span class="math inline">\(\beta\)</span>). In R, these parameter values are also called <em>coefficients</em>.</p>
-<p>One way to inspect the internal structure of objects in R is with the <code>str()</code> function (standing for “structure”), but since lm objects are so complex, it’s a little simpler to use the <code>names()</code> function instead:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pl_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "coefficients"  "residuals"     "effects"       "rank"         
- [5] "fitted.values" "assign"        "qr"            "df.residual"  
- [9] "xlevels"       "call"          "terms"         "model"        </code></pre>
-</div>
-</div>
-<p>And as you can see, there’s a structure inside the object called <code>coefficients</code>.</p>
-<p>In this structure, you can use the same “dollar sign” notation that we learned to access columns in a data frame. In other words, we can access the coefficients with the following:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  (Intercept) father_height 
-   33.2680781     0.5192646 </code></pre>
-</div>
-</div>
-<p>This is where R’s common use of ways to get individual pieces of a larger structure comes in handy. So all of the things we know about how to get values out of <a href="./R_basics_vectors.html">vectors</a> or <a href="./R_basics_dataframes.html">data frames</a> also apply here.</p>
-<p>To walk you through the process, let’s back up and start with the concept that we know our regression results are in the <code>pl_regression</code> object, but we’re not sure how to get info out of it. The first step is to use <code>names()</code> (or if you want to look at more detail, <code>str()</code>), and look at what the sub-parts of this object are.</p>
-<p>Seeing that there’s something called <code>coefficients</code>, we can access that using the code above: <code>pl_regression$coefficients</code></p>
-<p>Now what? Well, now we might want to check on what kind of thing this sub-structure is, again using our friend, the <code>class()</code> function:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pl_regression<span class="sc">$</span>coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "numeric"</code></pre>
-</div>
-</div>
-<p>The <code>class</code> function tells us that the coefficients are just a vector of numbers, though this vector also has names. This is good, because we already know how to work with vectors. For example, since <code>pl_regression$coefficients</code> is a vector, if we want to just get the value for the intercept parameter, we can do either of the following:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(Intercept) 
-   33.26808 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="st">"(Intercept)"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(Intercept) 
-   33.26808 </code></pre>
-</div>
-</div>
-<p>And similarly, we can get the slope parameter (which always has the name of the predictor it’s associated with) with either of the following:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>father_height 
-    0.5192646 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pl_regression<span class="sc">$</span>coefficients[<span class="st">"father_height"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>father_height 
-    0.5192646 </code></pre>
-</div>
-</div>
-<p>Putting this together, we can easily extract the intercept and slope parameters and assign them to variables with the following (or you could use the names instead, if you like that way better):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>regression_intercept <span class="ot">&lt;-</span> pl_regression<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>regression_slope <span class="ot">&lt;-</span> pl_regression<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="example-fitting-a-model-with-a-centered-predictor" class="level1 page-columns page-full">
-<h1>Example: fitting a model with a centered predictor</h1>
-<p>As we discussed in the <a href="./regression_foundations_reading.html">reading</a>, for this particular example, the intercept is not especially meaningful, since it means “the expected height of the son if the father is 0 inches tall.” So let’s walk through the code you could use to:</p>
+<section id="constructing-a-confidence-interval" class="level1 page-columns page-full">
+<h1>Constructing a confidence interval</h1>
+<p>The final step in this tutorial are to apply these same concepts in a slightly different way, in order to construct a confidence interval.</p>
+<p>The first step is to decide on the <em>confidence level</em>. This is similar to setting an <em>alpha</em> threshold for what counts as a “significant” <em>p</em>-value threshold. The higher the “confidence”, the wider the interval will be. This makes intuitive sense if you think about it. Imagine that I was meeting a new person, and was asked to guess their height. If I made a guess with a large interval, like saying, “I think they will be between 50 and 80 inches tall,” I could be highly confident that they would fall in that range. Conversely, if I guessed a narrower range, like between 67 and 70 inches, I would have much less confidence that I would be correct.</p>
+<p>Setting a confidence level is usually expressed as a percentile, and similar to how p &lt; 0.05 is a typical threshold for significance, it’s common to construct a 95% confidence interval. This is generally interpreted to mean that you can be 95% confident that the true value lies in this interval.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> You could construct 50% confidence intervals, or 99%, or 83%, or whatever you wanted. But 95% is the most typical choice.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Technically, the proper frequentist definition is to say that if you were able to repeat this same data collection (with new samples) many, many times, and you constructed a confidence interval each time, 95% of the confidence intervals from these hypothetical data sets would include the “true” value of the parameter. But in practice we treat it as “close enough” to say that when we construct a single 95% confidence interval, we can have 95% confidence that the true values lies inside that interval.</p></div></div><p>The steps for constructing a confidence interval are as follows:</p>
 <ol type="1">
-<li>Center the <code>father_height</code> predictor variable</li>
-<li>Re-fit the model with the new (centered) predictor</li>
-<li>Get the updated coefficients</li>
+<li>Obtain an estimate (which can be a mean, or a regression parameter, or whatever).</li>
+<li>Obtain the standard error of that estimate.</li>
+<li>Obtain “critical values” from the <em>t</em> distribution<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> for the high and low ends of the interval.</li>
+<li>Multiply the critical <em>t</em> values by the standard error.</li>
+<li>Add the results of step 4 (one should be negative and the other positive) to the mean, so you end up with an interval that goes both above and below the mean.</li>
 </ol>
-<p>First, we are creating a different “version” of a variable, namely the centered version of the <code>father_height</code> variable. Since transformations like log, centering, scaling, standardizing, etc. are common, I like to have a personal notation for reminding myself that a variable has been centered. For example, I like to add a “.c” at the end of a variable to stand for “this has been centered”. But note that this is just a personal naming convention; you can pick your own variable naming conventions. I just highly recommend having <em>some</em> kind of consistent system – your future self will thank you when they try to read your code later!</p>
-<p>So using this naming convention, the code below creates a new centered variable from the <code>father_height</code> variable, by simply subtracting the mean of <code>father_height</code> from the <code>father_height</code> column<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, and saving that as a new column in the data frame. Then we can fit a new model using that new variable in the formula. Finally, we can print the coefficients from that new model to see how the intercept has changed, but the slope hasn’t.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Recall from the <a href="./R_basics_vectors.html">tutorial on vectors</a> that in R, if you subtract a single number (like a mean) from a vector of numbers (like a column in your data), R subtracts that single value from <em>each</em> value in the vector. No programming loops required!</p></div></div><div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>father_height.c <span class="ot">&lt;-</span> pl<span class="sc">$</span>father_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>father_height)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pl_regression_father.c <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>pl_regression_father.c<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    (Intercept) father_height.c 
-     68.1614100       0.5192646 </code></pre>
-</div>
-</div>
-<p>Recall from the <a href="./regression_foundations_reading.html">reading</a> that this intercept value can be interpreted to mean “the expected height of a son of an average-height father is 68.16 inches.” The slope doesn’t change, because the relationship is still the same.</p>
-<p>We can also center the <code>son_height</code> variable, refit the model again, and print the updated parameter values:</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;If you are constructing a confidence interval around a mean or a regression parameter (which are very common things to do), you definitely use a <em>t</em> distribution. But there are other times when you might use a normal or other distribution.</p></div></div><p>Let’s use these steps to construct a confidence interval around the height differences that we were just examining.</p>
+<p>First, let’s re-compute the mean and standard error, just for illustration. We can re-use that new function we made above called <code>std_err_mean()</code> as well.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_height.c <span class="ot">&lt;-</span> pl<span class="sc">$</span>son_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>son_height)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.c <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height.c <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.c<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(mean_diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(father_son_sample<span class="sc">$</span>difference))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    (Intercept) father_height.c 
-  -1.832789e-14    5.192646e-01 </code></pre>
+<pre><code>[1] -1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(stderr_diff <span class="ot">&lt;-</span> <span class="fu">std_err_mean</span>(father_son_sample<span class="sc">$</span>difference))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3895178</code></pre>
 </div>
 </div>
-<p>By centering both the response variable and the predictor variable, the intercept should be zero. Recall that this is because the best-fitting regression line will <em>always</em> pass through the [mean of <span class="math inline">\(x\)</span>, mean of <span class="math inline">\(y\)</span>] coordinate. So by centering both variables (making the mean of both variables 0), both the <span class="math inline">\(y\)</span>-intercept and the <span class="math inline">\(x\)</span>-intercept are at 0.</p>
-<p>But if that is true, why does the output above not say <code>0</code>?</p>
-<p>This is a good opportunity to point out that when R runs into a lot of digits, it will often print things out in scientific notation. So here, the intercept value is a number times 10 to the negative 14, which is a very very very small number. To illustrate, you could re-write -1.83e-14 as: -0.0000000000000183</p>
-<p>Computers actually have a hard time computing things to be exactly zero in many cases, due to the limits of <em>floating point</em> numeric precision, so if you ever see a number this small in R, it’s basically equivalent to zero.</p>
-<p>Somewhat annoyingly, when you ask R to print something, the default is to print things out in a consistent way, so we also get scientific notation for the slope parameter when we print it along with this practically-zero intercept. Converting into regular notation, the value of the slope is 0.519, which is the same as in the other models we’ve fitted so far. Just keep an eye out for scientific notation when you’re reading results!</p>
-<p>Finally, let’s look at the code for <a href="./regression_foundations_reading.html">the example from the reading</a> where we created yet another version of the <code>son_height</code> variable by subtracting the mean <em>father’s</em> height. This gets us a variable that we can interpret as “relative height compared to an average father.”</p>
-<p>I gave this variable a suffix of <code>.adj</code> to stand for “adjusted”, because I couldn’t think of anything I liked better. Again, you should come up with a naming convention that makes sense to you. We can then once again fit a new model with these variables and print the parameter values.</p>
+<p>That takes care of steps 1 and 2, but for step 3, what is a “critical value”? Remember how as the <em>t</em> gets larger, the <em>p</em> value gets smaller, and at some point we would cross the <em>p</em> &lt; 0.05 threshold? The “critical value” is the value of <em>t</em> that corresponds to the target <em>p</em> value. When we have a 95% confidence interval, this means we are trying to cover the middle 95% of the data. This in turn means that the boundaries of our interval are at the 2.5% and 97.5% levels of the distribution. To put it another way, if we want the middle 95% of the distribution, what we’re left with is 2.5% of the data at the bottom and at the top of the distribution.</p>
+<p>The following code makes use of the <code>qt()</code> function,<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> so that we can give it these % levels and it will give us back the corresponding critical <em>t</em> values. Again, we need to provide the degrees of freedom parameter for the <em>t</em>, and again, it’s the number of observations minus the number of parameters. Here we are just looking at the mean, so it’s 30 - 1 = 29 once more. The code below shows us that for 29 degrees of freedom, the critical <em>t</em> values are -2.045 and 2.045.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;At this point we have now seen the full “family” of distribution functions. the <code>r</code> version, like <code>rnorm()</code> or <code>runif()</code> or <code>rt()</code> generates random numbers from that distribution. The <code>d</code> function, like <code>dnorm()</code> or <code>dt()</code> takes values from the distribution and returns the probability density for each. The <code>p</code> function, like <code>pnorm()</code> or <code>pt()</code>, takes values from the distribution and returns the cumulative probability density (aka, “how much of the distribution is equal to or less than this value?”). And now finally the <code>q</code> function, like <code>qnorm()</code> or <code>qt()</code>, is the reverse, taking <em>p</em>-values, which you can also think of as quantiles, and returning the critical values at those points in the distribution.</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>(high_low <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">df =</span> <span class="dv">29</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -2.04523  2.04523</code></pre>
+</div>
+</div>
+<p>Now, all we need to do is multiply these critical <em>t</em> values by our standard error, and add them both to the mean.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pl<span class="sc">$</span>son_height.adj <span class="ot">&lt;-</span> pl<span class="sc">$</span>son_height <span class="sc">-</span> <span class="fu">mean</span>(pl<span class="sc">$</span>father_height)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.adj <span class="ot">&lt;-</span> <span class="fu">lm</span>(son_height.adj <span class="sc">~</span> father_height.c, <span class="at">data =</span> pl)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>pl_regression_fatherson.adj<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(confint_95 <span class="ot">&lt;-</span> (high_low <span class="sc">*</span> stderr_diff) <span class="sc">+</span> mean_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    (Intercept) father_height.c 
-      0.9638219       0.5192646 </code></pre>
+<pre><code>[1] -1.7966534 -0.2033466</code></pre>
 </div>
 </div>
-<p>As discussed in the reading, this changes the interpretation of the intercept as “how much taller (on average) are the sons in this data, as compared to the average father height in this data.” And again, notice that the slope has not changed.</p>
-<section id="transformations-and-parameters" class="level2">
-<h2 class="anchored" data-anchor-id="transformations-and-parameters">Transformations and parameters</h2>
-<p>As a bit of a side-note, the reason that the <em>slope</em> did not change in any of the above models is that the only transformation we were performing was simple subtraction. Other transformations would affect the slope (as well as the intercept), like multiplication/division or exponential/logarithmic transformation.</p>
-<p>The easiest way to wrap your head around this in an intuitive way is to remember that the slope parameter means “for every <em>unit</em> change in the <span class="math inline">\(x\)</span> variable, there is a change of <span class="math inline">\(\beta\)</span> units in the <span class="math inline">\(y\)</span> variable.” If you are doing something like division or log-transforming, you are affecting what the <em>units</em> are of one or both variables, so the interpretation of what a “unit change” refers to is also affected.</p>
-<p>We’ll see examples of this going forward; I just wanted to point it out now in case you were getting a false impression that the slope of a model is unaffected by changes to the variables. To be precise, the slope is unaffected when we are just doing simple addition or subtraction. Other transformations will affect both the slope and intercept.</p>
+<p>This tells us that while the mean difference in this small sample of 30 father-son pairs is -1 (meaning that fathers are on average 1 inch shorter than their sons), the 95% confidence interval is between -1.80 and -0.20 inches. This means that since we only have 30 pairs here, we have some uncertainty about whether the overall difference in the larger population is exactly -1, but we can still be 95% confident that the overall difference will fall between -1.80 and -0.20.</p>
+<p>If we wanted to be 99% confident, we would need to compute different critical <em>t</em> values, with the following results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>(higher_lower <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.005</span>, <span class="fl">0.995</span>), <span class="at">df =</span> <span class="dv">29</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -2.756386  2.756386</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(confint_99 <span class="ot">&lt;-</span> (higher_lower <span class="sc">*</span> stderr_diff) <span class="sc">+</span> mean_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -2.07366145  0.07366145</code></pre>
+</div>
+</div>
+<p>At this point, our interval stretches from -2.07 inches to <em>positive</em> 0.07 inches. So at this point, we can’t quite be 99% confident that fathers in the larger population are shorter than their sons on average. But we can say that if they aren’t shorter, they almost certainly are not much taller, and they are possibly up to 2 inches shorter.</p>
+<p>With larger samples of data, the standard error will typically shrink, so the confidence interval will also usually get narrower. The only time adding data may not reduce your uncertainty is if the new data is very different or much more variable than the previous data.</p>
+<section id="confidence-intervals-for-regression-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-intervals-for-regression-parameters">Confidence intervals for regression parameters</h2>
+<p>This process actually works exactly the same for regression parameters; all the same steps. You just need to make sure you’re getting the right degrees of freedom, but that’s still just the number of observations minus the number of parameters. So if you have a more complex model with 2000 observations and 20 parameters, you’d still have 1980 degrees of freedom.</p>
+<p>Otherwise, as long as you get the estimates and standard errors for the parameter, you can easily follow the steps here to compute a confidence interval, and you can pick any confidence level you want, just by changing the critical <em>t</em> values.</p>
+</section>
+<section id="other-confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="other-confidence-intervals">Other confidence intervals</h2>
+<p>In fact, this process is so general, it applies nearly the same for virtually any other distribution. Usually, the only thing that might change is how the standard errors are calculated. For example, if your data is a proportion instead of a mean – imagine a poll result with 53% of the vote going to a particular candidate – you could calculate a confidence interval around that estimate, but the formula for the standard error of a proportion is different so you would need to apply that.</p>
+<p>But again, if you have an estimate and a standard error, you can get a confidence interval.</p>
+</section>
+<section id="quick-and-dirty-confidence" class="level2">
+<h2 class="anchored" data-anchor-id="quick-and-dirty-confidence">Quick and dirty confidence</h2>
+<p>Finally, I should point out that while getting these exact calculations is important if you want to have a confidence interval that is precisely 95% or whatever you pick, you may have noticed that a lot of the critical values are hovering around 2. It turns out that if you just take +/- 2 standard errors around the mean, that is a quick approximation to a 95% confidence interval. If you take +/- 1 standard error, that’s roughly a 68% confidence interval. Remember that the “confidence” refers to the confidence that the “true” or population value is within the interval. If you have a wider interval, you can be more confident that the true value is contained in that interval.</p>
 </section>
 </section>
-<section id="categorical-predictors" class="level1">
-<h1>Categorical predictors</h1>
-<p>Now let’s look briefly at how to handle categorical predictors. Luckily, R does some of the work for us. We will be using the same sleep-study data discussed in the reading. This data set is pre-loaded in R as <code>sleep</code>, so it’s very convenient to work with.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  extra group ID
-1   0.7     1  1
-2  -1.6     1  2
-3  -0.2     1  3
-4  -1.2     1  4
-5  -0.1     1  5
-6   3.4     1  6</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(sleep<span class="sc">$</span>group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "factor"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     extra        group        ID   
- Min.   :-1.600   1:10   1      :2  
- 1st Qu.:-0.025   2:10   2      :2  
- Median : 0.950          3      :2  
- Mean   : 1.540          4      :2  
- 3rd Qu.: 3.400          5      :2  
- Max.   : 5.500          6      :2  
-                         (Other):8  </code></pre>
-</div>
-</div>
-<p>When we look at the data, there is a <code>group</code> variable that’s our categorical “treatment” variable. But while it looks like it’s the number 1 and the number 2, it’s actually encoded in R as a <code>factor</code> data type. You can also see this if you use the <code>summary</code> function on the data frame, because instead of telling us the mean, median, min/max and quartiles of the variable (which it would do if R was treating it as a number), it tells us the tabulation of how many times each value shows up. This is the hint that this variable is a categorical factor.</p>
-<section id="dummy-coding-for-free" class="level2">
-<h2 class="anchored" data-anchor-id="dummy-coding-for-free">Dummy coding for free</h2>
-<p>When a variable is a factor (or a string), then when you use <code>lm()</code> to fit a model, R will do the dummy-coding for you, invisibly converting the factor to a variable of 0s and 1s when fitting the model.</p>
-<p>So let’s fit a model to this data, with the categorical <code>group</code> predicting the <code>extra</code> column, which is the amount of extra hours of sleep each person got for the given treatments.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sleep_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(extra <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group, <span class="at">data =</span> sleep)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sleep_regression<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(Intercept)      group2 
-       0.75        1.58 </code></pre>
-</div>
-</div>
-<p>Now notice that for the slope parameter, the name is “group2”, not just “group.” This is R telling us that the category “2” is the value that is assigned to the number 1 behind the scenes, and the other group category “1” is assigned to the number 0. So as described in the <a href="./regression_foundations_reading.html">Unit 3 reading</a>, this means that the intercept value of 0.75 represents the average value of extra sleep for the “group 1” category, and “group 2” is estimated to get 1.58 <em>more</em> hours of sleep than group 1.</p>
-</section>
-</section>
-<section id="more-to-come" class="level1">
-<h1>More to come</h1>
-<p>This is just the very beginning of fitting models with <code>lm()</code> and extracting parameter values. Tutorials in later units will dig deeper into <code>lm</code> objects and how to interpret the results of regression.</p>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>There are many functions in R that will calculate some of these quantities for you, depending on what kind of analysis you are performing or what kind of data you have. For example the summary output for linear models in R automatically computes standard errors, <em>t</em> values, and <em>p</em>-values. But the ability to compute these yourself can come in handy, and this is especially true with confidence intervals.</p>
+<p>In fact, the ease of constructing confidence intervals should further encourage you to examine these often. And if a quick-and-dirty method of +/- 2 standard errors around the mean is a pretty good approximation of 95% confidence, there’s almost no excuse not to try to use them more, as a way to help you think about the uncertainty in your estimates.</p>
+<p>Embrace uncertainty, and work to understand it!</p>
 
 
 </section>

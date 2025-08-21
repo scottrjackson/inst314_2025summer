@@ -71,7 +71,16 @@ website:
                 text: "Simulating data from a model in R"
               - href: R_modelstats.qmd
                 text: "Extracting model fit statistics in R"
-
+      - section: "Unit 5: Making Inferences"
+        contents:
+          - href: inference_reading.qmd
+            text: "Concepts Reading: uncertainty and hypothesis testing"
+          - section: "Code Tutorials"
+            contents:
+              - href: R_t_distribution_confidence.qmd
+                text: "Working with t-values, p-values, and confidence intervals"
+              - href: R_regression_inference.qmd
+                text: "Extracting inferences from model fits"
 
 format:
   html:

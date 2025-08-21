@@ -80,5 +80,14 @@
   },
   "errors_reading.qmd": {
     "errors_reading.html": "adf95d3e"
+  },
+  "inference_reading.qmd": {
+    "inference_reading.html": "75f65833"
+  },
+  "R_regression_inference.qmd": {
+    "R_regression_inference.html": "1e3f9bda"
+  },
+  "R_t_distribution_confidence.qmd": {
+    "R_t_distribution_confidence.html": "31223068"
   }
 }

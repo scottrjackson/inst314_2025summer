@@ -1,0 +1,116 @@
+---
+title: "Extracting inferential values from regression models in R"
+draft: false
+format:
+  html:
+    grid:
+      margin-width: 400px
+reference-location: margin
+citation-location: margin
+---
+
+# What's in this tutorial?
+
+This tutorial explains how to extract and interpret standard errors, *t*-values and *p*-values from regression models in R. 
+
+I recommend going through the [Unit 5 reading](inference_reading.qmd) before going through this tutorial.
+
+# Loading data and packages
+
+We will once again use the Pearson & Lee (1908) data on the heights of fathers and their sons.
+
+
+```{r}
+pl <- read.csv("FatherSonHeights.csv")
+```
+
+# Fit a model
+
+We will fit a simple regression model, this time switching things around so that we are using son heights to predict father heights.
+
+```{r}
+height_model <- lm(father_height ~ 1 + son_height, data = pl)
+```
+
+# Reading results with the `summary()` function
+
+One of the easiest ways to examine the results is with the `summary()` function. Note that this function is called a "generic" function in R, because it has different effects depending on what you use it on. If you use `summary()` on a vector of numbers, for example, it will give you the mean and quartiles of that numeric vector.
+
+But when applied to an `lm` object, it prints out a lot of useful results.
+
+```{r}
+summary(height_model)
+```
+
+There is a lot of information here, but I will draw your attention to the coefficient table. In fact, you can print out just this table with the following:
+
+```{r}
+summary(height_model)$coefficients
+```
+
+The top row in the coefficient table is always the intercept of the model (printed as `(Intercept)`). The following rows are the slope parameters in your model, listed by name. This model only has a single predictor, so we just have the `son_height` slope.
+
+Let's talk about each of the columns now.
+
+## Estimate
+
+The estimate is just that: our best-fitting estimate as determined by the model-fitting process. So here, we can say that the intercept is about 32.5 (inches), and the slope indicates that for every inch in the son's height, we expect a change of around 0.51 inches in the height of their father.
+
+## Standard Error
+
+The standard error is the measure that quantifies how much uncertainty you have, and it is on the scale of your estimate. A quick rule of thumb is that you can think of your uncertainty around -2/+2 standard errors. So with our slope, since the standard error is about 0.013 inches, we can say that we might estimate a change of 1 inch in the son height to correspond to 0.51 inches, plus or minus about 0.026 inches. Or alternatively something like "between 0.48 and 0.54 inches". This tells us that while the slope might be a little more or less than 0.51, we overall have a high confidence (low uncertainty), since we're talking about differences in just a few hundreds of an inch.
+
+The separate [tutorial on confidence intervals](R_t_distribution_confidence.qmd) goes into more depth on how to construct a precise confidence interval. But +/-2 standard errors is a quick way to get a rough estimate.
+
+## *t* value
+
+The *t* value is the critical statistic for the NHST significance test, to check whether the *estimate* appears to be significantly different from zero. Computing the *t* value is simple, just divide the estimate by the standard error. In other words, the *t* is just a measure of how many standard errors away from zero the estimate is. But R also helpful prints this out for you, even though it is easy to compute.
+
+More details about the *t* distribution and its role in significance testing are given in a [separate tutorial](R_t_distribution_confidence.qmd).
+
+## Degrees of freedom
+
+In order to compute a *p* value from a *t*, you simply need to know the degrees of freedom. In a regression model this is equal to the number of observation minus the number of parameters. Here we have two parameters (intercept and slope). If there were more predictor variables, each of those would be counted as an additional parameter. So the value is the number of observations (4312) minus 2 = 4310.
+
+This is also printed in the full summary table, visible both as the degrees of freedom on the residual standard error and in the F-test at the bottom.
+
+## *p*-value
+
+The final column says `Pr(>|t|)`, but this is just shorthand for saying "the probability that the absolute value of *t* is greater than zero." In other words, this is the critical *p*-value. The reference to absolute value just reminds you that this is a "two-tailed" test (refer back to the [Unit 5 reading](inference_reading.qmd#step-4-compute-a-p-value) for a description of this. Two-tailed tests are typical, so this is generally what you want.
+
+And interpreting the *p*-value is easy: if it's smaller than your threshold, you can conclude that this estimate is significantly different from zero. By convention, we set a threshold of 0.05, and the full `summary()` print out even displays markers (either `*` or `.`) to indicate significance levels. I implore you to ignore "significance levels" and just pay attention to whether it's higher (nonsignificant) or lower (significant) than your chosen threshold.
+
+## Extracting exact values from the summary
+
+Finally, I just want to show you how to extract these specific values from R.
+
+In short, the coefficients table above is just a two-dimensional table in R, much like a data frame. The names of the parameters are the row names, and the column names are column names. So you can grab specific values either by name or by row/column number. We'll save the coefficient table as a variable to make this a little easier.
+
+```{r}
+coef_table <- summary(height_model)$coefficients
+(son_slope <- coef_table["son_height", "Estimate"])
+(son_pval <- coef_table["son_height", "Pr(>|t|)"])
+(son_pval_also <- coef_table[2, 4]) # the same as above
+```
+
+And so on. You can try a few others to make sure you can grab whichever numbers you want.
+
+Note that getting the degrees of freedom comes from a different place, since it's not in the coefficients table. It has its own component in the summary object:
+
+```{r}
+(son_df <- summary(height_model)$df[2]) 
+```
+
+## Reporting results
+
+In general, reporting these values is fairly straightforward. In this case, the *p*-values are EXTREMELY small. By convention, we stop paying attention to *p*-values when they go under our threshold, so in this case, it would be most appropriate to report this effect as:
+
+> The estimated slope of son height predicting father height is 0.51, with a standard error of 0.013. This effect was significantly different from zero, with a *t* of 39.35 (df = 4310), *p* < 0.05.
+
+Reporting something like *p* < 2e-16 or < 2.04e-258 is kind of obnoxious. As long as it's less than your alpha threshold, like *p* < 0.05, then it doesn't matter how small it is.
+
+On the other hand, if your *p*-value is higher than your alpha threshold, then it's customary to report the actual value, like: "the effect was not significantly different from zero, *p* = 0.258."
+
+# Summary
+
+While many of these values and statistics can be computed in multiple ways, R makes it easy by making them all available to be extracted from the `lm` object itself. In this way, fitting, examining, and reporting the results of a linear model in R is very convenient.
